@@ -1,0 +1,13 @@
+import {chromium} from 'playwright';
+import fs from 'node:fs/promises';
+await fs.mkdir('outputs',{recursive:true});
+const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
+const page=await browser.newPage({viewport:{width:1440,height:900}});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto('http://127.0.0.1:5173/');await page.getByRole('heading',{name:'MOVIEVERSE',exact:true}).waitFor();await page.screenshot({path:'outputs/home-desktop.png'});
+await page.setViewportSize({width:390,height:844});await page.screenshot({path:'outputs/home-mobile.png'});
+await page.goto('http://127.0.0.1:5173/movies');await page.getByRole('heading',{name:'Now showing in Chennai.'}).waitFor();await page.screenshot({path:'outputs/movies-mobile.png',fullPage:true});
+await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:5173/movies/sintel');await page.locator('#showtimes').scrollIntoViewIfNeeded();await page.locator('.time-slot').first().click();await page.getByRole('button',{name:'Best 2 seats'}).waitFor();await page.waitForTimeout(6000);await page.screenshot({path:'outputs/seats-desktop.png'});
+console.log(JSON.stringify({errors,canvas:await page.locator('canvas').count(),media:await page.locator('.scene-hints').innerText()}));
+await page.setViewportSize({width:390,height:844});await page.screenshot({path:'outputs/seats-mobile.png',fullPage:true});
+await browser.close();
