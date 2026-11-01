@@ -17,11 +17,13 @@ export function Modal({
   onClose,
   title,
   wide = false,
+  variant = "default",
 }: {
   children: ReactNode;
   onClose: () => void;
   title: string;
   wide?: boolean;
+  variant?: "default" | "trailer";
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -38,7 +40,7 @@ export function Modal({
   return (
     <dialog
       ref={ref}
-      className={`modal ${wide ? "wide" : ""}`}
+      className={`modal ${wide ? "wide" : ""} ${variant === "trailer" ? "trailer-modal" : ""}`}
       aria-label={title}
       onCancel={(e) => {
         e.preventDefault();

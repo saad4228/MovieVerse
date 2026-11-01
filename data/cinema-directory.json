@@ -1,0 +1,98 @@
+{
+  "chennai": {
+    "names": [
+      "Meenakshi Cinemas (Rakki) 4K Dolby Atmos: Avadi",
+      "Green Cinemas 4K Atmos, PLF: Padi",
+      "Vels Theatres: Chennai",
+      "SLB (LakshmiBala) Movie Park 4K Dolby Atmos: Padi",
+      "HDFC Millennia PVR: Escape-Express Avenue Mall",
+      "VETRIVEL RGB DOLBY:NANGANALLUR (NEWLY RENOVATED)",
+      "KC(KrishnaveniCinemas) RG3 LASER DOLBYATMOS TNAGAR",
+      "INOX National: Arcot Road",
+      "Rakki RGB Laser 4K: Thiruvallur",
+      "Medavakkam Kumaran Cinemas RGB LASER Dolby Atmos"
+    ],
+    "source": "https://in.bookmyshow.com/cinemas-list/pvr/chennai/1",
+    "checked": "2026-11-01"
+  },
+  "pune": {
+    "names": [
+      "INOX: Royal Heritage Mall, NIBM Ext",
+      "E-SQUARE: VJ Happiness Street, Hinjawadi",
+      "City Pride Royal Cinemas: Rahatani",
+      "Dharmatma Cinemark: Chakan, Pune",
+      "E-SQUARE: Xion Mall, Hinjawadi",
+      "Cinemark 24 Proxima: Indryani Nagar, Bhosari-Pune",
+      "Cinepolis: VIP Seasons Mall, Pune",
+      "Shri Shivaji Talkies: Talegaon",
+      "Funsquare Cinema: Ghotawade Phata",
+      "PVR: Grand Highstreet Mall, Hinjawadi"
+    ],
+    "source": "https://in.bookmyshow.com/cinemas-list/pvr/pune/1",
+    "checked": "2026-11-01"
+  },
+  "bengaluru": {
+    "names": [
+      "PVR: Vaishnavi Sapphire Mall, Yeshwanthpur",
+      "PVR: Orion Uptown, Old Madras Road, Bengaluru",
+      "PVR: Orion Mall, Dr Rajkumar Road",
+      "INOX:SBR Horizon, Seegehalli Whitefield-Hoskote Rd",
+      "Sri Vajreshwari Cinemas AC 4K Dolby ATMOS: Ullal",
+      "PVR: Directors Cut, Forum Rex Walk Bengaluru",
+      "Kamakya 4K Dolby Atmos 3D A/C Cinema: Banashankari",
+      "AMB Cinemas Kapali: Bengaluru",
+      "INOX: Garuda Mall, Magrath Road",
+      "MIRAJ CINEMAS: TGN Lotus Elite, Sunkadakatte"
+    ],
+    "source": "https://in.bookmyshow.com/cinemas-list/pvr/bengaluru/1",
+    "checked": "2026-11-01"
+  },
+  "hyderabad": {
+    "names": [
+      "Santosh Theatre: Ibrahimpatnam",
+      "Prashant Cinema: Secunderabad (Newly Renovated)",
+      "AAA Cinemas: Ameerpet",
+      "Arjun 70MM: Kukatpally",
+      "Aparna Cinemas: Shamshabad",
+      "PVR: Irrum Manzil, Hyderabad",
+      "VLS Sridevi 2K A/C Dts: Chilakalguda",
+      "Asian Sha & Shahensha: Chintal",
+      "GPR Multiplex: Nizampet, Hyderabad",
+      "Bhramaramba 70MM A/C 4K Dolby: Kukatpally"
+    ],
+    "source": "https://in.bookmyshow.com/cinemas-list/pvr/hyderabad/1",
+    "checked": "2026-11-01"
+  },
+  "ahmedabad": {
+    "names": [
+      "PVR: Satyamev Emporio Odhav, Ahmedabad",
+      "Rupam Arth Cineplex: Sanand",
+      "Revolution Multiplex, CTM: Ahmedabad",
+      "Rajhans Cinemas: Vastral",
+      "Rupam Multiplex: Ahmedabad",
+      "P Square Movieplex, Gota: Ahmedabad",
+      "PVR: Palladium Mall, Ahmedabad",
+      "Sanelite Cinemas: South Bopal",
+      "PVR: Acropolis, Ahmedabad",
+      "Rajhans Cinemas: Nikol"
+    ],
+    "source": "https://in.bookmyshow.com/cinemas-list/pvr/ahmedabad/1",
+    "checked": "2026-11-01"
+  },
+  "nagpur": {
+    "names": [
+      "Panchsheel Cinema: Nagpur",
+      "Buty Cineplex-Sadar: Nagpur",
+      "AM Cinema Iconic: Jayanti Nagar VII, Besa, Nagpur",
+      "Janki Theatre (2K Laser, 5.1 Dolby): Sitabuldi",
+      "Skylight (Sangam) Cinema: Nagpur",
+      "Goyal Talkies: Kamptee",
+      "AM Cinema: Bansi Nagar, Nagpur",
+      "Kamal Cineplex: Nagpur",
+      "MovieMax: Eternity, Nagpur",
+      "Cinepolis: VR Mall, Nagpur"
+    ],
+    "source": "https://in.bookmyshow.com/cinemas-list/pvr/nagpur/1",
+    "checked": "2026-11-01"
+  }
+}

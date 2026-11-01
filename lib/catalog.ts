@@ -1,3 +1,4 @@
+import { enrichMovieMedia } from "./movie-media";
 export type Movie = {
   id: string;
   title: string;
@@ -17,6 +18,11 @@ export type Movie = {
   cast: string[];
   trailer: string | null;
   accent: string;
+  posterSmall?: string;
+  youtubeId?: string | null;
+  trailerLabel?: string;
+  mediaCredit?: string;
+  mediaSource?: string;
 };
 const base = {
   certificate: "UA 16+",
@@ -26,7 +32,7 @@ const base = {
   release: "2026-10-23",
   status: "showing" as const,
 };
-export const movies: Movie[] = [
+const seedMovies: Movie[] = [
   {
     ...base,
     id: "jailer-2",
@@ -179,6 +185,7 @@ export const movies: Movie[] = [
     formats: ["2D", "Dolby Atmos"],
   },
 ];
+export const movies: Movie[] = seedMovies.map(enrichMovieMedia);
 export type City = {
   id: string;
   name: string;
@@ -527,7 +534,7 @@ export function showsFor(
   if (!movie) return [];
   return (venue.times || ["10:30", "14:15", "18:30", "21:45"]).map(
     (time, i) => ({
-      id: [venue.id, movieId, date, time.replace(':','')].join("~"),
+      id: [venue.id, movieId, date, time.replace(":", "")].join("~"),
       movieId,
       venueId: venue.id,
       blueprintId: venue.blueprints[i % venue.blueprints.length],
@@ -547,7 +554,9 @@ export function getShow(
   const [venueId, movieId, date] = id.split("~");
   const v = configuredVenues.find((v) => v.id === venueId);
   return v
-    ? showsFor(v, movieId, date, configuredMovies).find(show=>show.id===id)
+    ? showsFor(v, movieId, date, configuredMovies).find(
+        (show) => show.id === id,
+      )
     : undefined;
 }
 export function cityMovies(cityId: string) {

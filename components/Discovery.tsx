@@ -36,6 +36,8 @@ import { rupees } from "@/lib/booking";
 import { SectionTitle, Empty } from "./ui";
 import { MovieCard, Trailer } from "./Home";
 import HeroPreview from "./HeroPreview";
+import { posterSet } from "@/lib/movie-media";
+import CityCinemaListings from "./CityCinemaListings";
 const amenities: Record<string, typeof Car> = {
   Parking: Car,
   "Wheelchair access": Accessibility,
@@ -222,6 +224,7 @@ function DateStrip({
         <button
           key={d}
           className={`date-button ${selected === d ? "selected" : ""}`}
+          aria-pressed={selected === d}
           onClick={() => onSelect(d)}
         >
           <span>
@@ -387,7 +390,10 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
           </label>
         )}
       </div>
-      <div className="showtime-list">
+      <div
+        className="showtime-list"
+        key={`${city}-${date}-${format}-${language}-${period}`}
+      >
         {listings.map(({ v, m, shows }, i) => (
           <article className="showtime-row" key={v.id + m.id}>
             <div className="showtime-venue">
@@ -465,6 +471,9 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
           Try another format, language, time, or date.
         </Empty>
       )}
+      {movie && !venue && (
+        <CityCinemaListings city={city} movie={movie.id} date={date} />
+      )}
     </section>
   );
 }
@@ -505,7 +514,9 @@ export function MovieDetail({
         className={`movie-hero ${m.id === "sintel" ? "sample-film" : ""}`}
         style={{ backgroundImage: `url(${m.backdrop})` }}
       >
-        {m.trailer && <HeroPreview movie={m} suspended={trailer} />}
+        {(m.trailer || m.youtubeId) && (
+          <HeroPreview movie={m} suspended={trailer} />
+        )}
         <div className="movie-hero-shade" />
         <Link href="/movies" className="back-link">
           <ChevronLeft size={16} />
@@ -515,6 +526,8 @@ export function MovieDetail({
           <div className="movie-identity">
             <img
               src={m.poster}
+              srcSet={posterSet(m)}
+              sizes="160px"
               className="detail-poster"
               alt={`${m.title} poster`}
             />

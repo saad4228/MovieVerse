@@ -30,12 +30,21 @@ export const movieSchema = z.object({
   votes: z.string().max(20),
   certificate: z.string().max(20),
   poster: url,
+  posterSmall: url.optional(),
   backdrop: url,
   release: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   status: z.enum(["showing", "upcoming"]),
   formats: z.array(z.string().max(30)).min(1).max(8),
   cast: z.array(z.string().max(100)).max(20),
   trailer: url.nullable(),
+  youtubeId: z
+    .string()
+    .regex(/^[a-zA-Z0-9_-]{11}$/)
+    .nullable()
+    .optional(),
+  trailerLabel: z.string().max(100).optional(),
+  mediaCredit: z.string().max(100).optional(),
+  mediaSource: url.optional(),
   accent: z.string().regex(/^#[a-fA-F0-9]{6}$/),
 });
 export const venueSchema = z.object({
@@ -89,7 +98,8 @@ export function assertCatalog(data: z.infer<typeof catalogSchema>) {
       throw new Error(`Duplicate ${key} IDs.`);
   }
   for (const v of data.venues) {
-    if(v.times && new Set(v.times).size!==v.times.length) throw new Error(`${v.name} has duplicate screening times.`);
+    if (v.times && new Set(v.times).size !== v.times.length)
+      throw new Error(`${v.name} has duplicate screening times.`);
     if (!data.cities.some((c) => c.id === v.cityId))
       throw new Error(`${v.name} references an unknown city.`);
     if (v.movieIds.some((id) => !data.movies.some((m) => m.id === id)))

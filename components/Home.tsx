@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -16,6 +16,9 @@ import { cities, cityMovies, movies, venues, type Movie } from "@/lib/catalog";
 import { useApp } from "@/lib/store";
 import { SectionTitle, Modal, Empty } from "./ui";
 import PosterWall from "./PosterWall";
+import CinematicCarousel, { type CarouselHandle } from "./CinematicCarousel";
+import YouTubePlayer from "./YouTubePlayer";
+import { posterSet } from "@/lib/movie-media";
 export function MovieCard({
   movie: m,
   index = 0,
@@ -31,7 +34,14 @@ export function MovieCard({
       style={{ "--tilt": `${tilt}deg` } as CSSProperties}
     >
       <Link href={`/movies/${m.id}`} className="movie-art">
-        <img src={m.poster} alt={`${m.title} movie poster`} loading="lazy" />
+        <img
+          src={m.poster}
+          srcSet={posterSet(m)}
+          sizes="(max-width: 760px) 46vw, 280px"
+          alt={`${m.title} movie poster`}
+          loading="lazy"
+          decoding="async"
+        />
         <div className="card-top">
           <span className="card-number">
             {String(index + 1).padStart(2, "0")}
@@ -65,10 +75,28 @@ export function Trailer({
   onClose: () => void;
 }) {
   return (
-    <Modal title={`${movie.title} trailer`} onClose={onClose} wide>
-      <span className="eyebrow">THE BIG PICTURE</span>
+    <Modal
+      title={`${movie.title} trailer`}
+      onClose={onClose}
+      wide
+      variant="trailer"
+    >
+      <span className="eyebrow">{movie.trailerLabel || "THE BIG PICTURE"}</span>
       <h2>{movie.title}</h2>
-      {movie.trailer ? (
+      {movie.youtubeId && !movie.trailer ? (
+        <>
+          <div className="trailer-media">
+            <YouTubePlayer
+              videoId={movie.youtubeId}
+              title={movie.title}
+              muted={false}
+            />
+          </div>
+          <p className="trailer-credit">
+            {movie.mediaCredit} · Official YouTube player
+          </p>
+        </>
+      ) : movie.trailer ? (
         <>
           <video
             className="trailer-player"
@@ -112,10 +140,7 @@ export default function Home() {
   const [active, setActive] = useState(3);
   const [language, setLanguage] = useState("All");
   const [trailer, setTrailer] = useState<Movie | null>(null);
-  const start = useRef(0);
-  const dragged = useRef(false);
-  const pointer = useRef<number | null>(null);
-  const [dragOffset, setDragOffset] = useState(0);
+  const carousel = useRef<CarouselHandle>(null);
   const preferred = [
     "vikram",
     "leo",
@@ -141,29 +166,10 @@ export default function Home() {
         ramayana: "#e9b65d",
       } as Record<string, string>
     )[featured.id] || featured.accent;
-  const rotate = (direction: number) =>
-    setActive((a) => (a + direction + panorama.length) % panorama.length);
+  const rotate = (direction: number) => carousel.current?.step(direction);
   const showing = cityMovies(cityId).filter(
     (m) => language === "All" || m.languages.includes(language),
   );
-  function finishDrag(event: PointerEvent<HTMLDivElement>, cancelled = false) {
-    if (pointer.current !== event.pointerId) return;
-    if (dragged.current && !cancelled) {
-      const step =
-        parseFloat(
-          getComputedStyle(event.currentTarget).getPropertyValue(
-            "--panorama-step",
-          ),
-        ) || 193;
-      const delta = event.clientX - start.current;
-      const steps = Math.max(-2, Math.min(2, Math.round(-delta / step)));
-      if (Math.abs(delta) > 28) rotate(steps || (delta < 0 ? 1 : -1));
-    }
-    pointer.current = null;
-    setDragOffset(0);
-    if (event.currentTarget.hasPointerCapture(event.pointerId))
-      event.currentTarget.releasePointerCapture(event.pointerId);
-  }
   return (
     <main>
       <section
@@ -190,74 +196,11 @@ export default function Home() {
             DRAG TO EXPLORE <span>·</span> TAP A SCREEN TO BOOK
           </p>
         </div>
-        <div
-          className={`panorama ${dragOffset ? "is-dragging" : ""}`}
-          style={{ "--drag-offset": `${dragOffset}px` } as CSSProperties}
-          onPointerDown={(e) => {
-            if (e.button !== 0) return;
-            start.current = e.clientX;
-            dragged.current = false;
-            pointer.current = e.pointerId;
-          }}
-          onPointerMove={(e) => {
-            if (pointer.current !== e.pointerId) return;
-            if (Math.abs(e.clientX - start.current) > 12) {
-              dragged.current = true;
-              e.currentTarget.setPointerCapture(e.pointerId);
-              setDragOffset(
-                Math.max(-420, Math.min(420, e.clientX - start.current)),
-              );
-            }
-          }}
-          onPointerUp={(e) => finishDrag(e)}
-          onPointerCancel={(e) => finishDrag(e, true)}
-        >
-          {panorama.map((m, i) => {
-            let d = i - (active % panorama.length);
-            if (d > panorama.length / 2) d -= panorama.length;
-            if (d < -panorama.length / 2) d += panorama.length;
-            return (
-              <div
-                key={m.id}
-                className={`panorama-screen ${d === 0 ? "current" : ""}`}
-                style={
-                  { "--offset": d, "--distance": Math.abs(d) } as CSSProperties
-                }
-              >
-                <span className="screen-title">{m.title}</span>
-                <Link
-                  href={`/movies/${m.id}`}
-                  onClick={(e) => {
-                    if (dragged.current) {
-                      e.preventDefault();
-                      return;
-                    }
-                    if (d !== 0) {
-                      e.preventDefault();
-                      setActive(i);
-                    }
-                  }}
-                  aria-label={`${m.title}${d === 0 ? " — explore and book" : " — bring to centre"}`}
-                  draggable={false}
-                >
-                  <img
-                    className="screen-poster"
-                    src={m.poster}
-                    alt={`${m.title} poster`}
-                    draggable={false}
-                  />
-                  <img
-                    className="reflection"
-                    src={m.poster}
-                    alt=""
-                    aria-hidden="true"
-                    draggable={false}
-                  />
-                </Link>
-              </div>
-            );
-          })}
-        </div>
+        <CinematicCarousel
+          ref={carousel}
+          movies={panorama}
+          onChange={setActive}
+        />
         <div className="cinema-floor" />
         <div className="lobby-controls">
           <button
@@ -272,7 +215,7 @@ export default function Home() {
               {String((active % panorama.length) + 1).padStart(2, "0")}{" "}
               <span>/ {String(panorama.length).padStart(2, "0")}</span>
             </span>
-            <div className="featured-info">
+            <div className="featured-info" key={featured.id} aria-live="polite">
               <span className="booking-status">
                 <i />
                 {featured.status === "upcoming"
@@ -430,7 +373,13 @@ export default function Home() {
                 href={`/movies/${m.id}`}
                 className="upcoming-card"
               >
-                <img src={m.poster} alt={`${m.title} poster`} loading="lazy" />
+                <img
+                  src={m.poster}
+                  srcSet={posterSet(m)}
+                  sizes="(max-width:760px) 220px, 420px"
+                  alt={`${m.title} poster`}
+                  loading="lazy"
+                />
                 <div>
                   <span className="eyebrow">
                     {new Date(m.release).toLocaleDateString("en-IN", {

@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import type { Blueprint } from "@/lib/catalog";
+import { TextileMaterial, WoodMaterial } from "./CinemaMaterials";
 
 export function screenFrame(b: Blueprint) {
   const height = Math.min((b.screenWidth * 9) / 16, b.height - 3.2);
@@ -42,11 +43,7 @@ function Curtain({
   useEffect(() => () => geometry.dispose(), [geometry]);
   return (
     <mesh position={position} geometry={geometry}>
-      <meshStandardMaterial
-        color="#710e20"
-        roughness={0.95}
-        side={THREE.DoubleSide}
-      />
+      <TextileMaterial color="#710e20" />
     </mesh>
   );
 }
@@ -170,17 +167,14 @@ export function ArchitectureDetails({
           <boxGeometry
             args={[b.width / backPanels - 0.1, b.height * 0.52, 0.12]}
           />
-          <meshStandardMaterial
-            color={b.style === "luxury" ? "#25222e" : "#352a28"}
-            roughness={0.85}
-          />
+          <WoodMaterial color={b.style === "luxury" ? "#413d48" : "#8a7767"} />
         </mesh>
       ))}
       {b.balcony && (
         <group>
           <mesh position={[0, balconyFloor + 0.04, balconyZ]}>
             <boxGeometry args={[b.width - 1, 1.25, 0.22]} />
-            <meshStandardMaterial color="#64432f" roughness={0.7} />
+            <WoodMaterial color="#947960" />
           </mesh>
           {Array.from({ length: backPanels }, (_, i) => (
             <mesh
@@ -194,7 +188,7 @@ export function ArchitectureDetails({
               <boxGeometry
                 args={[(b.width - 1) / backPanels - 0.12, 0.94, 0.035]}
               />
-              <meshStandardMaterial color="#412b22" roughness={0.8} />
+              <WoodMaterial color="#7f6758" />
             </mesh>
           ))}
           {[-0.57, 0.64].map((y) => (

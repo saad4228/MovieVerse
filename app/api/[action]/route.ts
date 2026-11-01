@@ -16,6 +16,8 @@ import {
   type Catalog,
 } from "@/lib/catalog-config";
 import { calculatePrice, seededUnavailable } from "@/lib/booking";
+import { enrichMovieMedia } from "@/lib/movie-media";
+import { cinemaListings } from "@/lib/cinema-listings";
 
 export const dynamic = "force-dynamic";
 const db = () => {
@@ -95,8 +97,12 @@ async function configuredCatalog(): Promise<Catalog> {
   const row = await db()
     .prepare("SELECT document FROM catalog_config WHERE id='active'")
     .first<{ document: string }>();
+  const catalog = row
+    ? JSON.parse(row.document)
+    : { cities, movies, venues, snacks };
   return {
-    ...(row ? JSON.parse(row.document) : { cities, movies, venues, snacks }),
+    ...catalog,
+    movies: catalog.movies.map(enrichMovieMedia),
     blueprints,
   };
 }
@@ -204,6 +210,26 @@ async function handler(req: Request) {
         return json({ error: "Request too large." }, 413);
     }
     const catalog = await configuredCatalog();
+    if (req.method === "GET" && action === "cinema-directory") {
+      const url = new URL(req.url);
+      const city = url.searchParams.get("city") || "",
+        movie = url.searchParams.get("movie") || "",
+        date = url.searchParams.get("date") || "";
+      if (
+        !catalog.cities.some((c) => c.id === city) ||
+        !catalog.movies.some((m) => m.id === movie) ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(date)
+      )
+        return json({ error: "Choose a valid city, movie and date." }, 400);
+      return json(
+        await cinemaListings(
+          city,
+          movie,
+          date,
+          env as unknown as Record<string, string | undefined>,
+        ),
+      );
+    }
     if (req.method === "GET" && action === "catalog") {
       const overrides = await db()
         .prepare("SELECT config FROM blueprints")
@@ -381,7 +407,16 @@ async function handler(req: Request) {
       if (unique.length !== input.seats.length)
         return reply({ error: "Duplicate seat." }, 400);
       const { seats, show } = await ensureInventory(input.showId, catalog);
-      if(new Date(`${show.date}T${show.time}:00+05:30`).getTime()<=Date.now())return reply({error:'This screening has already started. Please choose another showtime.'},409);
+      if (
+        new Date(`${show.date}T${show.time}:00+05:30`).getTime() <= Date.now()
+      )
+        return reply(
+          {
+            error:
+              "This screening has already started. Please choose another showtime.",
+          },
+          409,
+        );
       if (unique.some((id) => !seats.some((s) => s.id === id && !s.blocked)))
         return reply({ error: "Invalid seat selection." }, 400);
       const picked = seats.filter((x) => unique.includes(x.id));

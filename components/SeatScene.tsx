@@ -22,6 +22,9 @@ import {
   type Seat,
 } from "@/lib/catalog";
 import type { Inventory } from "@/lib/booking";
+import { useCinemaSurface } from "./CinemaMaterials";
+import YouTubePlayer from "./YouTubePlayer";
+import ProjectedMovieScreen from "./ProjectedMovieScreen";
 import {
   ArchitectureDetails,
   ScreenSurround,
@@ -69,18 +72,18 @@ function Sign({
 }) {
   const texture = useMemo(() => {
     const c = document.createElement("canvas");
-    c.width = 512;
-    c.height = 128;
+    c.width = 1024;
+    c.height = 256;
     const ctx = c.getContext("2d")!;
     if (background !== "transparent") {
       ctx.fillStyle = background;
-      ctx.fillRect(0, 0, 512, 128);
+      ctx.fillRect(0, 0, 1024, 256);
     }
     ctx.fillStyle = color;
-    ctx.font = "bold 54px sans-serif";
+    ctx.font = "bold 108px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(text, 256, 64);
+    ctx.fillText(text, 512, 128);
     const t = new THREE.CanvasTexture(c);
     t.colorSpace = THREE.SRGBColorSpace;
     return t;
@@ -148,9 +151,17 @@ function Seats({
     ],
     [],
   );
+  const textile = useCinemaSurface("fabric", 3, 5);
   const material = useMemo(
-    () => new THREE.MeshStandardMaterial({ roughness: 0.85, metalness: 0.03 }),
-    [],
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        ...textile,
+        roughness: 0.78,
+        metalness: 0,
+        sheen: 0.65,
+        sheenColor: new THREE.Color("#aaa2a0"),
+      }),
+    [textile.map, textile.normalMap, textile.roughnessMap],
   );
   useEffect(() => {
     const dummy = new THREE.Object3D();
@@ -269,7 +280,8 @@ function Screen({
   useEffect(() => {
     setVideoTexture(null);
     if (!movie.trailer) {
-      onMediaStatus("Poster preview · trailer not configured");
+      if (!movie.youtubeId)
+        onMediaStatus("Poster preview · trailer not configured");
       return;
     }
     const video = document.createElement("video");
@@ -359,7 +371,9 @@ function Screen({
         text={
           movie.trailer
             ? "MOVIEVERSE | OPEN FILM PREVIEW"
-            : "MOVIEVERSE | POSTER PREVIEW"
+            : movie.youtubeId
+              ? "MOVIEVERSE | OFFICIAL TRAILER"
+              : "MOVIEVERSE | POSTER PREVIEW"
         }
         position={[0, 1.1, z + 2.05]}
         width={8}
@@ -370,14 +384,31 @@ function Screen({
   );
 }
 function Room({ blueprint: b, lights }: Pick<Props, "blueprint" | "lights">) {
+  const carpet = useCinemaSurface("carpet", b.width / 3, b.rowSpacing / 2);
+  const { gl } = useThree();
+  useEffect(() => {
+    gl.shadowMap.needsUpdate = true;
+  }, [gl, b, lights]);
   const slats = Array.from(
     { length: Math.ceil(b.depth / 1.5) },
     (_, i) => -b.depth / 2 + i * 1.5,
   );
   return (
     <group>
-      <ambientLight intensity={lights ? 1.65 : 0.5} />
-      <hemisphereLight args={["#b7cdf6", "#59312b", lights ? 1.2 : 0.4]} />
+      <ambientLight intensity={lights ? 0.9 : 0.23} />
+      <hemisphereLight args={["#b7cdf6", "#59312b", lights ? 0.8 : 0.22]} />
+      <spotLight
+        position={[0, b.height - 1, b.depth / 2 - 2]}
+        target-position={[0, 0, 0]}
+        intensity={lights ? 550 : 110}
+        angle={1.1}
+        penumbra={0.85}
+        distance={b.depth * 2}
+        color="#ffe6c8"
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0004}
+      />
       <pointLight
         position={[0, 8, -b.depth / 2 + 4]}
         color="#b0d5ff"
@@ -393,6 +424,7 @@ function Room({ blueprint: b, lights }: Pick<Props, "blueprint" | "lights">) {
       <mesh position={[0, -0.23, 0]} receiveShadow>
         <boxGeometry args={[b.width, 0.4, b.depth]} />
         <meshStandardMaterial
+          {...carpet}
           color={b.style === "luxury" ? "#25212c" : "#3a2021"}
           roughness={0.95}
         />
@@ -411,6 +443,7 @@ function Room({ blueprint: b, lights }: Pick<Props, "blueprint" | "lights">) {
             >
               <boxGeometry args={[b.width - 0.5, y + 0.2, b.rowSpacing]} />
               <meshStandardMaterial
+                {...carpet}
                 color={b.style === "luxury" ? "#25232b" : "#43282a"}
                 roughness={0.95}
               />
@@ -620,40 +653,75 @@ function Camera({
   );
 }
 export default function SeatScene(props: Props) {
+  const projected = useRef<HTMLDivElement>(null);
+  const youtube = props.movie.youtubeId && !props.movie.trailer;
   return (
-    <Canvas
-      className="seat-canvas"
-      dpr={props.hd ? [1, 1.75] : 1}
-      camera={{
-        position: [
-          props.blueprint.width * 0.42,
-          props.blueprint.height * 0.72,
-          props.blueprint.depth * 0.41,
-        ],
-        fov: 64,
-        near: 0.1,
-        far: 150,
-      }}
-      gl={{ antialias: props.hd, powerPreference: "high-performance" }}
-      onCreated={({ gl }) => {
-        gl.setClearColor("#0a0b11");
-      }}
-    >
-      <fog attach="fog" args={["#0b0c14", 40, 90]} />
-      <Room {...props} />
-      <Suspense fallback={null}>
-        <Screen {...props} />
-        {props.blueprint.modelUrl ? (
-          <CustomModel
-            url={props.blueprint.modelUrl}
-            map={props.blueprint.seatMap}
-            onSelect={props.onSelect}
+    <div className="seat-scene-root">
+      <Canvas
+        className="seat-canvas"
+        dpr={props.hd ? [1.35, 2.25] : 1}
+        shadows={props.hd}
+        camera={{
+          position: [
+            props.blueprint.width * 0.42,
+            props.blueprint.height * 0.72,
+            props.blueprint.depth * 0.41,
+          ],
+          fov: 64,
+          near: 0.1,
+          far: 150,
+        }}
+        gl={{
+          antialias: true,
+          powerPreference: "high-performance",
+          alpha: false,
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor("#0a0b11");
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.1;
+          gl.outputColorSpace = THREE.SRGBColorSpace;
+          gl.shadowMap.type = THREE.PCFSoftShadowMap;
+          gl.shadowMap.autoUpdate = false;
+        }}
+      >
+        <fog attach="fog" args={["#0b0c14", 40, 90]} />
+        <Suspense fallback={null}>
+          <Room {...props} />
+          <Screen {...props} />
+          {props.blueprint.modelUrl ? (
+            <CustomModel
+              url={props.blueprint.modelUrl}
+              map={props.blueprint.seatMap}
+              onSelect={props.onSelect}
+            />
+          ) : (
+            <Seats {...props} />
+          )}
+        </Suspense>
+        <Camera {...props} />
+        {youtube && (
+          <ProjectedMovieScreen
+            blueprint={props.blueprint}
+            surface={projected}
           />
-        ) : (
-          <Seats {...props} />
         )}
-      </Suspense>
-      <Camera {...props} />
-    </Canvas>
+      </Canvas>
+      {youtube && (
+        <div
+          ref={projected}
+          className="projected-cinema-screen"
+          aria-label={`${props.movie.title} trailer on cinema screen`}
+        >
+          <YouTubePlayer
+            videoId={props.movie.youtubeId!}
+            title={props.movie.title}
+            muted={props.muted}
+            paused={props.paused}
+            onStatus={props.onMediaStatus}
+          />
+        </div>
+      )}
+    </div>
   );
 }

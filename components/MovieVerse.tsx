@@ -136,7 +136,7 @@ export default function MovieVerse() {
         Skip to content
       </a>
       <Navigation notify={setToast} />
-      <div id="main-content">
+      <div id="main-content" className="route-frame" key={path}>
         <Suspense
           fallback={
             <div className="initial-loading">
@@ -174,6 +174,21 @@ export default function MovieVerse() {
               Demonstration platform · Sample screenings · Simulated payments
             </span>
           </div>
+          <p className="fine-print media-attribution">
+            Artwork via{" "}
+            <a
+              href="https://www.themoviedb.org/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              TMDB
+            </a>{" "}
+            · Not endorsed or certified by TMDB. Materials powered by{" "}
+            <a href="https://polyhaven.com/" target="_blank" rel="noreferrer">
+              Poly Haven
+            </a>
+            .
+          </p>
         </footer>
       )}
       {toast && (

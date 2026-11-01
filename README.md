@@ -35,7 +35,7 @@ Routes: `/`, `/movies`, `/movies/:id`, `/coming-soon`, `/cinemas`, `/cinemas/:id
 
 The demo starts in Chennai and includes ten Indian cities and 23 illustrative venues. City changes invalidate the current booking. The default auditorium blueprints have 336, 168 and 84 seats. Screenings have independent persistent inventory and an eight-minute hold, acquired when continuing from seats. Booked and blocked seats cannot be purchased. Luxury recliners are sold in pairs. Up to eight seats can be booked together.
 
-Use the Sintel demo movie to test the licensed film clip on the physical 3D screen. Other films show configurable artwork until an authorised trailer URL is provided. The 2D map completes the same booking journey without WebGL. Test payments offer success, failure and cancellation outcomes. FIRSTSHOW discounts ticket prices by 10%, capped at ₹100.
+Each reference movie has its own official YouTube trailer or teaser in the movie hero, centered trailer dialog, and perspective-aligned auditorium screen. Sintel uses a bundled licensed MP4 and a native Three.js VideoTexture. YouTube controls quality and embedding availability; restricted videos provide an official watch link. Responsive posters retain up to 1200 pixels of width and matching backdrops up to 2560 pixels. The 2D map completes the same journey without WebGL. Test payments offer success, failure and cancellation outcomes. FIRSTSHOW discounts tickets by 10%, capped at ₹100.
 
 ## Architecture and configuration
 
@@ -49,6 +49,6 @@ Typed seed catalog: `lib/catalog.ts`. Runtime catalog changes are validated with
 
 All cinema layouts, addresses, distances, ratings, release dates, screening availability and payment outcomes are demonstration data. No model claims measured architectural accuracy. No real ticket, food order, bank payment or email is issued. Guest tickets persist through the browser's session cookie; signing in attaches that session's guest bookings to the account.
 
-No Supabase, live cinema feed, payment gateway or email delivery is configured. The demo uses versioned JSON configuration for catalog entities and relational tables for transactional inventory, users, sessions, bookings and payments. Replacing D1 with PostgreSQL requires a server repository adapter and migrations. See [implementation status](docs/IMPLEMENTATION_STATUS.md) and [asset credits](docs/ASSET_CREDITS.md).
+The booking page includes a sourced city cinema directory with current-listings links, separate from demo screenings. A directory entry does not assert that the selected film is playing. Complete live availability requires an authorised cinema inventory feed; the `LIVE_SHOWTIMES_ENDPOINT` adapter validates city, movie and date before displaying provider results. See [integrations](docs/INTEGRATIONS.md). No live feed, payment gateway or email delivery is configured. Replacing D1 with PostgreSQL requires a repository adapter and migrations. See [implementation status](docs/IMPLEMENTATION_STATUS.md) and [asset credits](docs/ASSET_CREDITS.md).
 
 The `mockups/` directory preserves the supplied design references. `scripts/prepare-assets.mjs` records the initial import and asset sources; runtime assets are already included and that machine-specific import does not need to be rerun.

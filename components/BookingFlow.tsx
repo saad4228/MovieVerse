@@ -735,7 +735,7 @@ function SeatExperience({
               My view
             </button>
           )}
-          {movie.trailer && mode === "3d" && (
+          {(movie.trailer || movie.youtubeId) && mode === "3d" && (
             <>
               <button
                 aria-label={paused ? "Play film" : "Pause film"}
