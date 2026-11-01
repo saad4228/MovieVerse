@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, type CSSProperties } from "react";
+import { useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -15,6 +15,7 @@ import {
 import { cities, cityMovies, movies, venues, type Movie } from "@/lib/catalog";
 import { useApp } from "@/lib/store";
 import { SectionTitle, Modal, Empty } from "./ui";
+import PosterWall from "./PosterWall";
 export function MovieCard({
   movie: m,
   index = 0,
@@ -113,6 +114,8 @@ export default function Home() {
   const [trailer, setTrailer] = useState<Movie | null>(null);
   const start = useRef(0);
   const dragged = useRef(false);
+  const pointer = useRef<number | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
   const preferred = [
     "vikram",
     "leo",
@@ -126,16 +129,48 @@ export default function Home() {
     .filter((m): m is Movie => !!m);
   const panorama = preferred.length ? preferred : movies.slice(0, 7);
   const featured = panorama[active % panorama.length];
+  const accent =
+    (
+      {
+        toxic: "#36cfa5",
+        leo: "#af86ef",
+        coolie: "#efaa4c",
+        vikram: "#ed7685",
+        varanasi: "#f9be3c",
+        "jailer-2": "#78b6ed",
+        ramayana: "#e9b65d",
+      } as Record<string, string>
+    )[featured.id] || featured.accent;
   const rotate = (direction: number) =>
     setActive((a) => (a + direction + panorama.length) % panorama.length);
   const showing = cityMovies(cityId).filter(
     (m) => language === "All" || m.languages.includes(language),
   );
+  function finishDrag(event: PointerEvent<HTMLDivElement>, cancelled = false) {
+    if (pointer.current !== event.pointerId) return;
+    if (dragged.current && !cancelled) {
+      const step =
+        parseFloat(
+          getComputedStyle(event.currentTarget).getPropertyValue(
+            "--panorama-step",
+          ),
+        ) || 193;
+      const delta = event.clientX - start.current;
+      const steps = Math.max(-2, Math.min(2, Math.round(-delta / step)));
+      if (Math.abs(delta) > 28) rotate(steps || (delta < 0 ? 1 : -1));
+    }
+    pointer.current = null;
+    setDragOffset(0);
+    if (event.currentTarget.hasPointerCapture(event.pointerId))
+      event.currentTarget.releasePointerCapture(event.pointerId);
+  }
   return (
     <main>
       <section
         className="cinema-lobby"
         aria-label="Interactive movie panorama"
+        data-featured-movie={featured.id}
+        style={{ "--lobby-accent": accent } as CSSProperties}
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.target !== e.currentTarget) return;
@@ -156,20 +191,26 @@ export default function Home() {
           </p>
         </div>
         <div
-          className="panorama"
+          className={`panorama ${dragOffset ? "is-dragging" : ""}`}
+          style={{ "--drag-offset": `${dragOffset}px` } as CSSProperties}
           onPointerDown={(e) => {
+            if (e.button !== 0) return;
             start.current = e.clientX;
             dragged.current = false;
+            pointer.current = e.pointerId;
           }}
           onPointerMove={(e) => {
-            if (e.buttons && Math.abs(e.clientX - start.current) > 15)
+            if (pointer.current !== e.pointerId) return;
+            if (Math.abs(e.clientX - start.current) > 12) {
               dragged.current = true;
-          }}
-          onPointerUp={(e) => {
-            if (dragged.current) {
-              rotate(e.clientX > start.current ? -1 : 1);
+              e.currentTarget.setPointerCapture(e.pointerId);
+              setDragOffset(
+                Math.max(-420, Math.min(420, e.clientX - start.current)),
+              );
             }
           }}
+          onPointerUp={(e) => finishDrag(e)}
+          onPointerCancel={(e) => finishDrag(e, true)}
         >
           {panorama.map((m, i) => {
             let d = i - (active % panorama.length);
@@ -330,6 +371,7 @@ export default function Home() {
         </div>
         <p className="carousel-hint">SWIPE TO EXPLORE · PICK YOUR NEXT STORY</p>
       </section>
+      <PosterWall />
       <section className="experience-section section-container">
         <div className="experience-copy">
           <span className="eyebrow">DON’T JUST PICK A SEAT. STEP INSIDE.</span>

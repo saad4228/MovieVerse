@@ -35,6 +35,7 @@ import { useApp } from "@/lib/store";
 import { rupees } from "@/lib/booking";
 import { SectionTitle, Empty } from "./ui";
 import { MovieCard, Trailer } from "./Home";
+import HeroPreview from "./HeroPreview";
 const amenities: Record<string, typeof Car> = {
   Parking: Car,
   "Wheelchair access": Accessibility,
@@ -250,6 +251,7 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
   const [period, setPeriod] = useState("All times");
   const [language, setLanguage] = useState("All languages");
   const [maxPrice, setMaxPrice] = useState("Any price");
+  const [sort, setSort] = useState("Recommended");
   const router = useRouter();
   const setShow = useApp((s) => s.setShow);
   const [query, setQuery] = useState("");
@@ -285,7 +287,16 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
         (m) => ({ v, m, shows: filterShows(showsFor(v, m.id, date)) }),
       ),
     )
-    .filter((x) => x.shows.length > 0);
+    .filter((x) => x.shows.length > 0)
+    .sort((a, b) =>
+      sort === "Nearest"
+        ? a.v.distance - b.v.distance
+        : sort === "Lowest price"
+          ? a.v.price - b.v.price
+          : sort === "Most shows"
+            ? b.shows.length - a.shows.length
+            : 0,
+    );
   return (
     <section className="showtimes-section section-container" id="showtimes">
       <SectionTitle
@@ -359,11 +370,36 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
           <i className="amber" /> Filling fast
         </span>
         <span>All showtimes in IST</span>
+        {!venue && (
+          <label className="showtime-sort">
+            Sort by
+            <select
+              aria-label="Sort showtime cinemas"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+            >
+              {["Recommended", "Nearest", "Lowest price", "Most shows"].map(
+                (option) => (
+                  <option key={option}>{option}</option>
+                ),
+              )}
+            </select>
+          </label>
+        )}
       </div>
       <div className="showtime-list">
         {listings.map(({ v, m, shows }, i) => (
           <article className="showtime-row" key={v.id + m.id}>
             <div className="showtime-venue">
+              {!venue && (
+                <span className="venue-monogram" aria-hidden="true">
+                  {v.name
+                    .split(" ")
+                    .map((word) => word[0])
+                    .slice(0, 2)
+                    .join("")}
+                </span>
+              )}
               {venue && <img src={m.poster} alt="" />}
               <div>
                 {!venue && (
@@ -469,6 +505,7 @@ export function MovieDetail({
         className={`movie-hero ${m.id === "sintel" ? "sample-film" : ""}`}
         style={{ backgroundImage: `url(${m.backdrop})` }}
       >
+        {m.trailer && <HeroPreview movie={m} suspended={trailer} />}
         <div className="movie-hero-shade" />
         <Link href="/movies" className="back-link">
           <ChevronLeft size={16} />

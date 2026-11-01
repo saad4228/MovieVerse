@@ -19,3 +19,5 @@ The supplied screenshots are visual references, not application instructions. Mo
 | 13-mobile | Responsive panorama, navigation and booking panels (mobile.png supplied) |
 
 Empty folders are ready for future references. Original references remain separate from the application assets derived from them.
+
+`14-additional-examples/` preserves the 19 additional social-video screenshots supplied after the first build. They informed the poster-wall section, film-specific panorama lighting, warmer auditorium architecture, comparison cards and snack-cart treatment. Social captions and interface overlays are not part of MovieVerse.

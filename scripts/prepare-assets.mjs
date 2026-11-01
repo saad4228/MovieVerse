@@ -6,7 +6,7 @@ const input='C:/Users/Saad/Downloads';
 const crops=[
  ['home.png','vikram',0,352,237,301],['home.png','leo',266,367,190,262],
  ['mobile.png','coolie',0,721,230,381],['mobile.png','varanasi',255,718,261,389],['mobile.png','toxic',550,725,230,382],
- ['now-showing.png','jailer-2',511,239,221,328],['home.png','ramayana',1196,355,244,283],['now-showing.png','war-2',234,250,224,334],
+ ['home.png','jailer-2',981,373,184,244],['home.png','ramayana',1196,355,244,283],['now-showing.png','war-2',236,285,222,225],
  ['movie.png','movie-backdrop',0,77,1440,620],['seats-3d.png','auditorium',0,75,1060,825],
  ];
 for(const [source,name,left,top,width,height] of crops){await sharp(path.join(input,source)).extract({left,top,width,height}).webp({quality:88}).toFile(path.join(destination,name+'.webp'));}

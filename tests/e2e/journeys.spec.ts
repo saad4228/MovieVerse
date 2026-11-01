@@ -260,3 +260,72 @@ test("admin previews distinct blueprints and protects publishing without a token
   const denied = await request.post("/api/blueprint", { data: {} });
   expect(denied.status()).toBe(403);
 });
+
+test("reference lobby lighting, dragging and poster-wall discovery", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const lobby = page.getByRole("region", {
+    name: "Interactive movie panorama",
+  });
+  await expect(lobby).toHaveAttribute("data-featured-movie", "varanasi");
+  const initialAccent = await lobby.evaluate((el) =>
+    getComputedStyle(el).getPropertyValue("--lobby-accent"),
+  );
+  await page.getByRole("button", { name: "Next movie", exact: true }).click();
+  await expect(lobby).toHaveAttribute("data-featured-movie", "toxic");
+  expect(
+    await lobby.evaluate((el) =>
+      getComputedStyle(el).getPropertyValue("--lobby-accent"),
+    ),
+  ).not.toBe(initialAccent);
+  const panorama = await page.locator(".panorama").boundingBox();
+  await page.mouse.move(panorama!.x + panorama!.width / 2, panorama!.y + 120);
+  await page.mouse.down();
+  await page.mouse.move(
+    panorama!.x + panorama!.width / 2 - 200,
+    panorama!.y + 120,
+    { steps: 8 },
+  );
+  await page.mouse.up();
+  await expect(lobby).toHaveAttribute("data-featured-movie", "jailer-2");
+  await page
+    .getByRole("link", { name: "Find your next story", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Now showing in Chennai." }),
+  ).toBeVisible();
+});
+
+test("sample-film hero controls and compact showtime comparisons", async ({
+  page,
+}) => {
+  await page.goto("/movies/sintel");
+  const preview = page.getByLabel("Sintel film preview");
+  await expect(preview).toBeVisible();
+  await expect
+    .poll(() => preview.evaluate((el: HTMLVideoElement) => el.readyState))
+    .toBeGreaterThan(1);
+  await page.getByRole("button", { name: "Pause preview" }).click();
+  await expect
+    .poll(() => preview.evaluate((el: HTMLVideoElement) => el.paused))
+    .toBe(true);
+  await page.getByRole("button", { name: "Play preview" }).click();
+  await expect
+    .poll(() => preview.evaluate((el: HTMLVideoElement) => el.paused))
+    .toBe(false);
+  await page.getByRole("button", { name: "Unmute preview" }).click();
+  await expect
+    .poll(() => preview.evaluate((el: HTMLVideoElement) => el.muted))
+    .toBe(false);
+  await page.getByRole("button", { name: "Mute preview" }).click();
+  await page.getByLabel("Sort showtime cinemas").selectOption("Lowest price");
+  await expect(page.locator(".showtime-row").first()).toContainText("Palazzo");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator("#showtimes").scrollIntoViewIfNeeded();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});

@@ -6,4 +6,6 @@ The movie screen is a physical plane. The licensed Sintel clip is a bundled 4.37
 
 The custom-model adapter uses GLTF loading and maps named clickable meshes to the same inventory IDs. Model coordinates, scale and mapping must match the configured blueprint. Local preview accepts .glb files; deployment requires an authorised HTTPS asset URL. No custom real-world models were provided, so that path is supported but not verified with a production model.
 
+`AuditoriumDetails.tsx` adds procedural velvet folds, screen trim, a ceiling with light strips, acoustic/wood panels and a railing at the actual balcony floor height. Seat headrests and cup holders share instanced geometry; selected seats have labels and floor markers. A shared screen-frame calculation fits the room height and supplies the camera target. Media fits inside that frame while preserving its aspect ratio.
+
 Canvas and texture errors switch to the same accessible 2D inventory. Mobile can select the 2D map at any time. HD/SD changes pixel ratio/antialiasing. Shadows are deliberately restrained. The 3D bundle is large and is loaded only for booking or Studio preview.

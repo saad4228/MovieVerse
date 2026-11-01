@@ -678,7 +678,11 @@ summary::marker {
   height: 570px;
   transform: translateX(-50%);
   clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
-  background: linear-gradient(#fff1d829, #f4d98308 70%, transparent);
+  background: linear-gradient(
+    color-mix(in srgb, var(--lobby-accent, #f9be3c) 26%, transparent),
+    color-mix(in srgb, var(--lobby-accent, #f9be3c) 5%, transparent) 70%,
+    transparent
+  );
   z-index: -1;
 }
 .lobby-heading {
@@ -716,6 +720,7 @@ summary::marker {
   padding: 0 5px;
 }
 .panorama {
+  --panorama-step: 193px;
   position: absolute;
   top: 41%;
   left: 0;
@@ -735,7 +740,9 @@ summary::marker {
   left: calc(50% - 87px);
   width: 174px;
   height: 268px;
-  transform: translateX(calc(var(--offset) * 193px))
+  transform: translateX(
+      calc(var(--offset) * var(--panorama-step) + var(--drag-offset, 0px))
+    )
     translateZ(calc(var(--distance) * 25px))
     rotateY(calc(var(--offset) * -5deg));
   transform-style: preserve-3d;
@@ -767,8 +774,26 @@ summary::marker {
   box-shadow: 0 20px 45px #0006;
 }
 .panorama-screen.current .screen-poster {
-  border: 1px solid #e2bd5c;
-  box-shadow: 0 0 25px #e5be4c72;
+  border: 1px solid var(--lobby-accent, #e2bd5c);
+  box-shadow: 0 0 28px
+    color-mix(in srgb, var(--lobby-accent, #e5be4c) 52%, transparent);
+}
+.panorama.is-dragging .panorama-screen {
+  transition: filter 0.3s;
+}
+.cinema-floor::before {
+  content: "";
+  position: absolute;
+  inset: -15% 20% 0;
+  background: radial-gradient(
+    ellipse at 50% 10%,
+    color-mix(in srgb, var(--lobby-accent, #f9be3c) 17%, transparent),
+    transparent 65%
+  );
+}
+.cinema-lobby .booking-status i {
+  background: var(--lobby-accent);
+  box-shadow: 0 0 9px var(--lobby-accent);
 }
 .reflection {
   width: 100%;
@@ -3671,11 +3696,16 @@ summary::marker {
 }
 /* Tablet */
 @media (min-width: 1550px) {
+  .panorama {
+    --panorama-step: 216px;
+  }
   .panorama-screen {
     width: 190px;
     left: calc(50% - 95px);
     height: 290px;
-    transform: translateX(calc(var(--offset) * 216px))
+    transform: translateX(
+        calc(var(--offset) * var(--panorama-step) + var(--drag-offset, 0px))
+      )
       translateZ(calc(var(--distance) * 25px))
       rotateY(calc(var(--offset) * -5deg));
   }
@@ -4173,6 +4203,7 @@ summary::marker {
     clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
   }
   .panorama {
+    --panorama-step: 177px;
     top: 42%;
     height: 275px;
     perspective: 900px;
@@ -4181,7 +4212,9 @@ summary::marker {
     width: 160px;
     height: 255px;
     left: calc(50% - 80px);
-    transform: translateX(calc(var(--offset) * 177px))
+    transform: translateX(
+        calc(var(--offset) * var(--panorama-step) + var(--drag-offset, 0px))
+      )
       translateZ(calc(var(--distance) * 12px))
       rotateY(calc(var(--offset) * -4deg));
   }
@@ -6233,5 +6266,488 @@ summary::marker {
   }
   .inventory-editor > h2 {
     font-size: 23px;
+  }
+}
+/* Additional cinema references: poster wall, film preview and booking cards. */
+.universe-wall {
+  height: 500px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #090b11;
+  margin: 20px 0 65px;
+  border-top: 1px solid #242631;
+  border-bottom: 1px solid #242631;
+}
+.poster-wall-art {
+  position: absolute;
+  inset: -190px -180px;
+  transform: perspective(1300px) rotateY(-11deg) rotateZ(-8deg) scale(1.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  z-index: -2;
+  pointer-events: none;
+}
+.poster-wall-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  height: 235px;
+  flex-shrink: 0;
+}
+.poster-wall-row:nth-child(2) {
+  transform: translateX(-95px);
+}
+.poster-wall-row > img {
+  width: 157px;
+  height: 235px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 4px;
+  border: 1px solid #c6cce820;
+  filter: saturate(0.85);
+}
+.universe-wall::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(
+      ellipse at center,
+      #07090dbd 5%,
+      #07090d8c 50%,
+      #07090de0 100%
+    ),
+    linear-gradient(transparent, #07090db0);
+}
+.poster-wall-copy {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px 20px;
+}
+.wall-ticket {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 47px;
+  height: 47px;
+  border-radius: 11px;
+  background: var(--gold);
+  color: #08090d;
+  transform: rotate(-8deg);
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px #0005;
+}
+.poster-wall-copy > .eyebrow {
+  font-size: 8px;
+  letter-spacing: 2.8px;
+  color: #cbc5ad;
+}
+.poster-wall-copy h2 {
+  font:
+    67px/0.95 "Bebas Neue",
+    sans-serif;
+  letter-spacing: 0.3px;
+  margin: 15px 0 14px;
+  text-shadow: 0 5px 22px #0007;
+}
+.poster-wall-copy h2 > span {
+  color: var(--gold);
+}
+.poster-wall-copy > p {
+  font-size: 11px;
+  color: #c7c4cc;
+  margin-bottom: 23px;
+}
+.poster-wall-copy > .btn {
+  font-size: 11px;
+  padding: 12px 20px;
+  border-radius: 99px;
+}
+.wall-genres {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+  font-size: 9px;
+  color: #bebbc4;
+}
+.wall-genres i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #aaa0a0;
+}
+.wall-genres a:hover {
+  color: var(--gold);
+}
+.movie-hero-film {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+.movie-hero-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(#0002, transparent 55%, #08090d99);
+}
+.hero-preview-controls {
+  position: absolute;
+  right: max(48px, calc((100vw - 1248px) / 2));
+  top: 113px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  z-index: 2;
+}
+.hero-preview-controls > span {
+  font-size: 7px;
+  letter-spacing: 2px;
+  margin-right: 8px;
+  color: #dfdce3;
+  text-shadow: 0 2px 8px #000;
+}
+.hero-preview-controls > .btn {
+  padding: 8px 12px;
+  border-radius: 99px;
+  font-size: 9px;
+  background: #0b0d14a6;
+  backdrop-filter: blur(8px);
+  gap: 5px;
+}
+.showtime-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.showtime-row {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+  padding: 24px 21px 17px;
+  margin: 0;
+  border-radius: 11px;
+  background: linear-gradient(155deg, #151821, #0e1017);
+  border: 1px solid #30313c;
+  border-top: 2px solid #ae8742;
+}
+.showtime-venue {
+  align-items: flex-start;
+  gap: 12px;
+}
+.showtime-venue > div {
+  min-width: 0;
+}
+.showtime-venue h3 {
+  font-size: 17px;
+  line-height: 1.35;
+  gap: 5px;
+}
+.showtime-venue h3 > svg {
+  flex-shrink: 0;
+}
+.venue-monogram {
+  width: 37px;
+  height: 40px;
+  min-width: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font:
+    20px "Bebas Neue",
+    sans-serif;
+  letter-spacing: 0.4px;
+  background: var(--gold);
+  color: #101114;
+  border-radius: 8px;
+}
+.venue-eyebrow {
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+  color: #c7ac72;
+}
+.showtime-venue p {
+  font-size: 9px;
+  line-height: 1.7;
+  margin-top: 5px;
+}
+.venue-facilities {
+  font-size: 7px;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.venue-facilities svg:nth-child(2) {
+  margin-left: 6px;
+}
+.showtime-slots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: auto;
+}
+.showtime-row .time-slot {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 5px;
+  background: #0b1118;
+  border-color: #2f4b43;
+}
+.showtime-row .time-slot:hover {
+  background: #1730298a;
+  border-color: #45bd91;
+}
+.time-slot.filling {
+  border-color: #67512d !important;
+}
+.showtime-disclaimer {
+  font-size: 7px;
+  line-height: 1.7;
+  padding-top: 13px;
+}
+.showtime-legend {
+  justify-content: flex-start;
+  min-height: 30px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.showtime-sort {
+  margin-left: auto;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+.showtime-sort select {
+  padding: 7px 20px 7px 8px;
+  background: none;
+  border-color: #30323b;
+  font-size: 9px;
+}
+.showtime-top .date-strip { margin-right: 0; padding-right: 0; max-width: 100%; }
+.snacks-layout {
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 40px;
+}
+.snacks-layout .snack-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 17px;
+}
+.snacks-layout .snack-card {
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.snacks-layout .snack-card.in-cart {
+  border-color: #a2803c;
+  background: #191920;
+}
+.snacks-layout .snack-art {
+  height: 145px;
+}
+.snacks-layout .snack-copy {
+  padding: 15px;
+}
+.snacks-layout .snack-copy h3 {
+  font-size: 14px;
+  line-height: 1.3;
+  min-height: 36px;
+}
+.snacks-layout .snack-copy > p {
+  font-size: 9px;
+  min-height: 29px;
+}
+.snack-cart-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #f9be3ceb;
+  color: #151515;
+  box-shadow: 0 3px 12px #0003;
+  border-radius: 99px;
+  padding: 5px 8px;
+  font-size: 7px;
+  font-weight: 600;
+}
+.snacks-layout .in-cart .quantity-control {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #11131b;
+}
+.snacks-layout .in-cart .quantity-control button {
+  color: #11131b;
+}
+.order-summary {
+  background: linear-gradient(140deg, #191c28, #11131c);
+  border-color: #333646;
+}
+.checkout-block {
+  background: #11141d;
+}
+@media (max-width: 1100px) {
+  .showtime-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .snacks-layout .snack-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .snacks-layout {
+    gap: 25px;
+    grid-template-columns: minmax(0, 1fr) 290px;
+  }
+  .hero-preview-controls {
+    right: 32px;
+  }
+  .snacks-layout .snack-art {
+    height: 150px;
+  }
+}
+@media (max-width: 760px) {
+  .universe-wall {
+    height: 435px;
+    margin: 20px 0 40px;
+  }
+  .poster-wall-art {
+    inset: -120px -160px;
+    transform: perspective(900px) rotateY(-9deg) rotateZ(-8deg) scale(0.85);
+  }
+  .poster-wall-copy h2 {
+    font-size: 57px;
+  }
+  .poster-wall-copy > .eyebrow {
+    font-size: 6px;
+    letter-spacing: 1.7px;
+  }
+  .poster-wall-copy > p {
+    font-size: 9px;
+    max-width: 260px;
+    line-height: 1.8;
+  }
+  .poster-wall-copy > .btn {
+    font-size: 10px;
+    padding: 11px 17px;
+  }
+  .wall-ticket {
+    width: 39px;
+    height: 39px;
+    border-radius: 9px;
+    margin-bottom: 18px;
+  }
+  .wall-ticket > svg {
+    width: 21px;
+  }
+  .wall-genres {
+    font-size: 6px;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .hero-preview-controls {
+    left: 20px;
+    right: auto;
+    top: 129px;
+    gap: 5px;
+  }
+  .hero-preview-controls > span {
+    font-size: 6px;
+    letter-spacing: 1.5px;
+    margin-right: 6px;
+  }
+  .hero-preview-controls > .btn {
+    font-size: 8px;
+    padding: 7px 9px;
+  }
+  .hero-preview-controls > .btn svg {
+    width: 11px;
+  }
+  .showtime-list {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .showtime-row {
+    padding: 20px 18px 14px;
+    gap: 19px;
+  }
+  .showtime-venue h3 {
+    font-size: 17px;
+  }
+  .venue-eyebrow {
+    font-size: 6px;
+  }
+  .venue-monogram {
+    width: 34px;
+    min-width: 34px;
+    height: 38px;
+    font-size: 19px;
+  }
+  .showtime-slots {
+    gap: 10px;
+  }
+  .showtime-row .time-slot {
+    padding: 11px 7px;
+  }
+  .showtime-disclaimer {
+    font-size: 6px;
+    padding-top: 12px;
+  }
+  .showtime-sort {
+    font-size: 8px;
+    gap: 6px;
+  }
+  .showtime-sort select {
+    font-size: 8px;
+    padding: 7px;
+  }
+  .showtime-legend {
+    gap: 10px;
+    font-size: 7px;
+  }
+  .snacks-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .snacks-layout .snack-grid {
+    gap: 14px;
+  }
+  .snacks-layout .snack-art {
+    height: 135px;
+  }
+  .snacks-layout .snack-copy {
+    padding: 13px;
+  }
+  .snacks-layout .snack-copy h3 {
+    font-size: 13px;
+    min-height: 34px;
+  }
+  .snacks-layout .snack-copy > p {
+    font-size: 8px;
+    min-height: 27px;
+  }
+  .snack-cart-badge {
+    font-size: 6px;
+    padding: 4px 6px;
+    right: 7px;
+    bottom: 8px;
+    gap: 3px;
+  }
+  .snack-cart-badge svg {
+    width: 9px;
   }
 }

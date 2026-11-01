@@ -880,7 +880,7 @@ function SnacksStep({
   const setCart = useApp((s) => s.setCart);
   const count = Object.values(cart).reduce((a, b) => a + b, 0);
   return (
-    <div className="checkout-columns">
+    <div className="checkout-columns snacks-layout">
       <section>
         <div className="page-intro compact">
           <span className="eyebrow">THE SUPPORTING CAST</span>
@@ -913,12 +913,21 @@ function SnacksStep({
           {snacks
             .filter((s) => category === "All snacks" || s.category === category)
             .map((s) => (
-              <article className="snack-card" key={s.id}>
+              <article
+                className={`snack-card ${cart[s.id] > 0 ? "in-cart" : ""}`}
+                key={s.id}
+              >
                 <div className="snack-art">
                   <img src={s.image} alt={s.name} />
                   <span className="vegetarian" title="Vegetarian">
                     ●
                   </span>
+                  {cart[s.id] > 0 && (
+                    <span className="snack-cart-badge">
+                      <Check size={10} />
+                      Added to your order
+                    </span>
+                  )}
                 </div>
                 <div className="snack-copy">
                   <span className="eyebrow">{s.category}</span>

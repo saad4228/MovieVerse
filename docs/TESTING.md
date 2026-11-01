@@ -6,4 +6,6 @@ Unit coverage: city/venue separation, screening identity, dates, structurally di
 
 Browser journeys: Nagpur movie-first booking with failure/retry, food, discount, QR download/history/cancellation; Mumbai cinema-first discovery then city invalidation/persistence; two independent API sessions racing for a group; idempotent checkout and private history; mobile registration/logout/login and overflow; licensed film playback on a WebGL screen, camera changes, pause/resume, My View and 2D parity; Studio blueprint editing and unauthorised write rejection.
 
+Additional-reference coverage verifies panorama colour changes and continuous dragging, poster-wall discovery links, sample-film hero play/pause/audio controls, cinema sorting and mobile movie-detail overflow. There are 8 Playwright journeys in total.
+
 `scripts/visual-qa.mjs` captures representative 1440×900 and 390×844 pages into ignored outputs and checks for uncaught page errors. Manual visual review used the supplied references. Safari/Firefox, a physical touch device, real cinema architecture and arbitrary production GLB models are not verified in this environment.

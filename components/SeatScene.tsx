@@ -6,7 +6,12 @@ import {
   useThree,
   type ThreeEvent,
 } from "@react-three/fiber";
-import { OrbitControls, useTexture, useGLTF } from "@react-three/drei";
+import {
+  Billboard,
+  OrbitControls,
+  useTexture,
+  useGLTF,
+} from "@react-three/drei";
 import * as THREE from "three";
 import type { OrbitControls as OrbitImpl } from "three-stdlib";
 import { RoundedBoxGeometry } from "three-stdlib";
@@ -17,6 +22,11 @@ import {
   type Seat,
 } from "@/lib/catalog";
 import type { Inventory } from "@/lib/booking";
+import {
+  ArchitectureDetails,
+  ScreenSurround,
+  screenFrame,
+} from "./AuditoriumDetails";
 export type Preset =
   | "Overview"
   | "From stage"
@@ -123,6 +133,18 @@ function Seats({
         x: 0.5,
       },
       { g: new THREE.BoxGeometry(0.49, 0.51, 0.5), y: 0.28, z: 0.1, x: 0 },
+      {
+        g: new RoundedBoxGeometry(0.58, 0.23, 0.12, 2, 0.05),
+        y: 1.47,
+        z: 0.23,
+        x: 0,
+      },
+      {
+        g: new THREE.CylinderGeometry(0.055, 0.055, 0.025, 12),
+        y: 0.947,
+        z: -0.19,
+        x: 0.5,
+      },
     ],
     [],
   );
@@ -159,6 +181,7 @@ function Seats({
         );
         if (pi === 4) color.multiplyScalar(0.3);
         if (pi === 2 || pi === 3) color.multiplyScalar(0.75);
+        if (pi === 6) color.set("#080a0e");
         mesh.setColorAt(i, color);
       });
       mesh.instanceMatrix.needsUpdate = true;
@@ -200,6 +223,34 @@ function Seats({
           }}
         />
       ))}
+      {seats
+        .filter((seat) => selected.includes(seat.id))
+        .map((seat) => (
+          <group key={seat.id}>
+            <mesh
+              position={[seat.x, seat.y + 0.045, seat.z]}
+              rotation={[-Math.PI / 2, 0, 0]}
+            >
+              <ringGeometry args={[0.58, 0.7, 28]} />
+              <meshBasicMaterial
+                color="#42f5c3"
+                transparent
+                opacity={0.7}
+                toneMapped={false}
+                side={THREE.DoubleSide}
+              />
+            </mesh>
+            <Billboard position={[seat.x, seat.y + 2.1, seat.z]}>
+              <Sign
+                text={seat.id}
+                position={[0, 0, 0]}
+                width={0.75}
+                height={0.25}
+                color="#42f5c3"
+              />
+            </Billboard>
+          </group>
+        ))}
     </group>
   );
 }
@@ -273,10 +324,15 @@ function Screen({
     },
     [videoTexture],
   );
-  const width = b.screenWidth;
-  const height = (width * 9) / 16;
-  const y = height / 2 + 2;
-  const z = -b.depth / 2 + 0.5;
+  const { width, height, y, z } = screenFrame(b);
+  const media = videoTexture?.image as HTMLVideoElement | undefined;
+  const artwork = texture.image as { width: number; height: number };
+  const aspect =
+    media?.videoWidth && media.videoHeight
+      ? media.videoWidth / media.videoHeight
+      : artwork.width / artwork.height;
+  const displayWidth = Math.min(width, height * aspect);
+  const displayHeight = displayWidth / aspect;
   return (
     <group>
       <mesh position={[0, y, z - 0.13]}>
@@ -285,6 +341,10 @@ function Screen({
       </mesh>
       <mesh position={[0, y, z + 0.08]}>
         <planeGeometry args={[width, height]} />
+        <meshBasicMaterial color="#020304" />
+      </mesh>
+      <mesh position={[0, y, z + 0.09]}>
+        <planeGeometry args={[displayWidth, displayHeight]} />
         <meshBasicMaterial map={videoTexture || texture} toneMapped={false} />
       </mesh>
       <mesh position={[0, 1.2, z + 1]}>
@@ -298,13 +358,14 @@ function Screen({
       <Sign
         text={
           movie.trailer
-            ? "MOVIEVERSE ? OPEN FILM PREVIEW"
-            : "MOVIEVERSE ? POSTER PREVIEW"
+            ? "MOVIEVERSE | OPEN FILM PREVIEW"
+            : "MOVIEVERSE | POSTER PREVIEW"
         }
         position={[0, 1.1, z + 2.05]}
         width={8}
         height={0.35}
       />
+      <ScreenSurround blueprint={b} />
     </group>
   );
 }
@@ -401,7 +462,7 @@ function Room({ blueprint: b, lights }: Pick<Props, "blueprint" | "lights">) {
             </mesh>
           ))}
           <Sign
-            text="EXIT ?"
+            text="EXIT >"
             position={[side * (b.width / 2 - 0.3), 2, -b.depth / 2 + 3]}
             rotation={[0, side === 1 ? -Math.PI / 2 : Math.PI / 2, 0]}
             width={1.3}
@@ -419,34 +480,7 @@ function Room({ blueprint: b, lights }: Pick<Props, "blueprint" | "lights">) {
         <boxGeometry args={[b.width, b.height, 0.3]} />
         <meshStandardMaterial color="#181923" />
       </mesh>
-      {b.balcony && (
-        <>
-          <mesh
-            position={[
-              0,
-              4.2,
-              -b.depth / 2 + 7 + (b.rows - 3) * b.rowSpacing - 0.9,
-            ]}
-          >
-            <boxGeometry args={[b.width - 1, 1, 0.15]} />
-            <meshStandardMaterial color="#1c1724" />
-          </mesh>
-          <mesh
-            position={[
-              0,
-              4.73,
-              -b.depth / 2 + 7 + (b.rows - 3) * b.rowSpacing - 0.9,
-            ]}
-          >
-            <boxGeometry args={[b.width - 1, 0.07, 0.2]} />
-            <meshStandardMaterial
-              color="#aa8754"
-              metalness={0.7}
-              roughness={0.3}
-            />
-          </mesh>
-        </>
-      )}
+      <ArchitectureDetails blueprint={b} lights={lights} />
     </group>
   );
 }
@@ -491,11 +525,8 @@ function Camera({
   }, []);
   useEffect(() => {
     moving.current = true;
-    const screen = new THREE.Vector3(
-      0,
-      (b.screenWidth * 9) / 32 + 2,
-      -b.depth / 2 + 0.5,
-    );
+    const frame = screenFrame(b);
+    const screen = new THREE.Vector3(0, frame.y, frame.z);
     if (preset === "My seat" && preview) {
       const s = seats.find((x) => x.id === preview);
       if (s) {

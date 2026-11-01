@@ -16,6 +16,10 @@ The supplied workspace was empty: no package manifest, source, routes, styles, g
 - Demo Studio for catalog CRUD via validated record editors, venue scheduling, blueprint editing/preview/export/model configuration, administrator-protected publishing and per-screening inventory management.
 - Versioned schema migrations, persistent screening blueprint snapshots, mockup folders, environment example and product/technical documentation.
 
+## Additional visual references
+
+The second reference set adds 19 frames, preserved in `mockups/14-additional-examples/`. The refinement adds a perspective poster wall with discovery links, film-specific lobby lighting and continuous pointer dragging, full-bleed playback controls for the authorised sample film, cinema comparison cards with sorting, selected snack states, and more detailed procedural theatre architecture. The auditorium now includes folded red curtains, ceiling light strips, wood balcony panels, headrests/cup holders and selected-seat labels. Screen artwork/video fits its frame without distortion, and camera targets use the same physical screen centre. No trailer rights or measured real-world blueprints are inferred from the examples.
+
 ## Deliberate demonstration boundaries
 
 - No live film/venue inventory, real payment, email receipt, food fulfilment or cinema admission.
@@ -29,4 +33,4 @@ The supplied workspace was empty: no package manifest, source, routes, styles, g
 
 ## Validation record
 
-TypeScript and all 10 business unit tests passed. All 6 Playwright journeys passed, covering full reservation/checkout/ticket journeys, simultaneous competing holds, simultaneous idempotent checkout, private history, mobile login, camera changes, native-screen video and Studio controls. The separate administrator integration check passed catalog persistence/restoration, inventory block/release and blueprint publishing/restoration using a temporary process-only secret. Production builds passed. Screenshots are kept locally under ignored `outputs/`; browser visual QA reported no uncaught page errors.
+TypeScript and all 10 business unit tests passed. The 8 Playwright journeys passed, covering full reservation/checkout/ticket journeys, simultaneous competing holds, simultaneous idempotent checkout, private history, mobile login, camera changes, native-screen video, Studio controls, the interactive lobby, hero media controls, sorting and mobile movie-detail overflow. The separate administrator integration check passed catalog persistence/restoration, inventory block/release and blueprint publishing/restoration using a temporary process-only secret. Production builds passed. Screenshots are kept locally under ignored `outputs/`; browser visual QA reported no uncaught page errors.
