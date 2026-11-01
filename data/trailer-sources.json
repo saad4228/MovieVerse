@@ -1,0 +1,116 @@
+{
+  "varanasi": [
+    {
+      "id": "varanasi-official",
+      "provider": "youtube",
+      "url": "https://www.youtube.com/watch?v=jDGETw3YAHc",
+      "type": "official-trailer",
+      "playbackAllowed": true,
+      "isPrimary": true,
+      "attribution": "Varanasi Movie"
+    }
+  ],
+  "ramayana": [
+    {
+      "id": "ramayana-official",
+      "provider": "youtube",
+      "url": "https://www.youtube.com/watch?v=AYkPRN874m8",
+      "type": "official-trailer",
+      "playbackAllowed": true,
+      "isPrimary": true,
+      "attribution": "Sony Pictures Entertainment"
+    }
+  ],
+  "leo": [
+    {
+      "id": "leo-official",
+      "provider": "youtube",
+      "url": "https://www.youtube.com/watch?v=Po3jStA673E",
+      "type": "official-trailer",
+      "playbackAllowed": true,
+      "isPrimary": true,
+      "attribution": "Sun TV"
+    }
+  ],
+  "toxic": [
+    {
+      "id": "toxic-official",
+      "provider": "youtube",
+      "url": "https://www.youtube.com/watch?v=EfluEyQ5QIA",
+      "type": "official-trailer",
+      "playbackAllowed": true,
+      "isPrimary": true,
+      "attribution": "KVN PRODUCTIONS"
+    }
+  ],
+  "vikram": [
+    {
+      "id": "vikram-official",
+      "provider": "youtube",
+      "url": "https://www.youtube.com/watch?v=OKBMCL-frPU",
+      "type": "official-trailer",
+      "playbackAllowed": true,
+      "isPrimary": true,
+      "attribution": "Sony Music South"
+    }
+  ],
+  "war-2": [
+    {
+      "id": "war-2-official",
+      "provider": "youtube",
+      "url": "https://www.youtube.com/watch?v=mjBym9uKth4",
+      "type": "official-trailer",
+      "playbackAllowed": true,
+      "isPrimary": true,
+      "attribution": "YRF"
+    }
+  ],
+  "jailer-2": [
+    {
+      "id": "jailer-2-official",
+      "provider": "youtube",
+      "url": "https://www.youtube.com/watch?v=FW_PPcr1sPE",
+      "type": "official-trailer",
+      "playbackAllowed": true,
+      "isPrimary": true,
+      "attribution": "Sun TV"
+    }
+  ],
+  "coolie": [
+    {
+      "id": "coolie-official",
+      "provider": "youtube",
+      "url": "https://www.youtube.com/watch?v=qeVfT2iLiu0",
+      "type": "official-trailer",
+      "playbackAllowed": true,
+      "isPrimary": true,
+      "attribution": "Sun TV"
+    }
+  ],
+  "sintel": [
+    {
+      "id": "sintel-1080",
+      "provider": "direct-mp4",
+      "url": "/assets/sintel-trailer-1080.mp4",
+      "type": "sample",
+      "playbackAllowed": true,
+      "isPrimary": true,
+      "height": 1080,
+      "language": "English",
+      "attribution": "Sintel \u00a9 Blender Foundation | www.sintel.org \u00b7 CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0/"
+    },
+    {
+      "id": "sintel-720",
+      "provider": "direct-mp4",
+      "url": "/assets/sintel-trailer-720.mp4",
+      "type": "sample",
+      "playbackAllowed": true,
+      "isPrimary": false,
+      "height": 720,
+      "language": "English",
+      "attribution": "Sintel \u00a9 Blender Foundation | www.sintel.org \u00b7 CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0/"
+    }
+  ]
+}

@@ -37,6 +37,24 @@ export const movieSchema = z.object({
   formats: z.array(z.string().max(30)).min(1).max(8),
   cast: z.array(z.string().max(100)).max(20),
   trailer: url.nullable(),
+  trailers: z
+    .array(
+      z.object({
+        id: z.string().min(1).max(100),
+        provider: z.enum(["direct-mp4", "hls", "youtube", "other"]),
+        url,
+        type: z.enum(["official-trailer", "teaser", "preview", "sample"]),
+        playbackAllowed: z.boolean(),
+        isPrimary: z.boolean().optional(),
+        height: z.number().int().min(144).max(8640).optional(),
+        language: z.string().max(50).optional(),
+        posterImage: url.optional(),
+        attribution: z.string().max(300).optional(),
+        licenseUrl: url.optional(),
+      }),
+    )
+    .max(20)
+    .optional(),
   youtubeId: z
     .string()
     .regex(/^[a-zA-Z0-9_-]{11}$/)

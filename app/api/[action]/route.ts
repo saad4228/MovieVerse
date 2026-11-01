@@ -725,6 +725,18 @@ async function handler(req: Request) {
           rowSpacing: z.number().min(1.3).max(2.5),
           slope: z.number().min(0.1).max(0.4),
           screenWidth: z.number().min(10).max(45),
+          screen: z
+            .object({
+              width: z.number().min(6).max(45),
+              height: z.number().min(3).max(24),
+              position: z.tuple([
+                z.number().finite(),
+                z.number().finite(),
+                z.number().finite(),
+              ]),
+              rotationY: z.number().min(-0.3).max(0.3).optional(),
+            })
+            .optional(),
           balcony: z.boolean(),
           style: z.enum(["classic", "grand", "luxury"]),
           verified: z.literal(false),
@@ -741,6 +753,31 @@ async function handler(req: Request) {
           400,
         );
       const physicalSeats = makeSeats(data);
+      if (data.screen) {
+        const {
+          width,
+          height,
+          position: [x, y, screenZ],
+          rotationY = 0,
+        } = data.screen;
+        const halfX = (Math.abs(Math.cos(rotationY)) * width) / 2;
+        const halfZ = (Math.abs(Math.sin(rotationY)) * width) / 2;
+        if (
+          Math.abs(x) + halfX > data.width / 2 - 0.5 ||
+          y - height / 2 < 1.2 ||
+          y + height / 2 > data.height - 0.5 ||
+          screenZ - halfZ < -data.depth / 2 + 0.35 ||
+          screenZ + halfZ > -data.depth / 2 + 3.5
+        ) {
+          return reply(
+            {
+              error:
+                "The screen must fit within the front wall area, above the stage and below the ceiling.",
+            },
+            400,
+          );
+        }
+      }
       if (
         physicalSeats.some(
           (seat) =>

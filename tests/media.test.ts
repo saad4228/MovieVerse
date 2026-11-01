@@ -1,49 +1,8 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { screenMatrix } from "../lib/screen-projection";
 import { movies } from "../lib/catalog";
 import { enrichMovieMedia } from "../lib/movie-media";
 import { cinemaListings } from "../lib/cinema-listings";
 
-describe("projected cinema playback", () => {
-  it("maps all four source corners to a perspective screen", () => {
-    const corners = [
-      { x: 20, y: 40 },
-      { x: 800, y: 130 },
-      { x: 760, y: 600 },
-      { x: 65, y: 530 },
-    ] as const;
-    const m = screenMatrix([...corners]);
-    expect(m).not.toBeNull();
-    [
-      [0, 0],
-      [1280, 0],
-      [1280, 720],
-      [0, 720],
-    ].forEach(([x, y], i) => {
-      const w = m![3] * x + m![7] * y + m![15];
-      expect((m![0] * x + m![4] * y + m![12]) / w).toBeCloseTo(corners[i].x, 5);
-      expect((m![1] * x + m![5] * y + m![13]) / w).toBeCloseTo(corners[i].y, 5);
-    });
-  });
-  it("hides a collapsed or invalid projection", () => {
-    expect(
-      screenMatrix([
-        { x: 1, y: 1 },
-        { x: 1, y: 1 },
-        { x: 1, y: 1 },
-        { x: 1, y: 1 },
-      ]),
-    ).toBeNull();
-    expect(
-      screenMatrix([
-        { x: NaN, y: 1 },
-        { x: 1, y: 1 },
-        { x: 1, y: 1 },
-        { x: 1, y: 1 },
-      ]),
-    ).toBeNull();
-  });
-});
 describe("movie media configuration", () => {
   it("assigns distinct film trailers and matching full-resolution artwork", () => {
     const films = movies.filter((m) => m.id !== "sintel");
@@ -81,16 +40,14 @@ describe("real cinema availability boundaries", () => {
   it("rejects stale provider results for another city or date", async () => {
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn()
-        .mockResolvedValue(
-          Response.json({
-            cityId: "mumbai",
-            movieId: "jailer-2",
-            date: "2026-11-02",
-            venues: [],
-          }),
-        ),
+      vi.fn().mockResolvedValue(
+        Response.json({
+          cityId: "mumbai",
+          movieId: "jailer-2",
+          date: "2026-11-02",
+          venues: [],
+        }),
+      ),
     );
     expect(
       (

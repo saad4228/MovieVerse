@@ -61,6 +61,8 @@ import {
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/client";
 import type { Preset } from "./SeatScene";
+import { viewpoints } from "@/lib/auditorium";
+import { directSources, officialTrailerLink } from "@/lib/video/sources";
 const Scene = lazy(() => import("./SeatScene"));
 class SceneBoundary extends Component<
   { children: ReactNode; onError: () => void },
@@ -529,6 +531,8 @@ function SeatExperience({
 }) {
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const [preset, setPreset] = useState<Preset>("Overview");
+  const [viewIndex, setViewIndex] = useState(0);
+  const [cameraCommand, setCameraCommand] = useState(0);
   const [lights, setLights] = useState(true);
   const [hd, setHd] = useState(true);
   const [muted, setMuted] = useState(true);
@@ -536,8 +540,23 @@ function SeatExperience({
   const [preview, setPreview] = useState<string | null>(null);
   const [hover, setHover] = useState<Seat | null>(null);
   const [media, setMedia] = useState("Loading screen…");
+  const playMedia = useRef<(() => void) | null>(null);
+  const playbackReady = useCallback((play: (() => void) | null) => {
+    playMedia.current = play;
+  }, []);
+  const playbackBlocked = media.includes("Press play");
   const viewport = useRef<HTMLDivElement>(null);
   const { blueprint: b, seats, inventory } = data;
+  const views = viewpoints(b);
+  const officialLink = officialTrailerLink(movie);
+  const canPlay = directSources(movie).length > 0;
+  const freeView = useCallback(() => setPreset("Free view"), []);
+  const navigateView = (direction: number) => {
+    setViewIndex((i) => (i + direction + views.length) % views.length);
+    setPreset("Viewpoint");
+    setCameraCommand((c) => c + 1);
+    setMode("3d");
+  };
   useEffect(() => {
     try {
       const c = document.createElement("canvas");
@@ -590,7 +609,24 @@ function SeatExperience({
     "Tour",
   ];
   return (
-    <div ref={viewport} className="seat-experience">
+    <div
+      ref={viewport}
+      className="seat-experience"
+      tabIndex={0}
+      role="region"
+      aria-label="Interactive auditorium"
+      onKeyDown={(e) => {
+        if (
+          e.target !== e.currentTarget &&
+          !(e.target instanceof HTMLCanvasElement)
+        )
+          return;
+        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+          e.preventDefault();
+          navigateView(e.key === "ArrowLeft" ? -1 : 1);
+        }
+      }}
+    >
       <div className="view-top-controls">
         <div className="camera-presets">
           {presets.map((p) => (
@@ -600,6 +636,7 @@ function SeatExperience({
               onClick={() => {
                 setMode("3d");
                 setPreset(p);
+                setCameraCommand((c) => c + 1);
               }}
             >
               {p === "Tour" && <Play size={11} fill="currentColor" />}
@@ -638,12 +675,16 @@ function SeatExperience({
               onSelect={select}
               movie={movie}
               preset={preset}
+              viewIndex={viewIndex}
+              command={cameraCommand}
+              onFreeView={freeView}
               lights={lights}
               hd={hd}
               muted={muted}
               paused={paused}
               preview={preview}
               onMediaStatus={mediaStatus}
+              onPlaybackReady={playbackReady}
               onHover={setHover}
             />
           </Suspense>
@@ -698,6 +739,60 @@ function SeatExperience({
           </p>
         </div>
       )}
+      {mode === "3d" && (
+        <>
+          <button
+            className="view-arrow view-arrow-left"
+            aria-label="Previous auditorium viewpoint"
+            onClick={() => navigateView(-1)}
+          >
+            <ArrowLeft size={19} />
+          </button>
+          <button
+            className="view-arrow view-arrow-right"
+            aria-label="Next auditorium viewpoint"
+            onClick={() => navigateView(1)}
+          >
+            <ArrowRight size={19} />
+          </button>
+          <div className="viewpoint-label" aria-live="polite">
+            {preset === "Viewpoint"
+              ? `${views[viewIndex].label} · View ${String(viewIndex + 1).padStart(2, "0")} / ${views.length}`
+              : preset === "My seat"
+                ? `Your view · ${preview}`
+                : preset}
+          </div>
+          {preset === "My seat" && (
+            <div className="seat-view-return">
+              <button
+                onClick={() => {
+                  setPreset("Overview");
+                  setCameraCommand((c) => c + 1);
+                }}
+              >
+                <ArrowLeft size={14} />
+                Return to auditorium
+              </button>
+              {selected.length > 1 && (
+                <select
+                  aria-label="Preview selected seat"
+                  value={preview || selected[0]}
+                  onChange={(e) => {
+                    setPreview(e.target.value);
+                    setCameraCommand((c) => c + 1);
+                  }}
+                >
+                  {selected.map((id) => (
+                    <option key={id} value={id}>
+                      {id}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+          )}
+        </>
+      )}
       {hover && mode === "3d" && (
         <div className="seat-hover">
           <Armchair size={17} />
@@ -720,6 +815,16 @@ function SeatExperience({
               ? media
               : "Same seats. Same availability. Your choice."}
           </small>
+          {!canPlay && officialLink && (
+            <a
+              className="screen-official-link"
+              href={officialLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Watch official trailer ↗
+            </a>
+          )}
         </div>
         <div className="scene-control-buttons">
           {selected.length > 0 && (
@@ -728,6 +833,7 @@ function SeatExperience({
               onClick={() => {
                 setPreview(selected[selected.length - 1]);
                 setPreset("My seat");
+                setCameraCommand((c) => c + 1);
                 setMode("3d");
               }}
             >
@@ -735,13 +841,24 @@ function SeatExperience({
               My view
             </button>
           )}
-          {(movie.trailer || movie.youtubeId) && mode === "3d" && (
+          {canPlay && mode === "3d" && (
             <>
               <button
-                aria-label={paused ? "Play film" : "Pause film"}
-                onClick={() => setPaused(!paused)}
+                aria-label={
+                  paused || playbackBlocked ? "Play film" : "Pause film"
+                }
+                onClick={() => {
+                  if (paused || playbackBlocked) {
+                    playMedia.current?.();
+                    setPaused(false);
+                  } else setPaused(true);
+                }}
               >
-                {paused ? <Play size={14} /> : <Pause size={14} />}
+                {paused || playbackBlocked ? (
+                  <Play size={14} />
+                ) : (
+                  <Pause size={14} />
+                )}
               </button>
               <button
                 aria-label={muted ? "Unmute film" : "Mute film"}

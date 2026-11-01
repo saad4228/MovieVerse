@@ -17,7 +17,7 @@ import { useApp } from "@/lib/store";
 import { SectionTitle, Modal, Empty } from "./ui";
 import PosterWall from "./PosterWall";
 import CinematicCarousel, { type CarouselHandle } from "./CinematicCarousel";
-import YouTubePlayer from "./YouTubePlayer";
+import MovieVideoPlayer from "./video/MovieVideoPlayer";
 import { posterSet } from "@/lib/movie-media";
 export function MovieCard({
   movie: m,
@@ -83,54 +83,7 @@ export function Trailer({
     >
       <span className="eyebrow">{movie.trailerLabel || "THE BIG PICTURE"}</span>
       <h2>{movie.title}</h2>
-      {movie.youtubeId && !movie.trailer ? (
-        <>
-          <div className="trailer-media">
-            <YouTubePlayer
-              videoId={movie.youtubeId}
-              title={movie.title}
-              muted={false}
-            />
-          </div>
-          <p className="trailer-credit">
-            {movie.mediaCredit} · Official YouTube player
-          </p>
-        </>
-      ) : movie.trailer ? (
-        <>
-          <video
-            className="trailer-player"
-            controls
-            autoPlay
-            muted
-            playsInline
-            poster={movie.backdrop}
-            src={movie.trailer}
-          />
-          <p className="fine-print">
-            Sintel © Blender Foundation · Creative Commons Attribution 3.0.
-          </p>
-        </>
-      ) : (
-        <div className="trailer-unavailable">
-          <img src={movie.poster} alt="" />
-          <div>
-            <h3>A story worth waiting for.</h3>
-            <p>
-              An authorised trailer hasn’t been configured for this demo movie
-              yet.
-            </p>
-            <Link
-              className="btn btn-gold"
-              href="/movies/sintel"
-              onClick={onClose}
-            >
-              Try the sample film
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      )}
+      <MovieVideoPlayer key={movie.id} movie={movie} />
     </Modal>
   );
 }

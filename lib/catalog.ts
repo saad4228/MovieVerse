@@ -1,4 +1,5 @@
 import { enrichMovieMedia } from "./movie-media";
+import type { TrailerSource } from "./video/sources";
 export type Movie = {
   id: string;
   title: string;
@@ -17,6 +18,7 @@ export type Movie = {
   formats: string[];
   cast: string[];
   trailer: string | null;
+  trailers?: TrailerSource[];
   accent: string;
   posterSmall?: string;
   youtubeId?: string | null;
@@ -268,6 +270,12 @@ export type Blueprint = {
   rowSpacing: number;
   slope: number;
   screenWidth: number;
+  screen?: {
+    width: number;
+    height: number;
+    position: [number, number, number];
+    rotationY?: number;
+  };
   balcony: boolean;
   style: "classic" | "grand" | "luxury";
   modelUrl?: string;

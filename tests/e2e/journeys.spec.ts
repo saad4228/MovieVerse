@@ -301,24 +301,24 @@ test("sample-film hero controls and compact showtime comparisons", async ({
   page,
 }) => {
   await page.goto("/movies/sintel");
-  const preview = page.getByLabel("Sintel film preview");
+  const preview = page.getByLabel("Sintel video");
   await expect(preview).toBeVisible();
   await expect
     .poll(() => preview.evaluate((el: HTMLVideoElement) => el.readyState))
     .toBeGreaterThan(1);
-  await page.getByRole("button", { name: "Pause preview" }).click();
+  await page.getByRole("button", { name: "Pause video" }).click();
   await expect
     .poll(() => preview.evaluate((el: HTMLVideoElement) => el.paused))
     .toBe(true);
-  await page.getByRole("button", { name: "Play preview" }).click();
+  await page.getByRole("button", { name: "Play video" }).click();
   await expect
     .poll(() => preview.evaluate((el: HTMLVideoElement) => el.paused))
     .toBe(false);
-  await page.getByRole("button", { name: "Unmute preview" }).click();
+  await page.getByRole("button", { name: "Unmute video" }).click();
   await expect
     .poll(() => preview.evaluate((el: HTMLVideoElement) => el.muted))
     .toBe(false);
-  await page.getByRole("button", { name: "Mute preview" }).click();
+  await page.getByRole("button", { name: "Mute video" }).click();
   await page.getByLabel("Sort showtime cinemas").selectOption("Lowest price");
   await expect(page.locator(".showtime-row").first()).toContainText("Palazzo");
   await page.setViewportSize({ width: 390, height: 844 });

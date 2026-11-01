@@ -1,8 +1,10 @@
 # Configurable media and live cinema listings
 
-Movie records support `poster`, `posterSmall`, `backdrop`, `trailer`, `youtubeId`, `trailerLabel`, `mediaCredit` and `mediaSource`. Direct MP4 takes precedence over YouTube. Change these fields in Demo Studio without changing the renderer. Explicit `youtubeId: null` disables a seeded embed. Legacy screenshot paths are upgraded by `lib/movie-media.ts`; custom URLs are preserved.
+Movie records support `poster`, `posterSmall`, `backdrop`, legacy `trailer`, and a new `trailers` array. The array replaces the bundled source list, including an explicit empty array. `youtubeId` and YouTube source records supply official external links. Artwork URLs and custom trailer fields remain configurable in Demo Studio.
 
-The YouTube IFrame Player API runs official players. A perspective homography aligns the auditorium player to the screen's projected corners as the camera moves. This is a DOM player, not a Three.js texture: cross-origin YouTube streams cannot be read into WebGL. Direct authorised MP4s use a real VideoTexture. Quality remains adaptive and is selectable with the official controls.
+Direct source entries contain `id`, `provider` (`direct-mp4` or `hls`), `url`, `type`, `playbackAllowed`, optional `isPrimary`, actual `height`, `language`, `posterImage`, `attribution` and `licenseUrl`. Only permitted direct sources enter the custom player or VideoTexture. Remote sources must allow CORS, serve correct media types and ideally support byte ranges. HLS manifests and segments must both be accessible. The configured list can mix direct sources and official external links. Do not put a YouTube watch URL in an MP4 field.
+
+See [video architecture and source evidence](VIDEO_AND_CAMERA_REFINEMENT.md). The same HTML5 playback hook drives the movie hero, centered custom trailer player and physical WebGL screen. Each mounted experience loads only its own active source. All-source failure retains movie artwork and an official link.
 
 ## Live listings adapter
 

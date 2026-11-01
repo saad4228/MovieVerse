@@ -1,43 +1,33 @@
 import { test, expect } from "@playwright/test";
 
-test("official film preview opens centrally and follows the selected movie", async ({
+test("official trailers use intentional artwork and links with a centred dialog", async ({
   page,
 }) => {
   await page.goto("/movies/ramayana");
-  await expect(page.locator(".movie-hero .youtube-player")).toHaveAttribute(
-    "data-video-id",
-    "AYkPRN874m8",
-  );
+  await expect(page.locator(".movie-hero iframe")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Trailer preview", exact: true })
     .click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
-  const viewport = page.viewportSize()!;
+  await expect(
+    dialog.getByRole("link", { name: "Watch official trailer" }),
+  ).toHaveAttribute("href", /AYkPRN874m8/);
+  const size = page.viewportSize()!;
   await expect
     .poll(async () => {
-      const bounds = await dialog.boundingBox();
-      return Math.max(
-        Math.abs(bounds!.x + bounds!.width / 2 - viewport.width / 2),
-        Math.abs(bounds!.y + bounds!.height / 2 - viewport.height / 2),
-      );
+      const b = await dialog.boundingBox();
+      return Math.abs(b!.x + b!.width / 2 - size.width / 2);
     })
     .toBeLessThan(3);
-  await expect(dialog.locator(".youtube-player")).toHaveAttribute(
-    "data-video-id",
-    "AYkPRN874m8",
-  );
+  await expect(dialog.locator("iframe")).toHaveCount(0);
   await page.keyboard.press("Escape");
-  await expect(dialog).not.toBeVisible();
   await page.goto("/movies/toxic");
-  await expect(page.locator(".movie-hero .youtube-player")).toHaveAttribute(
-    "data-video-id",
-    "EfluEyQ5QIA",
-  );
-  await expect(page.locator(".detail-poster")).toHaveAttribute(
-    "src",
-    /posters\/toxic-1200/,
-  );
+  await expect(
+    page
+      .locator(".movie-hero")
+      .getByRole("link", { name: "Watch official trailer" }),
+  ).toHaveAttribute("href", /EfluEyQ5QIA/);
 });
 
 test("date changes animate and update every screening date", async ({
@@ -92,34 +82,21 @@ test("carousel wraps smoothly and honours reduced motion", async ({ page }) => {
   await page.screenshot({ path: "outputs/hd-qa/mobile.png" });
 });
 
-test("booking screen uses the booked film trailer and remains aligned through camera views", async ({
+test("commercial booking uses matching artwork without a screen-space video overlay", async ({
   page,
 }) => {
   await page.goto("/movies/jailer-2");
   await page.locator(".time-slot").first().click();
-  const screen = page.getByLabel("Jailer 2 trailer on cinema screen");
-  await expect(screen.locator(".youtube-player")).toHaveAttribute(
-    "data-video-id",
-    "FW_PPcr1sPE",
+  await expect(page.locator(".seat-experience iframe")).toHaveCount(0);
+  await expect(page.locator("canvas")).toHaveAttribute(
+    "data-screen-media",
+    "poster-texture",
+    { timeout: 60000 },
   );
-  await expect
-    .poll(() => screen.evaluate((el) => getComputedStyle(el).visibility))
-    .toBe("visible");
-  await expect
-    .poll(() =>
-      screen.evaluate((el) => el.style.transform.startsWith("matrix3d(")),
-    )
-    .toBe(true);
+  await expect(page.locator(".screen-official-link")).toHaveAttribute(
+    "href",
+    /FW_PPcr1sPE/,
+  );
   await page.getByRole("button", { name: "From stage", exact: true }).click();
-  await expect
-    .poll(() => screen.evaluate((el) => getComputedStyle(el).visibility), {
-      timeout: 30000,
-    })
-    .toBe("hidden");
-  await page.getByRole("button", { name: "Overview", exact: true }).click();
-  await expect
-    .poll(() => screen.evaluate((el) => getComputedStyle(el).visibility), {
-      timeout: 30000,
-    })
-    .toBe("visible");
+  await expect(page.locator(".projected-cinema-screen")).toHaveCount(0);
 });

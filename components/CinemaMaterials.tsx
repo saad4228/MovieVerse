@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
@@ -16,7 +16,8 @@ export function useCinemaSurface(
   const { gl } = useThree();
   const maps = useMemo(
     () =>
-      loaded.map((texture, index) => {
+      loaded.map((original, index) => {
+        const texture = original.clone();
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(repeatX, repeatY);
         texture.anisotropy = Math.min(16, gl.capabilities.getMaxAnisotropy());
@@ -27,18 +28,19 @@ export function useCinemaSurface(
       }),
     [loaded[0], loaded[1], loaded[2], repeatX, repeatY, gl],
   );
+  useEffect(() => () => maps.forEach((texture) => texture.dispose()), [maps]);
   return {
-    map: maps[0],
+    map: kind === "fabric" ? null : maps[0],
     normalMap: maps[1],
     roughnessMap: maps[2],
     normalScale: new THREE.Vector2(
-      kind === "fabric" ? 0.32 : 0.45,
-      kind === "fabric" ? 0.32 : 0.45,
+      kind === "fabric" ? 0.085 : 0.3,
+      kind === "fabric" ? 0.085 : 0.3,
     ),
   };
 }
 export function TextileMaterial({ color = "#521324" }: { color?: string }) {
-  const surface = useCinemaSurface("fabric", 3, 5);
+  const surface = useCinemaSurface("fabric", 12, 18);
   return (
     <meshPhysicalMaterial
       {...surface}

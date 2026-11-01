@@ -1,5 +1,7 @@
 import sources from "../data/media-catalog.json" with { type: "json" };
 import type { Movie } from "./catalog";
+import trailerCatalog from "../data/trailer-sources.json" with { type: "json" };
+import type { TrailerSource } from "./video/sources";
 
 type MediaRecord = {
   poster: string;
@@ -16,6 +18,14 @@ type MediaRecord = {
 const media = sources as Record<string, MediaRecord>;
 
 export function enrichMovieMedia(movie: Movie): Movie {
+  const trailers = (trailerCatalog as Record<string, TrailerSource[]>)[
+    movie.id
+  ];
+  if (
+    movie.trailers === undefined &&
+    (!movie.trailer || movie.trailer === "/assets/sintel-trailer.mp4")
+  )
+    movie = { ...movie, trailers };
   const source = media[movie.id];
   if (!source) return movie;
   const legacyPoster = movie.poster === `/assets/${movie.id}.webp`;

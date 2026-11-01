@@ -514,7 +514,7 @@ export function MovieDetail({
         className={`movie-hero ${m.id === "sintel" ? "sample-film" : ""}`}
         style={{ backgroundImage: `url(${m.backdrop})` }}
       >
-        {(m.trailer || m.youtubeId) && (
+        {(m.trailer || m.youtubeId || m.trailers?.length) && (
           <HeroPreview movie={m} suspended={trailer} />
         )}
         <div className="movie-hero-shade" />
