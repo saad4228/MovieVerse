@@ -3,120 +3,304 @@
     "tmdb": 920708,
     "source": "https://www.themoviedb.org/movie/920708?language=en-US",
     "posterSource": "https://media.themoviedb.org/t/p/original/9XHgX5XEQt95nwZIlp2yiMaw65D.jpg",
-    "backdropSource": "https://media.themoviedb.org/t/p/original/pTHqIW0CN5LeB1Uk8hxGpySGGOG.jpg",
+    "backdropSource": "https://image.tmdb.org/t/p/original/aCzuLjuc0AmmzzFD3wSgZUZK2EN.jpg",
     "poster": "/assets/posters/varanasi-1200.webp",
     "posterSmall": "/assets/posters/varanasi-600.webp",
-    "backdrop": "/assets/backdrops/varanasi.webp",
+    "backdrop": "/assets/backdrops/varanasi-hd.webp",
     "width": 1000,
     "height": 1500,
     "youtubeId": "jDGETw3YAHc",
     "mediaCredit": "Varanasi Movie",
     "trailerLabel": "Official trailer",
-    "trailerSource": "https://www.youtube.com/watch?v=jDGETw3YAHc"
+    "trailerSource": "https://www.youtube.com/watch?v=jDGETw3YAHc",
+    "alternativeBackdrops": [
+      {
+        "url": "/assets/backdrops/varanasi-alt-1.webp",
+        "source": "https://image.tmdb.org/t/p/original/iZbZjYflt859q8hR7bsvApeDLr5.jpg",
+        "width": 2048,
+        "height": 1152
+      }
+    ],
+    "backdropWidth": 3840,
+    "backdropHeight": 2160,
+    "backdropSourceWidth": 3840,
+    "backdropSourceHeight": 2160,
+    "backdropSmall": "/assets/backdrops/varanasi-1280.webp",
+    "backdropPosition": "50% 40%",
+    "verifiedAt": "2026-11-01",
+    "selectionReason": "Replace 1600px artwork with a 3840px Mahesh Babu landscape; retain the 2048px silhouette alternative.",
+    "imageAttribution": "TMDB / respective rights holders"
   },
   "ramayana": {
     "tmdb": 656908,
     "source": "https://www.themoviedb.org/movie/656908?language=en-US",
     "posterSource": "https://media.themoviedb.org/t/p/original/cK6xaYrb498y2rmMRSZmRKaCXKL.jpg",
-    "backdropSource": "https://media.themoviedb.org/t/p/original/prbMZ3DPf8taS6JYQd6igPnm2mA.jpg",
+    "backdropSource": "https://image.tmdb.org/t/p/original/yHVZncPRZr63mezRX20IyKLrSkv.jpg",
     "poster": "/assets/posters/ramayana-1200.webp",
     "posterSmall": "/assets/posters/ramayana-600.webp",
-    "backdrop": "/assets/backdrops/ramayana.webp",
+    "backdrop": "/assets/backdrops/ramayana-hd.webp",
     "width": 1371,
     "height": 2057,
     "youtubeId": "AYkPRN874m8",
     "mediaCredit": "Sony Pictures Entertainment",
     "trailerLabel": "Official trailer",
-    "trailerSource": "https://www.youtube.com/watch?v=AYkPRN874m8"
+    "trailerSource": "https://www.youtube.com/watch?v=AYkPRN874m8",
+    "alternativeBackdrops": [
+      {
+        "url": "/assets/backdrops/ramayana-alt-1.webp",
+        "source": "https://image.tmdb.org/t/p/original/ks72NqTPhpupk207NXiqmZIQQVI.jpg",
+        "width": 2750,
+        "height": 1547
+      }
+    ],
+    "backdropWidth": 2710,
+    "backdropHeight": 1524,
+    "backdropSourceWidth": 2710,
+    "backdropSourceHeight": 1524,
+    "backdropSmall": "/assets/backdrops/ramayana-1280.webp",
+    "backdropPosition": "50% 40%",
+    "verifiedAt": "2026-11-01",
+    "selectionReason": "Replace 1840px abstract artwork with a 2710px Ranbir Kapoor landscape from the matching movie gallery.",
+    "imageAttribution": "TMDB / respective rights holders"
   },
   "leo": {
     "tmdb": 949229,
     "source": "https://www.themoviedb.org/movie/949229?language=en-US",
     "posterSource": "https://media.themoviedb.org/t/p/original/2XUHC4lp3tDsgfFLFygNZ2x2Um9.jpg",
-    "backdropSource": "https://media.themoviedb.org/t/p/original/zXuGXX6IjWRVjHQqMaxaobqzD8O.jpg",
+    "backdropSource": "https://image.tmdb.org/t/p/original/zJ4wVP58MrYYZdXOd2IbYdoYUPD.jpg",
     "poster": "/assets/posters/leo-1200.webp",
     "posterSmall": "/assets/posters/leo-600.webp",
-    "backdrop": "/assets/backdrops/leo.webp",
+    "backdrop": "/assets/backdrops/leo-hd.webp",
     "width": 1056,
     "height": 1584,
     "youtubeId": "Po3jStA673E",
     "mediaCredit": "Sun TV",
     "trailerLabel": "Official trailer",
-    "trailerSource": "https://www.youtube.com/watch?v=Po3jStA673E"
+    "trailerSource": "https://www.youtube.com/watch?v=Po3jStA673E",
+    "alternativeBackdrops": [
+      {
+        "url": "/assets/backdrops/leo-alt-1.webp",
+        "source": "https://image.tmdb.org/t/p/original/7LDbMNk6rbR7kRvyMKwdwLgixTJ.jpg",
+        "width": 2804,
+        "height": 1577
+      },
+      {
+        "url": "/assets/backdrops/leo-alt-2.webp",
+        "source": "https://image.tmdb.org/t/p/original/vBVYYc5PgXCICNlBmS7cCvxOc3H.jpg",
+        "width": 2819,
+        "height": 1586
+      }
+    ],
+    "backdropWidth": 2846,
+    "backdropHeight": 1599,
+    "backdropSourceWidth": 2846,
+    "backdropSourceHeight": 1599,
+    "backdropSmall": "/assets/backdrops/leo-1280.webp",
+    "backdropPosition": "42% 42%",
+    "verifiedAt": "2026-11-01",
+    "selectionReason": "Replace 1438px frame with a text-free blue/warm Vijay profile still from the correct 2023 film; stronger detail and clear negative space.",
+    "imageAttribution": "TMDB / respective rights holders"
   },
   "toxic": {
     "tmdb": 1213243,
     "source": "https://www.themoviedb.org/movie/1213243?language=en-US",
     "posterSource": "https://media.themoviedb.org/t/p/original/5RTd3YCLWbEhbe9OXRuNX3pbT5U.jpg",
-    "backdropSource": "https://media.themoviedb.org/t/p/original/tBRSSfgqOAq7YlG8udcoJIBm2FG.jpg",
+    "backdropSource": "https://image.tmdb.org/t/p/original/tBRSSfgqOAq7YlG8udcoJIBm2FG.jpg",
     "poster": "/assets/posters/toxic-1200.webp",
     "posterSmall": "/assets/posters/toxic-600.webp",
-    "backdrop": "/assets/backdrops/toxic.webp",
+    "backdrop": "/assets/backdrops/toxic-hd.webp",
     "width": 950,
     "height": 1426,
     "youtubeId": "EfluEyQ5QIA",
     "mediaCredit": "KVN PRODUCTIONS",
     "trailerLabel": "Official trailer",
-    "trailerSource": "https://www.youtube.com/watch?v=EfluEyQ5QIA"
+    "trailerSource": "https://www.youtube.com/watch?v=EfluEyQ5QIA",
+    "alternativeBackdrops": [
+      {
+        "url": "/assets/backdrops/toxic-alt-1.webp",
+        "source": "https://image.tmdb.org/t/p/original/5xktPU4PXpI3RZtIoAN5br84auN.jpg",
+        "width": 3840,
+        "height": 2160
+      },
+      {
+        "url": "/assets/backdrops/toxic-alt-2.webp",
+        "source": "https://image.tmdb.org/t/p/original/b631jgeboVLFNtwMeNi98iv3eWP.jpg",
+        "width": 2744,
+        "height": 1543
+      }
+    ],
+    "backdropWidth": 3839,
+    "backdropHeight": 2160,
+    "backdropSourceWidth": 3839,
+    "backdropSourceHeight": 2160,
+    "backdropSmall": "/assets/backdrops/toxic-1280.webp",
+    "backdropPosition": "50% 40%",
+    "verifiedAt": "2026-11-01",
+    "selectionReason": "Preserve existing white/red promotional direction at full3839px original width; warmer Yash alternatives stored separately. Stylised promotional artwork is intentional.",
+    "imageAttribution": "TMDB / respective rights holders"
   },
   "vikram": {
     "tmdb": 743563,
     "source": "https://www.themoviedb.org/movie/743563?language=en-US",
     "posterSource": "https://media.themoviedb.org/t/p/original/774UV1aCURb4s4JfEFg3IEMu5Zj.jpg",
-    "backdropSource": "https://media.themoviedb.org/t/p/original/dkIX4dSMuVqjfrPGunBJUR7K3LQ.jpg",
+    "backdropSource": "https://image.tmdb.org/t/p/original/cg5h53lli0pzPuSuYYCz9K9mUzB.jpg",
     "poster": "/assets/posters/vikram-1200.webp",
     "posterSmall": "/assets/posters/vikram-600.webp",
-    "backdrop": "/assets/backdrops/vikram.webp",
+    "backdrop": "/assets/backdrops/vikram-hd.webp",
     "width": 1400,
     "height": 2100,
     "youtubeId": "OKBMCL-frPU",
     "mediaCredit": "Sony Music South",
     "trailerLabel": "Official trailer",
-    "trailerSource": "https://www.youtube.com/watch?v=OKBMCL-frPU"
+    "trailerSource": "https://www.youtube.com/watch?v=OKBMCL-frPU",
+    "alternativeBackdrops": [
+      {
+        "url": "/assets/backdrops/vikram-alt-1.webp",
+        "source": "https://image.tmdb.org/t/p/original/sCZ1shKFBUTFagAaSEYfFrb337E.jpg",
+        "width": 3840,
+        "height": 2160
+      },
+      {
+        "url": "/assets/backdrops/vikram-alt-2.webp",
+        "source": "https://image.tmdb.org/t/p/original/zvJz2wJd6WUFa7TeWLwSERRym75.jpg",
+        "width": 2560,
+        "height": 1440
+      }
+    ],
+    "backdropWidth": 2443,
+    "backdropHeight": 1375,
+    "backdropSourceWidth": 2443,
+    "backdropSourceHeight": 1375,
+    "backdropSmall": "/assets/backdrops/vikram-1280.webp",
+    "backdropPosition": "44% 45%",
+    "verifiedAt": "2026-11-01",
+    "selectionReason": "Kamal Haasan action still from the 2022 film, with ensemble and larger promotional alternatives; not the similarly titled 1986 film.",
+    "imageAttribution": "TMDB / respective rights holders"
   },
   "war-2": {
     "tmdb": 1109086,
     "source": "https://www.themoviedb.org/movie/1109086?language=en-US",
     "posterSource": "https://media.themoviedb.org/t/p/original/2Yc8Kl2ldPpDzLrG2M5Ddv62FXB.jpg",
-    "backdropSource": "https://media.themoviedb.org/t/p/original/pKIRUTnwY3YYU9urSdsuobdcliP.jpg",
+    "backdropSource": "https://image.tmdb.org/t/p/original/pKIRUTnwY3YYU9urSdsuobdcliP.jpg",
     "poster": "/assets/posters/war-2-1200.webp",
     "posterSmall": "/assets/posters/war-2-600.webp",
-    "backdrop": "/assets/backdrops/war-2.webp",
+    "backdrop": "/assets/backdrops/war-2-hd.webp",
     "width": 2000,
     "height": 3000,
     "youtubeId": "mjBym9uKth4",
     "mediaCredit": "YRF",
     "trailerLabel": "Official trailer",
-    "trailerSource": "https://www.youtube.com/watch?v=mjBym9uKth4"
+    "trailerSource": "https://www.youtube.com/watch?v=mjBym9uKth4",
+    "alternativeBackdrops": [],
+    "backdropWidth": 1920,
+    "backdropHeight": 1080,
+    "backdropSourceWidth": 1920,
+    "backdropSourceHeight": 1080,
+    "backdropSmall": "/assets/backdrops/war-2-1280.webp",
+    "backdropPosition": "50% 40%",
+    "verifiedAt": "2026-11-01",
+    "selectionReason": "Retain full-HD two-lead ensemble; alternatives reviewed but not better for this composition. No enlargement.",
+    "imageAttribution": "TMDB / respective rights holders"
   },
   "jailer-2": {
     "tmdb": 1234139,
     "source": "https://www.themoviedb.org/movie/1234139?language=en-US",
     "posterSource": "https://media.themoviedb.org/t/p/original/upwdEyhhYZ7pT2hD535fr2MGfpx.jpg",
-    "backdropSource": "https://media.themoviedb.org/t/p/original/zpHTOdRl7GEPqFsDGqsN6Hi9Ylt.jpg",
+    "backdropSource": "https://image.tmdb.org/t/p/original/zpHTOdRl7GEPqFsDGqsN6Hi9Ylt.jpg",
     "poster": "/assets/posters/jailer-2-1200.webp",
     "posterSmall": "/assets/posters/jailer-2-600.webp",
-    "backdrop": "/assets/backdrops/jailer-2.webp",
+    "backdrop": "/assets/backdrops/jailer-2-hd.webp",
     "width": 2000,
     "height": 3000,
     "youtubeId": "FW_PPcr1sPE",
     "mediaCredit": "Sun TV",
     "trailerLabel": "Official trailer",
-    "trailerSource": "https://www.youtube.com/watch?v=FW_PPcr1sPE"
+    "trailerSource": "https://www.youtube.com/watch?v=FW_PPcr1sPE",
+    "alternativeBackdrops": [],
+    "backdropWidth": 1920,
+    "backdropHeight": 1080,
+    "backdropSourceWidth": 1920,
+    "backdropSourceHeight": 1080,
+    "backdropSmall": "/assets/backdrops/jailer-2-1280.webp",
+    "backdropPosition": "50% 40%",
+    "verifiedAt": "2026-11-01",
+    "selectionReason": "Retain matching full-HD ensemble. Do not substitute unrelated portraits found among community gallery submissions.",
+    "imageAttribution": "TMDB / respective rights holders"
   },
   "coolie": {
     "tmdb": 1153399,
     "source": "https://www.themoviedb.org/movie/1153399?language=en-US",
     "posterSource": "https://media.themoviedb.org/t/p/original/kr36awqmziEI5mfUElsHB0pj9zP.jpg",
-    "backdropSource": "https://media.themoviedb.org/t/p/original/btBN7iV1CT1R3sbMzPF0iz8nbnn.jpg",
+    "backdropSource": "https://image.tmdb.org/t/p/original/btBN7iV1CT1R3sbMzPF0iz8nbnn.jpg",
     "poster": "/assets/posters/coolie-1200.webp",
     "posterSmall": "/assets/posters/coolie-600.webp",
-    "backdrop": "/assets/backdrops/coolie.webp",
+    "backdrop": "/assets/backdrops/coolie-hd.webp",
     "width": 2000,
     "height": 3000,
     "youtubeId": "qeVfT2iLiu0",
     "mediaCredit": "Sun TV",
     "trailerLabel": "Official trailer",
-    "trailerSource": "https://www.youtube.com/watch?v=qeVfT2iLiu0"
+    "trailerSource": "https://www.youtube.com/watch?v=qeVfT2iLiu0",
+    "alternativeBackdrops": [
+      {
+        "url": "/assets/backdrops/coolie-alt-1.webp",
+        "source": "https://image.tmdb.org/t/p/original/nqy5utzULJL8Q851sPvrvqpGqiT.jpg",
+        "width": 3840,
+        "height": 2160
+      },
+      {
+        "url": "/assets/backdrops/coolie-alt-2.webp",
+        "source": "https://image.tmdb.org/t/p/original/qgXJsJlS5akzi05LJYt6zK0yZwt.jpg",
+        "width": 3840,
+        "height": 2160
+      }
+    ],
+    "backdropWidth": 3840,
+    "backdropHeight": 2160,
+    "backdropSourceWidth": 3840,
+    "backdropSourceHeight": 2160,
+    "backdropSmall": "/assets/backdrops/coolie-1280.webp",
+    "backdropPosition": "50% 40%",
+    "verifiedAt": "2026-11-01",
+    "selectionReason": "Preserve current ensemble composition, deliver full 3840px original instead of 2560px derivative; add warm street and darker portrait alternatives.",
+    "imageAttribution": "TMDB / respective rights holders"
+  },
+  "thug-life": {
+    "tmdb": 1045021,
+    "source": "https://www.themoviedb.org/movie/1045021-thug-life?language=en-US",
+    "posterSource": "https://media.themoviedb.org/t/p/original/jH2wFFESmlPgfqO5LgCMVFJymFY.jpg",
+    "poster": "/assets/posters/thug-life-1200.webp",
+    "posterSmall": "/assets/posters/thug-life-600.webp",
+    "backdrop": "/assets/backdrops/thug-life-hd.webp",
+    "youtubeId": "96kAbj3IF3k",
+    "mediaCredit": "TMDB / respective rights holders",
+    "trailerLabel": "Official promotional material",
+    "trailerSource": "https://www.netflix.com/title/81912932",
+    "alternativeBackdrops": [
+      {
+        "url": "/assets/backdrops/thug-life-alt-1.webp",
+        "source": "https://image.tmdb.org/t/p/original/lwHlJPZbl4LjVBwQRc5uIzqMXSW.jpg",
+        "width": 2844,
+        "height": 1600
+      },
+      {
+        "url": "/assets/backdrops/thug-life-alt-2.webp",
+        "source": "https://image.tmdb.org/t/p/original/dE30zsgy0MFDj8DvuINl217MRte.jpg",
+        "width": 2048,
+        "height": 1150
+      }
+    ],
+    "backdropSource": "https://image.tmdb.org/t/p/original/of9YQ9XE2aUVbiorECRnFCu5iIn.jpg",
+    "backdropWidth": 3840,
+    "backdropHeight": 2160,
+    "backdropSourceWidth": 3840,
+    "backdropSourceHeight": 2160,
+    "backdropSmall": "/assets/backdrops/thug-life-1280.webp",
+    "backdropPosition": "50% 40%",
+    "verifiedAt": "2026-11-01",
+    "selectionReason": "Correct Mani Ratnam/Kamal Haasan 2025 film: high-resolution ensemble landscape, matching poster and two character-still alternatives.",
+    "imageAttribution": "TMDB / respective rights holders",
+    "width": 2000,
+    "height": 3000
   }
 }

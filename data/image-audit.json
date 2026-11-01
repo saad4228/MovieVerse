@@ -1,0 +1,1079 @@
+{
+  "checked": "2026-11-01",
+  "method": "Public movie-specific TMDB galleries, visual contact-sheet inspection, original asset dimension decoding. Source pixel dimensions cannot certify that a community upload was never enlarged upstream.",
+  "attribution": "TMDB / respective rights holders. This product is not endorsed or certified by TMDB. Public availability does not establish a blanket commercial redistribution licence.",
+  "records": [
+    {
+      "id": "leo",
+      "tmdbId": 949229,
+      "gallery": "https://www.themoviedb.org/movie/949229/images/backdrops?language=en-US",
+      "previous": {
+        "width": 1438,
+        "height": 809
+      },
+      "selected": {
+        "source": "https://image.tmdb.org/t/p/original/zJ4wVP58MrYYZdXOd2IbYdoYUPD.jpg",
+        "width": 2846,
+        "height": 1599,
+        "url": "/assets/backdrops/leo-hd.webp"
+      },
+      "alternatives": [
+        {
+          "url": "/assets/backdrops/leo-alt-1.webp",
+          "source": "https://image.tmdb.org/t/p/original/7LDbMNk6rbR7kRvyMKwdwLgixTJ.jpg",
+          "width": 2804,
+          "height": 1577
+        },
+        {
+          "url": "/assets/backdrops/leo-alt-2.webp",
+          "source": "https://image.tmdb.org/t/p/original/vBVYYc5PgXCICNlBmS7cCvxOc3H.jpg",
+          "width": 2819,
+          "height": 1586
+        }
+      ],
+      "reviewedCandidates": [
+        {
+          "url": "https://image.tmdb.org/t/p/original/MSNYxWe4u4en9vQ3oZIKQWKYHu.jpg",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/A5zPrUIv0BstbrEzEXMOyWsJfPA.jpg",
+          "width": 3797,
+          "height": 2136
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/7LDbMNk6rbR7kRvyMKwdwLgixTJ.jpg",
+          "width": 2804,
+          "height": 1577
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/Al9zYIfvIgpnL2BelzNsj01bAfI.jpg",
+          "width": 3556,
+          "height": 2000
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/6qyzn497ujkBnjneHJZYaBTj4db.jpg",
+          "width": 3808,
+          "height": 2142
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/vBVYYc5PgXCICNlBmS7cCvxOc3H.jpg",
+          "width": 2819,
+          "height": 1586
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/6IdHwof58HB31rAaiJ3zymq4lTk.jpg",
+          "width": 3000,
+          "height": 1687
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/aXyrQGTaRwa0315CrPsn1WETNqH.jpg",
+          "width": 3000,
+          "height": 1688
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/p6iJfcx3YvHxscvUgFHIlexWV3V.jpg",
+          "width": 3000,
+          "height": 1687
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/n3BLGxc4uxHEmNMjkQ7GghbUCjm.jpg",
+          "width": 2560,
+          "height": 1440
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/vPac9oyoZuCEVIKpADrJzpwurTc.jpg",
+          "width": 2828,
+          "height": 1589
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/oi7Sv1ugA0U0ckxqkvA00TgNXj6.jpg",
+          "width": 2843,
+          "height": 1598
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/zJ4wVP58MrYYZdXOd2IbYdoYUPD.jpg",
+          "width": 2846,
+          "height": 1599
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/sUGukiolx3XiBMfV4zZrPGv7fVu.jpg",
+          "width": 3000,
+          "height": 1688
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/3iuHUVqCkZXof6GUYvj7ZPJ3ZYW.jpg",
+          "width": 3000,
+          "height": 1688
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/4ZrrL10IEtQbzDAf3eQwSytFrfi.jpg",
+          "width": 3000,
+          "height": 1688
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/9rRReyWcRU6HI4Fi0sq8sTtvjCD.jpg",
+          "width": 3000,
+          "height": 1688
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/1GOZ0OHyS4f99Pu5uuW51HfoxYO.jpg",
+          "width": 3000,
+          "height": 1688
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/wDdIKwDFamwQsSQ1muhQ3dLt7Ns.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/x3KDXp8yawTgQXeuCwQYNWMXNHx.jpg",
+          "width": 3000,
+          "height": 1687
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/rsDnVF1DEq2GmtzugLvP3eg1Wqg.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/wKmx31lIQdXnudHUSqESgWeHcJK.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/qPEq0olLj6l9D8nFSTX3uIDf3rG.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/l7OJQj0LBQjq4lr2cJ0hqwnygMz.jpg",
+          "width": 3840,
+          "height": 2160
+        }
+      ],
+      "reason": "Replace 1438px frame with a text-free blue/warm Vijay profile still from the correct 2023 film; stronger detail and clear negative space."
+    },
+    {
+      "id": "vikram",
+      "tmdbId": 743563,
+      "gallery": "https://www.themoviedb.org/movie/743563/images/backdrops?language=en-US",
+      "previous": {
+        "width": 1920,
+        "height": 1080
+      },
+      "selected": {
+        "source": "https://image.tmdb.org/t/p/original/cg5h53lli0pzPuSuYYCz9K9mUzB.jpg",
+        "width": 2443,
+        "height": 1375,
+        "url": "/assets/backdrops/vikram-hd.webp"
+      },
+      "alternatives": [
+        {
+          "url": "/assets/backdrops/vikram-alt-1.webp",
+          "source": "https://image.tmdb.org/t/p/original/sCZ1shKFBUTFagAaSEYfFrb337E.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "/assets/backdrops/vikram-alt-2.webp",
+          "source": "https://image.tmdb.org/t/p/original/zvJz2wJd6WUFa7TeWLwSERRym75.jpg",
+          "width": 2560,
+          "height": 1440
+        }
+      ],
+      "reviewedCandidates": [
+        {
+          "url": "https://image.tmdb.org/t/p/original/dkIX4dSMuVqjfrPGunBJUR7K3LQ.jpg",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/sCZ1shKFBUTFagAaSEYfFrb337E.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/yDb3dwnBvuoTMVQEtEM4rBBtIZN.jpg",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/aGz4HswZFrIE1JhORxMt2QbxoV0.jpg",
+          "width": 2000,
+          "height": 1125
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/cg5h53lli0pzPuSuYYCz9K9mUzB.jpg",
+          "width": 2443,
+          "height": 1375
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/50YWqNZS75CSWCqtnFwXkt6TBvF.jpg",
+          "width": 1918,
+          "height": 1079
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/eickyld1CuaoAMZWbpb0H7bcRbp.jpg",
+          "width": 1918,
+          "height": 1079
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/vih7tEyaiRuk8013HrEr18NliOU.jpg",
+          "width": 2276,
+          "height": 1280
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/wNDAgzYTv1BhFTLTbzZDfl5yDwG.jpg",
+          "width": 2560,
+          "height": 1440
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/zvJz2wJd6WUFa7TeWLwSERRym75.jpg",
+          "width": 2560,
+          "height": 1440
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/q6ggNZ5ep5Oqb9LpcyJMPxQqpfc.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/2jgCvpnYilYpPlnKdFPKFSqLbN.jpg",
+          "width": 2345,
+          "height": 1320
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/yJSwKRwE6dFKzACFKC3YBHRHn4u.jpg",
+          "width": 2347,
+          "height": 1320
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/aooovTAu3TzJRqQ3eWr9t3rNJIJ.jpg",
+          "width": 2171,
+          "height": 1221
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/iGwgapuu36JKjPGweDzLB4MiWOh.jpg",
+          "width": 2168,
+          "height": 1218
+        }
+      ],
+      "reason": "Kamal Haasan action still from the 2022 film, with ensemble and larger promotional alternatives; not the similarly titled 1986 film."
+    },
+    {
+      "id": "coolie",
+      "tmdbId": 1153399,
+      "gallery": "https://www.themoviedb.org/movie/1153399/images/backdrops?language=en-US",
+      "previous": {
+        "width": 2560,
+        "height": 1440
+      },
+      "selected": {
+        "source": "https://image.tmdb.org/t/p/original/btBN7iV1CT1R3sbMzPF0iz8nbnn.jpg",
+        "width": 3840,
+        "height": 2160,
+        "url": "/assets/backdrops/coolie-hd.webp"
+      },
+      "alternatives": [
+        {
+          "url": "/assets/backdrops/coolie-alt-1.webp",
+          "source": "https://image.tmdb.org/t/p/original/nqy5utzULJL8Q851sPvrvqpGqiT.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "/assets/backdrops/coolie-alt-2.webp",
+          "source": "https://image.tmdb.org/t/p/original/qgXJsJlS5akzi05LJYt6zK0yZwt.jpg",
+          "width": 3840,
+          "height": 2160
+        }
+      ],
+      "reviewedCandidates": [
+        {
+          "url": "https://image.tmdb.org/t/p/original/btBN7iV1CT1R3sbMzPF0iz8nbnn.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/6junzTa3Pc1gwWp4gbBPOYfKkSF.jpg",
+          "width": 3600,
+          "height": 2025
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/nqy5utzULJL8Q851sPvrvqpGqiT.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/a0klh2j0qrZYaCfUYtAlmtxqE5j.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/l8dxYmAXaZmgl0YfqUEKWrztEE0.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/4GV6bd9mBkv4iLJoizFAyk1z1mW.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/6UFTscuzaZLsC4LASp8AE0WdEeO.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/mXlbT8g6FG8HhWIfueFjfuuS3fg.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/jzXKWosjb5K9TBp8LQGux7RTSAQ.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/bUeFRketUasUW2SoCG74ebtic9Q.jpg",
+          "width": 2936,
+          "height": 1652
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/thqnMXaGINOmm0096eGu7Z9iUvK.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/lIRx739WFtJ7ExyynIgsLqiVb9P.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/si5OYp0KVb5a7Y5XlLmjXyzHOtt.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/pAG8nMT5l11Nx8QU7XZ02GZBLih.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/bLn0CPzrrqFLicjNTgrzaIyE0gZ.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/itGjrAuueHx0La98noBKOYlK0GT.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/5FreioXqQJW92UvsIfFRw6ztoUP.jpg",
+          "width": 2177,
+          "height": 1224
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/oM3GRM1anK9oWqv9xiwgi0tIjuw.jpg",
+          "width": 2002,
+          "height": 1126
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/8FIUpGjmETgzwQcr2ycIRSwMhob.jpg",
+          "width": 2600,
+          "height": 1462
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/a2oBEWoU2g7LCLphSxTAZcN8JCZ.jpg",
+          "width": 2334,
+          "height": 1313
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/qgXJsJlS5akzi05LJYt6zK0yZwt.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/9QEFCBwjamK0OpDxpw8CymkZ5Sv.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/gyzzUHo7qpWcoPUuS80rxC2wBBv.jpg",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/sR8P1T5IjlGPSAGu5BxwsF2wOs5.jpg",
+          "width": 2352,
+          "height": 1321
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/iRgQqGkUKNMHyx5HZmDLa0MDGTD.jpg",
+          "width": 3500,
+          "height": 1969
+        }
+      ],
+      "reason": "Preserve current ensemble composition, deliver full 3840px original instead of 2560px derivative; add warm street and darker portrait alternatives."
+    },
+    {
+      "id": "toxic",
+      "tmdbId": 1213243,
+      "gallery": "https://www.themoviedb.org/movie/1213243/images/backdrops?language=en-US",
+      "previous": {
+        "width": 2560,
+        "height": 1440
+      },
+      "selected": {
+        "source": "https://image.tmdb.org/t/p/original/tBRSSfgqOAq7YlG8udcoJIBm2FG.jpg",
+        "width": 3839,
+        "height": 2160,
+        "url": "/assets/backdrops/toxic-hd.webp"
+      },
+      "alternatives": [
+        {
+          "url": "/assets/backdrops/toxic-alt-1.webp",
+          "source": "https://image.tmdb.org/t/p/original/5xktPU4PXpI3RZtIoAN5br84auN.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "/assets/backdrops/toxic-alt-2.webp",
+          "source": "https://image.tmdb.org/t/p/original/b631jgeboVLFNtwMeNi98iv3eWP.jpg",
+          "width": 2744,
+          "height": 1543
+        }
+      ],
+      "reviewedCandidates": [
+        {
+          "url": "https://image.tmdb.org/t/p/original/tBRSSfgqOAq7YlG8udcoJIBm2FG.jpg",
+          "width": 3839,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/6y5Y8l6mAc1FzU0rovUMVtbl4NE.jpg",
+          "width": 2726,
+          "height": 1533
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/d9Jlz3fq1HEpDENr8Y0mzqCTurt.jpg",
+          "width": 2560,
+          "height": 1436
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/oOJ8g4DIb8hfLas43eNnO79DIy3.jpg",
+          "width": 2568,
+          "height": 1440
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/oxgtM8iJVVb7xqeHkdqSzqIMtRh.jpg",
+          "width": 2743,
+          "height": 1543
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/bvlA39TC7t8xZQx0Q9v8tgKdjJW.jpg",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/5xktPU4PXpI3RZtIoAN5br84auN.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/mVon2XJpn6oiIDEZuD6z08xQgMN.jpg",
+          "width": 2742,
+          "height": 1542
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/usMIc7ifBMtWveozvLbXQAfAc4Q.jpg",
+          "width": 2737,
+          "height": 1540
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/kFaljQxVWjuXgLecfuxaDcHTbbS.jpg",
+          "width": 2763,
+          "height": 1554
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/zcyceRZNZlzuYcy89IU9cnjNsn1.jpg",
+          "width": 2739,
+          "height": 1540
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/b631jgeboVLFNtwMeNi98iv3eWP.jpg",
+          "width": 2744,
+          "height": 1543
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/feakK9RVdrViBjuK7QbrWt38IpX.jpg",
+          "width": 2745,
+          "height": 1544
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/dejOABgceBKPPBtNyebq8OcNiQn.jpg",
+          "width": 2703,
+          "height": 1520
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/zLDVB2j85slejkrxBJC8lpIfHR0.jpg",
+          "width": 2346,
+          "height": 1317
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/tZuFGQ0FACoTUNPy0yDo3rQ7BvW.jpg",
+          "width": 2347,
+          "height": 1320
+        }
+      ],
+      "reason": "Preserve existing white/red promotional direction at full3839px original width; warmer Yash alternatives stored separately. Stylised promotional artwork is intentional."
+    },
+    {
+      "id": "thug-life",
+      "tmdbId": 1045021,
+      "gallery": "https://www.themoviedb.org/movie/1045021/images/backdrops?language=en-US",
+      "previous": null,
+      "selected": {
+        "source": "https://image.tmdb.org/t/p/original/of9YQ9XE2aUVbiorECRnFCu5iIn.jpg",
+        "width": 3840,
+        "height": 2160,
+        "url": "/assets/backdrops/thug-life-hd.webp"
+      },
+      "alternatives": [
+        {
+          "url": "/assets/backdrops/thug-life-alt-1.webp",
+          "source": "https://image.tmdb.org/t/p/original/lwHlJPZbl4LjVBwQRc5uIzqMXSW.jpg",
+          "width": 2844,
+          "height": 1600
+        },
+        {
+          "url": "/assets/backdrops/thug-life-alt-2.webp",
+          "source": "https://image.tmdb.org/t/p/original/dE30zsgy0MFDj8DvuINl217MRte.jpg",
+          "width": 2048,
+          "height": 1150
+        }
+      ],
+      "reviewedCandidates": [
+        {
+          "url": "https://image.tmdb.org/t/p/original/xI3c07VIq7WIYswXLFshNRvkmo.jpg",
+          "width": 2048,
+          "height": 1151
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/lwHlJPZbl4LjVBwQRc5uIzqMXSW.jpg",
+          "width": 2844,
+          "height": 1600
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/of9YQ9XE2aUVbiorECRnFCu5iIn.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/7EgR5geqRvumoUMNav6b5PDgvJ.jpg",
+          "width": 2759,
+          "height": 1552
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/82Kb5XdyvJZXI1IZltdYdYHPGRC.jpg",
+          "width": 2774,
+          "height": 1561
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/7foZYUvmmx9T2nO1b8RZEHOInV8.jpg",
+          "width": 2786,
+          "height": 1566
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/boxs3p8Lidb79p5lWtgHeNudB2T.jpg",
+          "width": 2048,
+          "height": 1150
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/dE30zsgy0MFDj8DvuINl217MRte.jpg",
+          "width": 2048,
+          "height": 1150
+        }
+      ],
+      "reason": "Correct Mani Ratnam/Kamal Haasan 2025 film: high-resolution ensemble landscape, matching poster and two character-still alternatives."
+    },
+    {
+      "id": "varanasi",
+      "tmdbId": 920708,
+      "gallery": "https://www.themoviedb.org/movie/920708/images/backdrops?language=en-US",
+      "previous": {
+        "width": 1600,
+        "height": 900
+      },
+      "selected": {
+        "source": "https://image.tmdb.org/t/p/original/aCzuLjuc0AmmzzFD3wSgZUZK2EN.jpg",
+        "width": 3840,
+        "height": 2160,
+        "url": "/assets/backdrops/varanasi-hd.webp"
+      },
+      "alternatives": [
+        {
+          "url": "/assets/backdrops/varanasi-alt-1.webp",
+          "source": "https://image.tmdb.org/t/p/original/iZbZjYflt859q8hR7bsvApeDLr5.jpg",
+          "width": 2048,
+          "height": 1152
+        }
+      ],
+      "reviewedCandidates": [
+        {
+          "url": "https://image.tmdb.org/t/p/original/pTHqIW0CN5LeB1Uk8hxGpySGGOG.jpg",
+          "width": 1600,
+          "height": 900
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/iZbZjYflt859q8hR7bsvApeDLr5.jpg",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/aCzuLjuc0AmmzzFD3wSgZUZK2EN.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/BhmNbhtueR6O8vyV30BYLrAm48.jpg",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/2B8dUWGIcOEDVvPBqKFeu6UhWio.jpg",
+          "width": 3840,
+          "height": 2160
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/tEaQfHcDVWCdgO5pYzLRRfdNrBP.jpg",
+          "width": 3840,
+          "height": 2160
+        }
+      ],
+      "reason": "Replace 1600px artwork with a 3840px Mahesh Babu landscape; retain the 2048px silhouette alternative."
+    },
+    {
+      "id": "ramayana",
+      "tmdbId": 656908,
+      "gallery": "https://www.themoviedb.org/movie/656908/images/backdrops?language=en-US",
+      "previous": {
+        "width": 1840,
+        "height": 1034
+      },
+      "selected": {
+        "source": "https://image.tmdb.org/t/p/original/yHVZncPRZr63mezRX20IyKLrSkv.jpg",
+        "width": 2710,
+        "height": 1524,
+        "url": "/assets/backdrops/ramayana-hd.webp"
+      },
+      "alternatives": [
+        {
+          "url": "/assets/backdrops/ramayana-alt-1.webp",
+          "source": "https://image.tmdb.org/t/p/original/ks72NqTPhpupk207NXiqmZIQQVI.jpg",
+          "width": 2750,
+          "height": 1547
+        }
+      ],
+      "reviewedCandidates": [
+        {
+          "url": "https://image.tmdb.org/t/p/original/prbMZ3DPf8taS6JYQd6igPnm2mA.jpg",
+          "width": 1840,
+          "height": 1034
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/yHVZncPRZr63mezRX20IyKLrSkv.jpg",
+          "width": 2710,
+          "height": 1524
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/ks72NqTPhpupk207NXiqmZIQQVI.jpg",
+          "width": 2750,
+          "height": 1547
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/4xfWXTZNkeZ9R82aiDaZD34ruY5.jpg",
+          "width": 1766,
+          "height": 994
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/wE38Vvr1w577h1ndljzaEnXTKQ3.jpg",
+          "width": 1839,
+          "height": 1035
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/kJAklyTOaIu3BTxYGtlw3m1HlHo.jpg",
+          "width": 2740,
+          "height": 1541
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/wfGbMf0e9tZhq7ZQ1uKgtWQCKOl.jpg",
+          "width": 2738,
+          "height": 1540
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/xmtdDK5FaBgwDPc9oUSRDmBFJfm.jpg",
+          "width": 3606,
+          "height": 2026
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/f5Lq2ndFETM1V5RNmFhpl2FKrHL.jpg",
+          "width": 3606,
+          "height": 2026
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/zCYGEG326MprR1jBxOW2FPiv2dP.jpg",
+          "width": 2940,
+          "height": 1654
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/y8tFY6Rbj1Eev0hPEBCTLZhSSvF.jpg",
+          "width": 2910,
+          "height": 1637
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/oy1XAE5d6GtQui2uSkiCryyjRLQ.jpg",
+          "width": 2916,
+          "height": 1640
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/shbnPhKP5MfD5jzQjNpNySY7nJD.jpg",
+          "width": 1791,
+          "height": 1007
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/svGHaToRKhlxwTBslsOxuntz0D7.jpg",
+          "width": 3606,
+          "height": 2026
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/in5hdAhBrI4lMnVlK0Bx45rJu5g.jpg",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/hrLsRLGN7ECUx0Gl1QFVQbNfolM.jpg",
+          "width": 1812,
+          "height": 1019
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/4w2iyoPWrFt38prtORs9rkxdqCj.jpg",
+          "width": 1770,
+          "height": 995
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/kWhb5em2Kbjch0yK015elnAKpHo.jpg",
+          "width": 1822,
+          "height": 1024
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/oYQIjM49aq1MWanjTSd0A6lHNkT.jpg",
+          "width": 1820,
+          "height": 1024
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/osorYdk1AGjwUc4PNKRKrbyKEeT.jpg",
+          "width": 3606,
+          "height": 2026
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/xkAeco8drGGU0GClXa5JU5FHNce.jpg",
+          "width": 1832,
+          "height": 1031
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/zI5idmTx1KrufNjXDN1LL0AfZ4p.jpg",
+          "width": 3606,
+          "height": 2026
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/yZs1UQkH7WqaSb9BBgUefaWgpnk.jpg",
+          "width": 1757,
+          "height": 989
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/aIKiJxDz5qWj0zHJamtGSrtPjvU.jpg",
+          "width": 1785,
+          "height": 1004
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/oJK3DVJwZ37LXDBPm2KgCpyStvN.jpg",
+          "width": 1788,
+          "height": 1006
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/o8PMOYYbVRMXUmBoVOMuhzMmRpb.jpg",
+          "width": 1785,
+          "height": 1004
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/mAYpYjhsz92zD2JWhjEglIyrLV.jpg",
+          "width": 1791,
+          "height": 1007
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/sqOB9HybR3ANh2OxXEnoVUg4dER.jpg",
+          "width": 1876,
+          "height": 1055
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/dHCZCiDEfARpZRcSPHZPCOgJ7sB.jpg",
+          "width": 2012,
+          "height": 1132
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/9kiLPCihFIaaODXNiIR5vKJ3gUg.jpg",
+          "width": 1742,
+          "height": 980
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/giPjM3hG9WKyy7Mz72D4BovzYmJ.jpg",
+          "width": 1904,
+          "height": 1071
+        }
+      ],
+      "reason": "Replace 1840px abstract artwork with a 2710px Ranbir Kapoor landscape from the matching movie gallery."
+    },
+    {
+      "id": "war-2",
+      "tmdbId": 1109086,
+      "gallery": "https://www.themoviedb.org/movie/1109086/images/backdrops?language=en-US",
+      "previous": {
+        "width": 1920,
+        "height": 1080
+      },
+      "selected": {
+        "source": "https://image.tmdb.org/t/p/original/pKIRUTnwY3YYU9urSdsuobdcliP.jpg",
+        "width": 1920,
+        "height": 1080,
+        "url": "/assets/backdrops/war-2-hd.webp"
+      },
+      "alternatives": [],
+      "reviewedCandidates": [
+        {
+          "url": "https://image.tmdb.org/t/p/original/pKIRUTnwY3YYU9urSdsuobdcliP.jpg",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/bNwxRkm97oLUhSYXpSvQNyWJFmg.jpg",
+          "width": 2175,
+          "height": 1224
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/1hJLR7K03XVn6vaqnt2VDlfXtXb.jpg",
+          "width": 2176,
+          "height": 1224
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/6DlhH0P52p14yXr7ua8vqAjWXwt.jpg",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/zEuAwH4Uc96a4HCEUmIagW0qZQC.jpg",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/raF0eC9R4rLukbSKKBalCqiIauD.jpg",
+          "width": 2176,
+          "height": 1224
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/i7qArgoTogtdW690F3QGYtfNM1J.jpg",
+          "width": 2830,
+          "height": 1592
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/lVWU99Zsta4qDtYvqpLiLXyLnI.jpg",
+          "width": 2832,
+          "height": 1593
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/pEyGHf9JduAglrmW0kgmdbZdDiK.jpg",
+          "width": 2177,
+          "height": 1225
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/yibkU0G2yYoAIGvfbVxuTfRH6OJ.jpg",
+          "width": 2169,
+          "height": 1220
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/nmhOhx2p0r8GPi9hEuK2uTSV57w.jpg",
+          "width": 2193,
+          "height": 1234
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/tMGaZbd4CiloWWfPmuEObuEVEwo.jpg",
+          "width": 1609,
+          "height": 905
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/A6aMb8HZIR4Xvri3LXAeNrL6IWs.jpg",
+          "width": 2842,
+          "height": 1598
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/dht3Ll29mcElXOAGYFUpybYRDsp.jpg",
+          "width": 2801,
+          "height": 1575
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/rtqryvnfscmAsb2F9jsDCoWEVyK.jpg",
+          "width": 2166,
+          "height": 1218
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/9bN9Dk3w9h9aaxnV9Yr280pk16I.jpg",
+          "width": 2172,
+          "height": 1222
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/jCJSTNuHTbSTPoLZ6fEpCjtZ3Ly.jpg",
+          "width": 2175,
+          "height": 1224
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/iEyZmnM6JaI4mAPWvZ8Ncjrfz5U.jpg",
+          "width": 2172,
+          "height": 1222
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/4yUkt8JJU4snlCls0mct92jljbc.jpg",
+          "width": 2171,
+          "height": 1221
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/r4DMJLS6dhhmMvbt0AsnCY3cSjj.jpg",
+          "width": 1600,
+          "height": 900
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/8mBpZHcahG4vfYhZC1GRvHeGd4m.jpg",
+          "width": 2177,
+          "height": 1224
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/hiOKx1urvq9A0i2Q3u13QU6tFam.jpg",
+          "width": 2172,
+          "height": 1222
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/t6nTSz5BN0DXpisZUqzRCJGhvF.jpg",
+          "width": 2129,
+          "height": 1198
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/cDWqefhAU2aZB3sBxgnLOR0UATA.jpg",
+          "width": 2177,
+          "height": 1224
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/qD90TZ2105dYQRezdIOSnfyd0il.jpg",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/tdmRPFOjmy3wBc2FABk5eyMlUeN.jpg",
+          "width": 2400,
+          "height": 1350
+        }
+      ],
+      "reason": "Retain full-HD two-lead ensemble; alternatives reviewed but not better for this composition. No enlargement."
+    },
+    {
+      "id": "jailer-2",
+      "tmdbId": 1234139,
+      "gallery": "https://www.themoviedb.org/movie/1234139/images/backdrops?language=en-US",
+      "previous": {
+        "width": 1920,
+        "height": 1080
+      },
+      "selected": {
+        "source": "https://image.tmdb.org/t/p/original/zpHTOdRl7GEPqFsDGqsN6Hi9Ylt.jpg",
+        "width": 1920,
+        "height": 1080,
+        "url": "/assets/backdrops/jailer-2-hd.webp"
+      },
+      "alternatives": [],
+      "reviewedCandidates": [
+        {
+          "url": "https://image.tmdb.org/t/p/original/zpHTOdRl7GEPqFsDGqsN6Hi9Ylt.jpg",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/m0ks2o59mOAz6WdCybJ5FAUNTOU.jpg",
+          "width": 2644,
+          "height": 1489
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/4PvsvVeg03Nd9tma0tUaaterSGt.jpg",
+          "width": 2620,
+          "height": 1474
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/ceclu0D2psC5VTIkhcHJ3a4iBsI.jpg",
+          "width": 1618,
+          "height": 910
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/paGuGyEysCn49NOP8xfXipxp1qk.jpg",
+          "width": 1552,
+          "height": 873
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/jiepYPH25Cff5aFNn57KCiSszxQ.jpg",
+          "width": 1735,
+          "height": 975
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/cJtT4dxFpHPTVk2MiOqUXM6Rg0D.jpg",
+          "width": 1647,
+          "height": 927
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/qoHhsetUS2wnGM5SlohO7UxYUjR.jpg",
+          "width": 2626,
+          "height": 1477
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/pyaAF4U4mbgBWWi8Q1stYpHuUTQ.jpg",
+          "width": 2622,
+          "height": 1475
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/9buHDeAkU84GF98MCFdopBRGKvr.jpg",
+          "width": 2617,
+          "height": 1472
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/diudpwFhfTQtXAs4PN9kKVBkFJT.jpg",
+          "width": 2619,
+          "height": 1473
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/qmnQCnbkfNRdEXreT39SR2CQ0nx.jpg",
+          "width": 2018,
+          "height": 1136
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/5YjFKd4fWoc6alNy2XIsArldA1l.jpg",
+          "width": 2096,
+          "height": 1177
+        },
+        {
+          "url": "https://image.tmdb.org/t/p/original/ekjouVAY4AbMCjAupAUFKO6Xqt4.jpg",
+          "width": 1548,
+          "height": 870
+        }
+      ],
+      "reason": "Retain matching full-HD ensemble. Do not substitute unrelated portraits found among community gallery submissions."
+    }
+  ]
+}

@@ -13,19 +13,34 @@ async function download(url) {
     throw new Error(`Artwork download failed (${response.status}): ${url}`);
   return Buffer.from(await response.arrayBuffer());
 }
+const requested = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
+const backdropsOnly = process.argv.includes("--backdrops-only");
 for (const [id, record] of Object.entries(records)) {
-  const poster = await download(record.posterSource);
-  for (const width of [600, 1200])
-    await sharp(poster)
-      .resize({ width, withoutEnlargement: true })
-      .webp({ quality: 95, effort: 6 })
-      .toFile(path.join(root, `public/assets/posters/${id}-${width}.webp`));
+  if (requested.length && !requested.includes(id)) continue;
+  if (!backdropsOnly) {
+    const poster = await download(record.posterSource);
+    for (const [width, target] of [[600, record.posterSmall], [1200, record.poster]])
+      await sharp(poster)
+        .resize({ width, withoutEnlargement: true })
+        .webp({ quality: 95, effort: 6 })
+        .toFile(path.join(root, "public", target));
+  }
   if (record.backdropSource) {
     const backdrop = await download(record.backdropSource);
     await sharp(backdrop)
-      .resize({ width: 2560, withoutEnlargement: true })
+      .resize({ width: 3840, withoutEnlargement: true })
       .webp({ quality: 94, effort: 6 })
-      .toFile(path.join(root, `public/assets/backdrops/${id}.webp`));
+      .toFile(path.join(root, "public", record.backdrop));
+    if (record.backdropSmall)
+      await sharp(backdrop)
+        .resize({ width: 1280, withoutEnlargement: true })
+        .webp({ quality: 91, effort: 6 })
+        .toFile(path.join(root, "public", record.backdropSmall));
+    for (const alternative of record.alternativeBackdrops || [])
+      await sharp(await download(alternative.source))
+        .resize({ width: 3840, withoutEnlargement: true })
+        .webp({ quality: 94, effort: 6 })
+        .toFile(path.join(root, "public", alternative.url));
   }
   console.log(`${id}: original artwork variants saved`);
 }

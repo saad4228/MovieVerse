@@ -19,6 +19,8 @@ import PosterWall from "./PosterWall";
 import CinematicCarousel, { type CarouselHandle } from "./CinematicCarousel";
 import MovieVideoPlayer from "./video/MovieVideoPlayer";
 import { posterSet } from "@/lib/movie-media";
+import { isUpcoming, releaseLabel } from "@/lib/movie-information";
+import { cinemaDirectoryProvider } from "@/lib/cinema-directory";
 export function MovieCard({
   movie: m,
   index = 0,
@@ -48,7 +50,7 @@ export function MovieCard({
           </span>
           <span className="rating">
             <Star size={12} fill="currentColor" />
-            <b>{m.rating}</b>
+            <b>{m.rating || "Coming soon"}</b>
             <span>· {m.votes}</span>
           </span>
         </div>
@@ -59,7 +61,7 @@ export function MovieCard({
           <h3>{m.title}</h3>
           <p>{m.languages.slice(0, 3).join(" · ")}</p>
           <span className="card-book">
-            {m.status === "upcoming" ? "Explore movie" : "Book tickets"}
+            {isUpcoming(m) ? "Explore movie" : "Book tickets"}
             <ArrowRight size={15} />
           </span>
         </div>
@@ -171,7 +173,7 @@ export default function Home() {
             <div className="featured-info" key={featured.id} aria-live="polite">
               <span className="booking-status">
                 <i />
-                {featured.status === "upcoming"
+                {isUpcoming(featured)
                   ? "COMING TO YOUR UNIVERSE"
                   : "NOW SHOWING · BOOKING OPEN"}
               </span>
@@ -192,7 +194,7 @@ export default function Home() {
                 Trailer
               </button>
               <Link className="btn btn-gold" href={`/movies/${featured.id}`}>
-                {featured.status === "upcoming" ? "Explore" : "Book tickets"}
+                {isUpcoming(featured) ? "Explore" : "Book tickets"}
                 <ArrowUpRight size={14} />
               </Link>
             </div>
@@ -319,7 +321,8 @@ export default function Home() {
         />
         <div className="upcoming-grid">
           {movies
-            .filter((m) => m.status === "upcoming")
+            .filter((m) => isUpcoming(m))
+            .sort((a,b)=>a.id === "avengers-doomsday" ? -1 : b.id === "avengers-doomsday" ? 1 : a.release.localeCompare(b.release))
             .map((m) => (
               <Link
                 key={m.id}
@@ -335,10 +338,7 @@ export default function Home() {
                 />
                 <div>
                   <span className="eyebrow">
-                    {new Date(m.release).toLocaleDateString("en-IN", {
-                      month: "short",
-                      year: "numeric",
-                    })}
+                    {releaseLabel(m)}
                   </span>
                   <h3>{m.title}</h3>
                   <p>{m.tagline}</p>
@@ -362,7 +362,7 @@ export default function Home() {
           <p>
             From intimate lounges to larger-than-life IMAX screens.
             <br />
-            Explore {venues.filter((v) => v.cityId === cityId).length} demo
+            Explore {cinemaDirectoryProvider.list(cityId).length} listed
             cinemas in {city.name}.
           </p>
         </div>

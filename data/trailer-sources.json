@@ -1,4 +1,12 @@
 {
+  "avengers-doomsday": [
+    {"id":"doomsday-disney-trailer","provider":"other","url":"https://video.disney.com/watch/avengers-doomsday-official-trailer-in-theaters-december-18-6570e5fd34d02c78224df0db","type":"official-trailer","isPrimary":true,"playbackAllowed":false,"attribution":"Marvel Studios / Disney"},
+    {"id":"doomsday-disney-special-look","provider":"other","url":"https://video.disney.com/watch/avengers-doomsday-special-look-in-theaters-december-18-6590e687598031d27d85088d","type":"preview","playbackAllowed":false,"attribution":"Marvel Studios / Disney"}
+  ],
+  "thug-life": [
+    {"id":"thug-life-tamil","provider":"youtube","url":"https://www.youtube.com/watch?v=96kAbj3IF3k","type":"official-trailer","isPrimary":true,"playbackAllowed":false,"language":"Tamil","attribution":"Saregama Tamil / RKFI / Madras Talkies"},
+    {"id":"thug-life-hindi","provider":"youtube","url":"https://www.youtube.com/watch?v=GoJXALuvP_g","type":"official-trailer","playbackAllowed":false,"language":"Hindi","attribution":"Saregama Music / RKFI / Madras Talkies"}
+  ],
   "varanasi": [
     {
       "id": "varanasi-official",

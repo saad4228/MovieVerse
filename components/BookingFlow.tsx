@@ -60,6 +60,7 @@ import {
 } from "@/lib/booking";
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/client";
+import { bookingProvider, seatInventoryProvider } from "@/lib/providers";
 import type { Preset } from "./SeatScene";
 import { viewpoints } from "@/lib/auditorium";
 import { directSources, officialTrailerLink } from "@/lib/video/sources";
@@ -121,7 +122,7 @@ export default function BookingFlow({
   useEffect(() => {
     let active = true;
     const refresh = () =>
-      api<InventoryResponse>(`inventory?show=${encodeURIComponent(showId)}`)
+      seatInventoryProvider.get(showId)
         .then((x) => {
           if (active) {
             setData(x);
@@ -172,7 +173,7 @@ export default function BookingFlow({
     if (!selected.length || busy) return;
     setBusy(true);
     try {
-      const result = await api("hold", { showId, seats: ids });
+      const result = await bookingProvider.hold(showId, ids);
       setExpiry(result.expires);
       router.push(`/booking/${encodeURIComponent(showId)}/snacks`);
     } catch (e) {
@@ -1151,7 +1152,7 @@ function CheckoutStep({
     setBusy(true);
     setError("");
     try {
-      const result = await api("checkout", {
+      const result = await bookingProvider.checkout({
         showId: show.id,
         seats: selected.map((s) => s.id),
         cart,

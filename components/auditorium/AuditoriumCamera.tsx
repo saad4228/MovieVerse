@@ -40,7 +40,7 @@ export default function AuditoriumCamera({
     start: THREE.Vector3;
     targetStart: THREE.Vector3;
     targetEnd: THREE.Vector3;
-    elapsed: number;
+    startedAt: number;
     duration: number;
     segment: number;
   } | null>(null);
@@ -75,7 +75,7 @@ export default function AuditoriumCamera({
       start: camera.position.clone(),
       targetStart: c.target.clone(),
       targetEnd: new THREE.Vector3(...target),
-      elapsed: 0,
+      startedAt: performance.now(),
       duration: 0.7,
       segment: 0,
     };
@@ -133,8 +133,8 @@ export default function AuditoriumCamera({
     previous.current.copy(camera.position);
     const m = movement.current;
     if (m) {
-      m.elapsed += dt;
-      const t = Math.min(1, m.elapsed / m.duration),
+      // A transition lasts wall-clock time even when a low-end GPU drops frames.
+      const t = Math.min(1, (performance.now() - m.startedAt) / (m.duration * 1000)),
         smooth = t * t * (3 - 2 * t);
       camera.position.lerpVectors(
         m.start,
@@ -151,7 +151,7 @@ export default function AuditoriumCamera({
         } else {
           m.start.copy(camera.position);
           m.targetStart.copy(c.target);
-          m.elapsed = 0;
+          m.startedAt = performance.now();
         }
       }
     } else {
@@ -195,7 +195,7 @@ export default function AuditoriumCamera({
       }
     }
     camera.updateMatrixWorld();
-    debugElapsed.current += dt;
+    debugElapsed.current += frameDelta;
     if (debugElapsed.current > 0.2) {
       debugElapsed.current = 0;
       gl.domElement.dataset.cameraPosition = camera.position

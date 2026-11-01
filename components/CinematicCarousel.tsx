@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import type { Movie } from "@/lib/catalog";
 import { posterSet } from "@/lib/movie-media";
+import { posterSpacing, wrapMovieIndex, snapMovie } from "@/lib/carousel";
 export type CarouselHandle = { step: (direction: number) => void };
 
 const CinematicCarousel = forwardRef<
@@ -28,12 +29,27 @@ const CinematicCarousel = forwardRef<
   const start = useRef({ x: 0, position: initial, time: 0, lastX: 0 });
   const reduced = useRef(false);
   const [focused, setFocused] = useState(initial);
+  const [autoplay, setAutoplay] = useState(false);
+  const active = useRef(initial);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+  const lastInteraction = useRef(0);
+  const hovered = useRef(false);
   const count = movies.length;
   function paint() {
     const root = viewport.current;
     if (!root) return;
     const width = root.clientWidth;
-    const step = width > 1550 ? 212 : width <= 760 ? 177 : 190;
+    const step = posterSpacing(width);
+    const nearest = snapMovie(position.current);
+    root.dataset.position = position.current.toFixed(4);
+    root.dataset.target = String(target.current);
+    root.dataset.activeMovie = movies[wrapMovieIndex(nearest, count)]?.id;
+    if (active.current !== nearest) {
+      active.current = nearest;
+      setFocused(nearest);
+      onChangeRef.current(wrapMovieIndex(nearest, count));
+    }
     root
       .querySelectorAll<HTMLElement>("[data-carousel-index]")
       .forEach((element) => {
@@ -74,10 +90,11 @@ const CinematicCarousel = forwardRef<
   }
   function go(next: number) {
     target.current = next;
-    setFocused(next);
-    onChange(((next % count) + count) % count);
+    velocity.current = 0;
+    lastInteraction.current = performance.now();
     if (reduced.current) {
       cancelAnimationFrame(animation.current);
+      animation.current = 0;
       position.current = next;
       paint();
       return;
@@ -102,6 +119,16 @@ const CinematicCarousel = forwardRef<
       cancelAnimationFrame(animation.current);
     };
   }, []);
+  useEffect(() => {
+    if (!autoplay || reduced.current) return;
+    lastInteraction.current = performance.now();
+    const timer = window.setInterval(() => {
+      if (document.hidden || hovered.current || pointer.current !== null || animation.current ||
+        viewport.current?.contains(document.activeElement) || performance.now() - lastInteraction.current < 8000) return;
+      go(target.current + 1);
+    }, 500);
+    return () => clearInterval(timer);
+  }, [autoplay, count]);
   const cycle = Math.floor(focused / count);
   const items = Array.from(
     { length: count * 3 },
@@ -111,8 +138,11 @@ const CinematicCarousel = forwardRef<
     <div
       ref={viewport}
       className="panorama cinematic-panorama"
+      onPointerEnter={() => { hovered.current = true; }}
+      onPointerLeave={() => { hovered.current = false; lastInteraction.current = performance.now(); }}
       onPointerDown={(event) => {
-        if (event.button !== 0) return;
+        if (event.button !== 0 || (event.target as HTMLElement).closest("button")) return;
+        lastInteraction.current = performance.now();
         cancelAnimationFrame(animation.current);
         animation.current = 0;
         pointer.current = event.pointerId;
@@ -131,7 +161,7 @@ const CinematicCarousel = forwardRef<
         if (Math.abs(delta) > 7) dragging.current = true;
         if (!dragging.current) return;
         event.currentTarget.setPointerCapture(event.pointerId);
-        const step = event.currentTarget.clientWidth <= 760 ? 177 : 190;
+        const step = posterSpacing(event.currentTarget.clientWidth);
         const next = start.current.position - delta / step;
         const elapsed =
           Math.max(8, event.timeStamp - start.current.time) / 1000;
@@ -144,26 +174,22 @@ const CinematicCarousel = forwardRef<
         if (pointer.current !== event.pointerId) return;
         pointer.current = null;
         if (dragging.current) {
-          const inertial = Math.max(
-            start.current.position - 2,
-            Math.min(
-              start.current.position + 2,
-              position.current +
-                Math.max(-0.3, Math.min(0.3, velocity.current * 0.055)),
-            ),
-          );
-          go(Math.round(inertial));
-        }
+          go(snapMovie(position.current));
+        } else go(snapMovie(position.current));
         if (event.currentTarget.hasPointerCapture(event.pointerId))
           event.currentTarget.releasePointerCapture(event.pointerId);
       }}
       onPointerCancel={(event) => {
         pointer.current = null;
+        dragging.current = false;
         go(Math.round(position.current));
         if (event.currentTarget.hasPointerCapture(event.pointerId))
           event.currentTarget.releasePointerCapture(event.pointerId);
       }}
     >
+      <button className="panorama-autoplay" aria-pressed={autoplay} onClick={e => { setAutoplay(!autoplay); if(e.detail) e.currentTarget.blur(); }}>
+        {autoplay ? "Pause automatic rotation" : "Start automatic rotation"}
+      </button>
       {items.map((index) => {
         const movie = movies[((index % count) + count) % count];
         const d = index - focused;

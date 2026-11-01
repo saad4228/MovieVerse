@@ -8,10 +8,12 @@ export default function CityCinemaListings({
   city,
   movie,
   date,
+  venueId,
 }: {
   city: string;
   movie: string;
   date: string;
+  venueId?: string;
 }) {
   const [result, setResult] = useState<CinemaDirectoryResult | null>(null);
   const [expanded, setExpanded] = useState(false);
@@ -44,7 +46,7 @@ export default function CityCinemaListings({
   const cityName = cities.find((c) => c.id === city)?.name || city;
   const live = result.status === "live";
   const matching = result.venues.filter((v) =>
-    `${v.name} ${v.address}`.toLowerCase().includes(query.toLowerCase()),
+    (!venueId || v.id === venueId) && `${v.name} ${v.address}`.toLowerCase().includes(query.toLowerCase()),
   );
   return (
     <section
@@ -125,6 +127,7 @@ export default function CityCinemaListings({
           {result.checked && ` Directory checked ${result.checked}.`}
         </p>
       )}
+      {venueId && (!matching.length || matching.every(v=>!v.shows.length)) && <p className="directory-note">No confirmed screenings supplied for this film, venue and date. Check the operator's listings.</p>}
     </section>
   );
 }

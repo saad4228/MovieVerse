@@ -34,3 +34,17 @@ Return every venue screening the film in that city/date. Translate upstream movi
 Without a feed, the site offers demonstration bookings plus a labelled real venue directory and external listings links. Directory coverage is a source snapshot, not exhaustive. BookMyShow blocks automated requests from this environment; no unsupported scraping or fabricated live showtimes are used.
 
 Cinema blueprints remain separate JSON records with dimensions, row/aisle configuration, screen size, and optional GLB/GLTF plus mesh-to-seat mapping. Real measurements can replace these inputs without changing the renderer.
+
+## Expansion provider contracts
+
+- MovieMetadataProvider: `lib/metadata-provider.ts`, sourced bundled fallback plus optional server-only TMDB adapter. Set `TMDB_READ_TOKEN` in ignored `.dev.vars` or hosted environment secrets. A bounded 24-hour cache prevents repeated upstream requests; identity is checked against the numeric TMDB movie ID.
+- MovieImageProvider: `lib/image-provider.ts` resolves curated responsive artwork, dimensions, positioning and alternatives. `lib/asset-cache.ts` resolves locally cached performer and catalogue imagery. The ingestion scripts preserve source/delivered dimensions and do not enlarge images.
+- CinemaDirectoryProvider: `lib/cinema-directory.ts` supplies stable branch records from `data/cinema-venues.json`. Add records for a configured city without changing the rendering engine. New cities also need their city configuration entry.
+- ShowtimeProvider: `lib/providers.ts` exposes demo schedules; `lib/cinema-listings.ts` remains the separately authorised live/external provider boundary. Live responses may include `complete`, `auditoriumId`, `price`, and `availability`; `complete` defaults false. To connect directory detail pages, map upstream venue IDs to the directory's stable IDs.
+- SeatInventoryProvider and BookingProvider: `lib/providers.ts` connect the booking UI to existing transactional D1 routes. They do not imply support for a real payment gateway.
+
+An optional `screenings` array on each demo venue supports `{key,movieId,auditoriumId,blueprintId,time,language,format,price,date?}`. Keys are unique per venue. Multiple films can use the same auditorium if timings do not overlap (runtime plus a 20-minute turnaround). Its blueprint must remain consistent. Every screening/date has an independent inventory key. A saved show blueprint remains immutable for that show.
+
+`GET /api/show-availability?shows=<comma-separated IDs>` accepts up to 40 valid screenings and reads persisted inventory. No existing inventory means `unknown`, never an invented available count. Summaries refresh every 20 seconds in discovery. Exact seats and holds are still checked transactionally when booking.
+
+`catalogRevision: 2` marks the expansion. Older administrator snapshots receive only newly introduced film IDs in memory, preserving customised entries. Publishing revision 2 makes later deletions deliberate; removed films are not silently reintroduced. No stored catalogue is overwritten by the upgrade.

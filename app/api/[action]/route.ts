@@ -18,6 +18,9 @@ import {
 import { calculatePrice, seededUnavailable } from "@/lib/booking";
 import { enrichMovieMedia } from "@/lib/movie-media";
 import { cinemaListings } from "@/lib/cinema-listings";
+import { metadataProvider } from "@/lib/metadata-provider";
+import { enrichMovieInformation } from "@/lib/movie-information";
+import { upgradeCatalog } from "@/lib/catalog-upgrade";
 
 export const dynamic = "force-dynamic";
 const db = () => {
@@ -97,12 +100,13 @@ async function configuredCatalog(): Promise<Catalog> {
   const row = await db()
     .prepare("SELECT document FROM catalog_config WHERE id='active'")
     .first<{ document: string }>();
-  const catalog = row
+  const stored = row
     ? JSON.parse(row.document)
     : { cities, movies, venues, snacks };
+  const catalog = upgradeCatalog(stored, movies);
   return {
     ...catalog,
-    movies: catalog.movies.map(enrichMovieMedia),
+    movies: catalog.movies.map((m: typeof movies[number]) => enrichMovieInformation(enrichMovieMedia(m))),
     blueprints,
   };
 }
@@ -210,6 +214,20 @@ async function handler(req: Request) {
         return json({ error: "Request too large." }, 413);
     }
     const catalog = await configuredCatalog();
+    if (req.method === "GET" && action === "movie-information") {
+      const movie = catalog.movies.find(m=>m.id===url.searchParams.get("id"));
+      if (!movie) return json({error:"Unknown movie."},404);
+      return Response.json({movieId:movie.id,metadata:await metadataProvider((env as unknown as Record<string,string>).TMDB_READ_TOKEN).get(movie)}, {headers:{"Cache-Control":"public, max-age=3600"}});
+    }
+    if (req.method === "GET" && action === "show-availability") {
+      const ids = [...new Set((url.searchParams.get("shows") || "").split(",").filter(Boolean))];
+      if (!ids.length || ids.length > 40 || ids.some(id=>!getShow(id,catalog.venues,catalog.movies))) return json({error:"Choose up to 40 valid screenings."},400);
+      const rows = await db().prepare(`SELECT show_id, count(*) AS total, sum(CASE WHEN status='available' OR (status='held' AND expires<?) THEN 1 ELSE 0 END) AS available FROM inventory WHERE show_id IN (${ids.map(()=>"?").join(",")}) GROUP BY show_id`).bind(Date.now(),...ids).all<{show_id:string;total:number;available:number}>();
+      return json({summaries:Object.fromEntries(ids.map(id=>{
+        const row=rows.results.find(r=>r.show_id===id);
+        return [id,{available:row?.available ?? null,total:row?.total ?? null,status:!row?"unknown":row.available===0?"sold-out":row.available/row.total<.2?"limited":"available",checked:new Date().toISOString()}];
+      }))});
+    }
     if (req.method === "GET" && action === "cinema-directory") {
       const url = new URL(req.url);
       const city = url.searchParams.get("city") || "",

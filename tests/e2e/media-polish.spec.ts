@@ -23,9 +23,10 @@ test("official trailers use intentional artwork and links with a centred dialog"
   await expect(dialog.locator("iframe")).toHaveCount(0);
   await page.keyboard.press("Escape");
   await page.goto("/movies/toxic");
+  await page.getByRole("button", { name: "Trailer preview", exact: true }).click();
   await expect(
     page
-      .locator(".movie-hero")
+      .getByRole("dialog")
       .getByRole("link", { name: "Watch official trailer" }),
   ).toHaveAttribute("href", /EfluEyQ5QIA/);
 });

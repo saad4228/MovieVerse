@@ -1,10 +1,12 @@
 import directory from "../data/cinema-directory.json" with { type: "json" };
 import { z } from "zod";
+import { cinemaDirectoryProvider } from "./cinema-directory";
 
 const listingSchema = z.object({
   cityId: z.string(),
   movieId: z.string(),
   date: z.string(),
+  complete: z.boolean().optional(),
   venues: z.array(
     z.object({
       id: z.string(),
@@ -15,6 +17,9 @@ const listingSchema = z.object({
           time: z.string(),
           format: z.string(),
           language: z.string(),
+          auditoriumId: z.string().optional(),
+          price: z.number().nonnegative().optional(),
+          availability: z.enum(["available","limited","sold-out","unknown"]).optional(),
           bookingUrl: z
             .string()
             .url()
@@ -56,10 +61,10 @@ export async function cinemaListings(
       entry?.source || `https://in.bookmyshow.com/explore/movies-${cityId}`,
     checked: entry?.checked || "",
     complete: false,
-    venues: (entry?.names || []).map((name, index) => ({
-      id: `${cityId}-${index}`,
-      name,
-      address: "",
+    venues: cinemaDirectoryProvider.list(cityId).map((venue) => ({
+      id: venue.id,
+      name: venue.name,
+      address: venue.address,
       shows: [],
     })),
   };
@@ -89,7 +94,7 @@ export async function cinemaListings(
       status: "live",
       source: endpoint.origin,
       checked: new Date().toISOString(),
-      complete: true,
+      complete: data.complete === true,
     };
   } catch {
     return { ...fallback, status: "provider-unavailable" };

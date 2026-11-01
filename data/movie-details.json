@@ -1,0 +1,1976 @@
+{
+  "coolie": {
+    "tmdbId": 1153399,
+    "overview": "Deva investigates the suspicious death of a friend and finds himself drawn into the orbit of an influential criminal organisation. His search for the truth brings buried relationships and dangerous loyalties back into his life.",
+    "cast": [
+      {
+        "id": 91555,
+        "name": "Rajinikanth",
+        "character": "Devaraj 'Deva'",
+        "profilePath": "/cQBcrXqcQPfXOQfNfgO3slJM2xi.jpg"
+      },
+      {
+        "id": 149958,
+        "name": "Nagarjuna Akkineni",
+        "character": "Simon",
+        "profilePath": "/y6A79KaYhxRZ7OUsDm2dq2MFSm2.jpg"
+      },
+      {
+        "id": 1470729,
+        "name": "Soubin Shahir",
+        "character": "Dhayal/Dilip",
+        "profilePath": "/eFMA1PFOpDtiJ5MlkSAMexvTPsl.jpg"
+      },
+      {
+        "id": 1054336,
+        "name": "Upendra",
+        "character": "Kaleesha",
+        "profilePath": "/lcxwf2cFMmO2JH1fGULGzfBprk.jpg"
+      },
+      {
+        "id": 85883,
+        "name": "Shruti Haasan",
+        "character": "Preeti",
+        "profilePath": "/1zYJuSccSA45VVBdgozpRcL99Rd.jpg"
+      },
+      {
+        "id": 581895,
+        "name": "Sathyaraj",
+        "character": "Rajasekar",
+        "profilePath": "/lnlBZ7V3K3Z3OIsjCd0zkKx26L3.jpg"
+      },
+      {
+        "id": 52763,
+        "name": "Aamir Khan",
+        "character": "Dahaa",
+        "profilePath": "/6uiZSwi2kvd1jZ7X7Xz9W9VGuV4.jpg"
+      },
+      {
+        "id": 1840670,
+        "name": "Rachita Ram",
+        "character": "Kalyani",
+        "profilePath": "/yYMsCColotfKj0pC4p1U9hjLOdv.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 1606574,
+        "name": "Girish Gangadharan",
+        "job": "Director of Photography",
+        "profilePath": "/l0prBtRT58P3uHVYPMivXnJwIFT.jpg"
+      },
+      {
+        "id": 1592411,
+        "name": "Lokesh Kanagaraj",
+        "job": "Director",
+        "profilePath": "/yym15SAcSzIe6xzxOWCgDWiSaZN.jpg"
+      },
+      {
+        "id": 1666862,
+        "name": "Kalanithi Maran",
+        "job": "Producer",
+        "profilePath": "/7zMuusP8W6lEL94C0rqwOGCnd5.jpg"
+      },
+      {
+        "id": 1081464,
+        "name": "Anirudh Ravichander",
+        "job": "Original Music Composer",
+        "profilePath": "/xKvlrZpRaXkm2K2ZiXpqgrEedUU.jpg"
+      },
+      {
+        "id": 3879454,
+        "name": "Chandhru Anbazhagan",
+        "job": "Screenplay",
+        "profilePath": null
+      },
+      {
+        "id": 1592411,
+        "name": "Lokesh Kanagaraj",
+        "job": "Screenplay",
+        "profilePath": "/yym15SAcSzIe6xzxOWCgDWiSaZN.jpg"
+      },
+      {
+        "id": 1592411,
+        "name": "Lokesh Kanagaraj",
+        "job": "Story",
+        "profilePath": "/yym15SAcSzIe6xzxOWCgDWiSaZN.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2025-08-14",
+        "status": "released",
+        "source": "https://www.themoviedb.org/movie/1153399/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1153399",
+      "https://www.themoviedb.org/movie/1153399/cast",
+      "https://www.themoviedb.org/movie/1153399/release-dates"
+    ],
+    "checked": "2026-11-01",
+    "story": "Deva is drawn into a criminal investigation after the death of a friend raises questions that those around him cannot answer. Looking for the truth brings him up against a powerful gang and forces him to reconsider relationships connected to his own past. As the inquiry becomes more dangerous, his responsibility to the people he wants to protect grows harder to separate from his need for answers. The film follows that collision between friendship, suspicion and the influence of an organised criminal network, with Deva's investigation providing the route into its larger conflict."
+  },
+  "leo": {
+    "tmdbId": 949229,
+    "overview": "A cafe owner in Himachal Pradesh tries to preserve a quiet life with his family. A violent confrontation brings unwanted attention, and a powerful criminal family begins questioning the identity he has built.",
+    "cast": [
+      {
+        "id": 91547,
+        "name": "Vijay",
+        "character": "Parthiban / Leo Das",
+        "profilePath": "/zbQ1sDRVRHkroWwvrnqYKMerl66.jpg"
+      },
+      {
+        "id": 85881,
+        "name": "Sanjay Dutt",
+        "character": "Antony Das",
+        "profilePath": "/70viNBvKHpX1kMZcfIwULqWnfdM.jpg"
+      },
+      {
+        "id": 544977,
+        "name": "Arjun Sarja",
+        "character": "Harold Das",
+        "profilePath": "/fQ0yTvyDdykFxfHNYKNfRKzlCyz.jpg"
+      },
+      {
+        "id": 116925,
+        "name": "Trisha Krishnan",
+        "character": "Sathya",
+        "profilePath": "/8YkgaUlTshiDWHymBOEXZ948Yyn.jpg"
+      },
+      {
+        "id": 1473118,
+        "name": "Madonna Sebastian",
+        "character": "Elisa Das",
+        "profilePath": "/zQuhFAXtJNOkVbW3ZgsdGCi8IUv.jpg"
+      },
+      {
+        "id": 120953,
+        "name": "Gautham Vasudev Menon",
+        "character": "Joshy Andrews",
+        "profilePath": "/qOFycWPpr3Hi4kVXKWnTTKCAnGk.jpg"
+      },
+      {
+        "id": 3993568,
+        "name": "Baby Iyal",
+        "character": "Mathi 'Chintu'",
+        "profilePath": null
+      },
+      {
+        "id": 2236875,
+        "name": "Mathew Thomas",
+        "character": "Siddharth 'Siddhu'",
+        "profilePath": "/tynqqZ6LXz6TCDUWMG0xR4pNDkw.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 494979,
+        "name": "Manoj Paramahamsa",
+        "job": "Director of Photography",
+        "profilePath": null
+      },
+      {
+        "id": 1592411,
+        "name": "Lokesh Kanagaraj",
+        "job": "Director",
+        "profilePath": "/yym15SAcSzIe6xzxOWCgDWiSaZN.jpg"
+      },
+      {
+        "id": 1700746,
+        "name": "Lalit Kumar",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 1081464,
+        "name": "Anirudh Ravichander",
+        "job": "Original Music Composer",
+        "profilePath": "/xKvlrZpRaXkm2K2ZiXpqgrEedUU.jpg"
+      },
+      {
+        "id": 1540759,
+        "name": "Deeraj Vaidy",
+        "job": "Writer",
+        "profilePath": "/4ZgCAYkZ6qMh76vaMDdrRjSbukL.jpg"
+      },
+      {
+        "id": 1592411,
+        "name": "Lokesh Kanagaraj",
+        "job": "Writer",
+        "profilePath": "/yym15SAcSzIe6xzxOWCgDWiSaZN.jpg"
+      },
+      {
+        "id": 1387313,
+        "name": "Rathna Kumar",
+        "job": "Writer",
+        "profilePath": "/rI9zRYRweUXvQZuf7k7PG4U0t9N.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2023-10-19",
+        "status": "released",
+        "source": "https://www.themoviedb.org/movie/949229/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/949229",
+      "https://www.themoviedb.org/movie/949229/cast",
+      "https://www.themoviedb.org/movie/949229/release-dates"
+    ],
+    "checked": "2026-11-01",
+    "story": "Parthiban runs a cafe in Himachal Pradesh and shares an apparently ordinary life with his wife and children. A confrontation involving his business disrupts that privacy and attracts attention far beyond his home. Members of a criminal family believe that he may be someone they once knew, turning a question of identity into a threat to everyone around him. Parthiban must respond while trying to preserve the life his family recognises. The story follows the pressure created by that unwanted recognition without immediately settling what connects him to the people who are searching for him."
+  },
+  "vikram": {
+    "tmdbId": 743563,
+    "overview": "An investigator follows a series of killings that appear to target people connected to a drug network. As his team uncovers overlapping identities and loyalties, the investigation becomes a confrontation with a much larger criminal operation.",
+    "cast": [
+      {
+        "id": 93193,
+        "name": "Kamal Haasan",
+        "character": "Karnan / Arun Kumar Vikram",
+        "profilePath": "/17zscZgz4wOlGDd3Gziw4YbI3G.jpg"
+      },
+      {
+        "id": 1072750,
+        "name": "Fahadh Faasil",
+        "character": "Amar",
+        "profilePath": "/wmkwZWFHqMptqdt4HacMIAe8OBP.jpg"
+      },
+      {
+        "id": 1123766,
+        "name": "Vijay Sethupathi",
+        "character": "Sandhanam",
+        "profilePath": "/a3HWdfCAbplrvoMNEJCjnkbqqOo.jpg"
+      },
+      {
+        "id": 85720,
+        "name": "Suriya",
+        "character": "Rolex",
+        "profilePath": "/tgHFBhOfaV0Wck48y8BFhAlVvQx.jpg"
+      },
+      {
+        "id": 587752,
+        "name": "Narain",
+        "character": "Bejoy",
+        "profilePath": "/d0ApUGeFuGXpBkODIc6eLbBkb7B.jpg"
+      },
+      {
+        "id": 1209616,
+        "name": "Chemban Vinod Jose",
+        "character": "Police Chief Jose",
+        "profilePath": "/4bCAqhHMcPeoI41Emi4BBSXwZaj.jpg"
+      },
+      {
+        "id": 237992,
+        "name": "Santhana Bharathi",
+        "character": "Uppiliappan",
+        "profilePath": "/vdPEpOZTY5CyqWVOO6W7LwgzQjn.jpg"
+      },
+      {
+        "id": 1425004,
+        "name": "Elango Kumaravel",
+        "character": "Lawrence",
+        "profilePath": "/8LtXDdacaCA7Gk4B8ACxTs430EO.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 1606574,
+        "name": "Girish Gangadharan",
+        "job": "Director of Photography",
+        "profilePath": "/l0prBtRT58P3uHVYPMivXnJwIFT.jpg"
+      },
+      {
+        "id": 1592411,
+        "name": "Lokesh Kanagaraj",
+        "job": "Director",
+        "profilePath": "/yym15SAcSzIe6xzxOWCgDWiSaZN.jpg"
+      },
+      {
+        "id": 93193,
+        "name": "Kamal Haasan",
+        "job": "Producer",
+        "profilePath": "/17zscZgz4wOlGDd3Gziw4YbI3G.jpg"
+      },
+      {
+        "id": 3299515,
+        "name": "R. Mahendran",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 1081464,
+        "name": "Anirudh Ravichander",
+        "job": "Original Music Composer",
+        "profilePath": "/xKvlrZpRaXkm2K2ZiXpqgrEedUU.jpg"
+      },
+      {
+        "id": 1387313,
+        "name": "Rathna Kumar",
+        "job": "Screenplay",
+        "profilePath": "/rI9zRYRweUXvQZuf7k7PG4U0t9N.jpg"
+      },
+      {
+        "id": 1592411,
+        "name": "Lokesh Kanagaraj",
+        "job": "Screenplay",
+        "profilePath": "/yym15SAcSzIe6xzxOWCgDWiSaZN.jpg"
+      },
+      {
+        "id": 1592411,
+        "name": "Lokesh Kanagaraj",
+        "job": "Story",
+        "profilePath": "/yym15SAcSzIe6xzxOWCgDWiSaZN.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2022-06-03",
+        "status": "released",
+        "source": "https://www.themoviedb.org/movie/743563/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/743563",
+      "https://www.themoviedb.org/movie/743563/cast",
+      "https://www.themoviedb.org/movie/743563/release-dates"
+    ],
+    "checked": "2026-11-01",
+    "story": "Amar leads an investigation into killings whose victims appear connected to a wider criminal operation. What first looks like a sequence of separate attacks develops into a case involving concealed identities, competing loyalties and the reach of a narcotics network. Each discovery changes how his team understands both the victims and the people pursuing them. The investigation gradually brings Amar closer to a conflict already unfolding beyond the authorities' view. The film builds its action around that process of discovery, keeping the relationship between its central players uncertain as their interests begin to collide."
+  },
+  "varanasi": {
+    "tmdbId": 920708,
+    "overview": "Rudhra's journey connects distant places and different eras as an extraordinary threat approaches Varanasi. The announced premise combines an ancient setting with a looming catastrophe in 2027; further story details remain limited.",
+    "cast": [
+      {
+        "id": 116924,
+        "name": "Mahesh Babu",
+        "character": "Rudhra / Lord Rama",
+        "profilePath": "/fcxgYi1h6vywacUg8asM6S0IIhf.jpg"
+      },
+      {
+        "id": 77234,
+        "name": "Priyanka Chopra Jonas",
+        "character": "Mandakini",
+        "profilePath": "/hh48u9scic0nITGtzi9b6rJeAtT.jpg"
+      },
+      {
+        "id": 117690,
+        "name": "Prithviraj Sukumaran",
+        "character": "Kumbha",
+        "profilePath": "/1xhG42QU8tMQRTDdP1Ed3y9GRvm.jpg"
+      },
+      {
+        "id": 89153,
+        "name": "Prakash Raj",
+        "character": "Role not announced",
+        "profilePath": "/dJvFZOXmZdkYCOUcKTXQAhBcAoH.jpg"
+      },
+      {
+        "id": 2225027,
+        "name": "Raja Chembolu",
+        "character": "Role not announced",
+        "profilePath": "/hWYmCpzj6MeuCUVxBCoK2Gbd6ge.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 1170058,
+        "name": "P. S. Vinod",
+        "job": "Director of Photography",
+        "profilePath": null
+      },
+      {
+        "id": 147021,
+        "name": "S. S. Rajamouli",
+        "job": "Director",
+        "profilePath": "/qPskSZxvoYflC8Bye4tGNBSroy5.jpg"
+      },
+      {
+        "id": 1314993,
+        "name": "K. L. Narayana",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 1337585,
+        "name": "S. Gopala Reddy",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 2162371,
+        "name": "S. S. Karthikeya",
+        "job": "Producer",
+        "profilePath": "/vj5NZIzc4tXZjOyNOdCupcbBmQt.jpg"
+      },
+      {
+        "id": 225318,
+        "name": "M.M. Keeravaani",
+        "job": "Original Music Composer",
+        "profilePath": "/r0f7RTGIkG0ZBaQViIKrE1g82Ec.jpg"
+      },
+      {
+        "id": 151081,
+        "name": "S. S. Kanchi",
+        "job": "Screenplay",
+        "profilePath": "/1SHjFBOEuW5jHPDCPOsbvMXe8eE.jpg"
+      },
+      {
+        "id": 147021,
+        "name": "S. S. Rajamouli",
+        "job": "Screenplay",
+        "profilePath": "/qPskSZxvoYflC8Bye4tGNBSroy5.jpg"
+      },
+      {
+        "id": 147022,
+        "name": "Vijayendra Prasad",
+        "job": "Screenplay",
+        "profilePath": "/wNzLSp9QSr2iEiC19eRuqKc2LQp.jpg"
+      },
+      {
+        "id": 147022,
+        "name": "Vijayendra Prasad",
+        "job": "Story",
+        "profilePath": "/wNzLSp9QSr2iEiC19eRuqKc2LQp.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2027-04-07",
+        "status": "announced",
+        "source": "https://www.themoviedb.org/movie/920708/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/920708",
+      "https://www.themoviedb.org/movie/920708/cast",
+      "https://www.themoviedb.org/movie/920708/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "toxic": {
+    "tmdbId": 1213243,
+    "overview": "Behind a coastal paradise, a drug trade thrives during the waning years of Portuguese colonial rule. Competing interests struggle for power in an underworld whose violence reaches far beyond its glamorous public face.",
+    "cast": [
+      {
+        "id": 1293681,
+        "name": "Yash",
+        "character": "Raya / Ticket",
+        "profilePath": "/eN4AXetHfg8sFOI4tCFBCaq1iac.jpg"
+      },
+      {
+        "id": 1340978,
+        "name": "Kiara Advani",
+        "character": "Nadia",
+        "profilePath": "/2xmU03a6kTWUvuTPMdofiFLxdAw.jpg"
+      },
+      {
+        "id": 91548,
+        "name": "Nayanthara",
+        "character": "Ganga",
+        "profilePath": "/sYUzvjsSsqeOgBblSzda6ZwwbEa.jpg"
+      },
+      {
+        "id": 1108805,
+        "name": "Huma Qureshi",
+        "character": "Elizabeth",
+        "profilePath": "/nJWauZQdRjMJxwY3UP4SXrqh9CM.jpg"
+      },
+      {
+        "id": 2030881,
+        "name": "Tara Sutaria",
+        "character": "Rebecca",
+        "profilePath": "/tF2OxFzOaDOMX1Sn4k17qZxhvFL.jpg"
+      },
+      {
+        "id": 2252714,
+        "name": "Rukmini Vasanth",
+        "character": "Mellisa",
+        "profilePath": "/4LERfXpxgdAXwxixYOCPWFeQ800.jpg"
+      },
+      {
+        "id": 1544619,
+        "name": "Sudev Nair",
+        "character": "Karmadi",
+        "profilePath": "/6x111KVuthpPOGJYTvdXLmh3J3p.jpg"
+      },
+      {
+        "id": 1342538,
+        "name": "Akshay Oberoi",
+        "character": "Tony",
+        "profilePath": "/dsFqDJzSzUiKZpicmj05Iv1YbOs.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 1136857,
+        "name": "Rajeev Ravi",
+        "job": "Director of Photography",
+        "profilePath": "/7PaWPa9mjdwOvory7JuGX1spGpX.jpg"
+      },
+      {
+        "id": 237715,
+        "name": "Geetu Mohandas",
+        "job": "Director",
+        "profilePath": "/6lhzUi7jmEkkUw3BrD6Pqyel00L.jpg"
+      },
+      {
+        "id": 4421534,
+        "name": "Venkat K Narayana",
+        "job": "Producer",
+        "profilePath": "/6oYkELlw7tlnJPoFLHhjK0L52IJ.jpg"
+      },
+      {
+        "id": 5472227,
+        "name": "Arslan Nizami",
+        "job": "Original Music Composer",
+        "profilePath": null
+      },
+      {
+        "id": 5472225,
+        "name": "Faheem Abdullah",
+        "job": "Original Music Composer",
+        "profilePath": "/ef1r1MFC26TpAFiRRDsKrLr2jOV.jpg"
+      },
+      {
+        "id": 2006306,
+        "name": "Ravi Basrur",
+        "job": "Original Music Composer",
+        "profilePath": "/mlHRC8r4J3ZND7w80B59x3WeX1I.jpg"
+      },
+      {
+        "id": 1775462,
+        "name": "Tanishk Bagchi",
+        "job": "Original Music Composer",
+        "profilePath": "/lTNruwralNeUIDHBx3SC22yQOqv.jpg"
+      },
+      {
+        "id": 2156687,
+        "name": "Vishal Mishra",
+        "job": "Original Music Composer",
+        "profilePath": "/rgTiKOQ016nV05FxiWpvjqurWAC.jpg"
+      },
+      {
+        "id": 237715,
+        "name": "Geetu Mohandas",
+        "job": "Writer",
+        "profilePath": "/6lhzUi7jmEkkUw3BrD6Pqyel00L.jpg"
+      },
+      {
+        "id": 1293681,
+        "name": "Yash",
+        "job": "Writer",
+        "profilePath": "/eN4AXetHfg8sFOI4tCFBCaq1iac.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2026-08-26",
+        "status": "released",
+        "source": "https://www.themoviedb.org/movie/1213243/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1213243",
+      "https://www.themoviedb.org/movie/1213243/cast",
+      "https://www.themoviedb.org/movie/1213243/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "jailer-2": {
+    "tmdbId": 1234139,
+    "overview": "Retired jailer Muthuvel Pandian faces another threat to the life he has tried to build with his family. Going undercover as a driver brings him into contact with an expanding criminal syndicate.",
+    "cast": [
+      {
+        "id": 91555,
+        "name": "Rajinikanth",
+        "character": "Muthuvel 'Tiger' Pandian",
+        "profilePath": "/cQBcrXqcQPfXOQfNfgO3slJM2xi.jpg"
+      },
+      {
+        "id": 292250,
+        "name": "S. J. Suryah",
+        "character": "Bodhi Kalpak",
+        "profilePath": "/7Q8510XwxPU1193cteaFQsiq2rv.jpg"
+      },
+      {
+        "id": 930731,
+        "name": "Suraj Venjaramoodu",
+        "character": "Dileep",
+        "profilePath": "/2FUs0wmR3eHBd8g4GVbCmhkUzeI.jpg"
+      },
+      {
+        "id": 141701,
+        "name": "Ramya Krishnan",
+        "character": "Vijayalakshmi 'Viji' Pandian",
+        "profilePath": "/7C1bj7z3XhqxjDIGoCs6MFJdSVa.jpg"
+      },
+      {
+        "id": 35068,
+        "name": "Vidya Balan",
+        "character": "Kantha Kalpak",
+        "profilePath": "/m4bnX5VQs2DfvQsLmfbKbBxUkC9.jpg"
+      },
+      {
+        "id": 583960,
+        "name": "Namo Narayana",
+        "character": "Moorthi",
+        "profilePath": "/jE3oslL16GYDBjmER7zkdeTVyK8.jpg"
+      },
+      {
+        "id": 1540764,
+        "name": "Yogi Babu",
+        "character": "Vimal",
+        "profilePath": "/4UMOPd8NqGfKp19VQHsnIzlSRUl.jpg"
+      },
+      {
+        "id": 1251828,
+        "name": "Mirnaa",
+        "character": "Swetha Pandian",
+        "profilePath": "/l4bmtLBuBPEE2Pg3qh5NTdmKFYP.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 1540734,
+        "name": "Vijay Kartik Kannan",
+        "job": "Director of Photography",
+        "profilePath": "/qJkifKa9Ag4Y170WW5QtPSahGvC.jpg"
+      },
+      {
+        "id": 1378577,
+        "name": "Nelson",
+        "job": "Director",
+        "profilePath": "/n0T7BQnWXPr4yhezpVzoqklxwTe.jpg"
+      },
+      {
+        "id": 1666862,
+        "name": "Kalanithi Maran",
+        "job": "Producer",
+        "profilePath": "/7zMuusP8W6lEL94C0rqwOGCnd5.jpg"
+      },
+      {
+        "id": 1081464,
+        "name": "Anirudh Ravichander",
+        "job": "Original Music Composer",
+        "profilePath": "/xKvlrZpRaXkm2K2ZiXpqgrEedUU.jpg"
+      },
+      {
+        "id": 1378577,
+        "name": "Nelson",
+        "job": "Writer",
+        "profilePath": "/n0T7BQnWXPr4yhezpVzoqklxwTe.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2026-10-15",
+        "status": "released",
+        "source": "https://www.themoviedb.org/movie/1234139/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1234139",
+      "https://www.themoviedb.org/movie/1234139/cast",
+      "https://www.themoviedb.org/movie/1234139/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "ramayana": {
+    "tmdbId": 656908,
+    "overview": "A prince and princess begin a life together before exile changes the course of their future. This adaptation opens an epic journey shaped by duty, devotion and the choices that turn human lives into enduring legend.",
+    "cast": [
+      {
+        "id": 85034,
+        "name": "Ranbir Kapoor",
+        "character": "Prince Ram / Parshuram / Lord Vishnu",
+        "profilePath": "/ymYNHV9luwgyrw17NXHqbOWTQkg.jpg"
+      },
+      {
+        "id": 1293681,
+        "name": "Yash",
+        "character": "Ravana",
+        "profilePath": "/eN4AXetHfg8sFOI4tCFBCaq1iac.jpg"
+      },
+      {
+        "id": 1473119,
+        "name": "Sai Pallavi",
+        "character": "Sita",
+        "profilePath": "/qAPdGKUIUEzLibdgVCey7oKvvME.jpg"
+      },
+      {
+        "id": 1252841,
+        "name": "Ravi Dubey",
+        "character": "Lakshman",
+        "profilePath": "/dUhZ0E8nchBkjYV0okWfj4BLxy2.jpg"
+      },
+      {
+        "id": 1228593,
+        "name": "Arun Govil",
+        "character": "King Dashrath",
+        "profilePath": "/xgefRNWurCiwyLSlpnDGgfMIF7H.jpg"
+      },
+      {
+        "id": 1143308,
+        "name": "Rakul Preet Singh",
+        "character": "Surpanakha",
+        "profilePath": "/4n4MmOFNyxKc4qMfzyapglvDDlF.jpg"
+      },
+      {
+        "id": 55063,
+        "name": "Lara Dutta",
+        "character": "Kaikeyi",
+        "profilePath": "/tt0qUlMx7tlDa8XyhBm6OQPurG0.jpg"
+      },
+      {
+        "id": 1255589,
+        "name": "Indira Krishnan",
+        "character": "Kaushalya",
+        "profilePath": "/fbN5eUSX9UjizTfotFh8Ka6NyqV.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 1431944,
+        "name": "Mahesh Limaye",
+        "job": "Director of Photography",
+        "profilePath": null
+      },
+      {
+        "id": 1756104,
+        "name": "Pankaj Kumar",
+        "job": "Director of Photography",
+        "profilePath": null
+      },
+      {
+        "id": 1042010,
+        "name": "Nitesh Tiwari",
+        "job": "Director",
+        "profilePath": "/h80yPI8rDKlUk29dWFFl6Is8J0P.jpg"
+      },
+      {
+        "id": 3348438,
+        "name": "Namit Malhotra",
+        "job": "Producer",
+        "profilePath": "/uAMUDrZlkSruuSnXcdO9K5Mf6xU.jpg"
+      },
+      {
+        "id": 5288,
+        "name": "A.R. Rahman",
+        "job": "Original Music Composer",
+        "profilePath": "/3po8IwdtONY72BuXr7ZhZZ0ugxQ.jpg"
+      },
+      {
+        "id": 947,
+        "name": "Hans Zimmer",
+        "job": "Original Music Composer",
+        "profilePath": "/tpQnDeHY15szIXvpnhlprufz4d.jpg"
+      },
+      {
+        "id": 1042010,
+        "name": "Nitesh Tiwari",
+        "job": "Screenplay",
+        "profilePath": "/h80yPI8rDKlUk29dWFFl6Is8J0P.jpg"
+      },
+      {
+        "id": 85443,
+        "name": "Shridhar Raghavan",
+        "job": "Screenplay",
+        "profilePath": null
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2026-11-05",
+        "status": "announced",
+        "source": "https://www.themoviedb.org/movie/656908/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/656908",
+      "https://www.themoviedb.org/movie/656908/cast",
+      "https://www.themoviedb.org/movie/656908/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "war-2": {
+    "tmdbId": 1109086,
+    "overview": "Kabir's apparent break with the intelligence establishment sets another formidable operative, Vikram, on his trail. Their pursuit unfolds across an espionage conflict where motives and allegiances are difficult to trust.",
+    "cast": [
+      {
+        "id": 148037,
+        "name": "N.T. Rama Rao Jr.",
+        "character": "Vikram",
+        "profilePath": "/5ycQgZ3SPUa12bq0yn1jpToBq9X.jpg"
+      },
+      {
+        "id": 78749,
+        "name": "Hrithik Roshan",
+        "character": "Kabir Dhaliwal",
+        "profilePath": "/d7XGTvyYgmrsA05XOn1YtxYcuY1.jpg"
+      },
+      {
+        "id": 1340978,
+        "name": "Kiara Advani",
+        "character": "Kavya Luthra",
+        "profilePath": "/2xmU03a6kTWUvuTPMdofiFLxdAw.jpg"
+      },
+      {
+        "id": 86508,
+        "name": "Ashutosh Rana",
+        "character": "Colonel Sunil Luthra",
+        "profilePath": "/jFlhAoEP3KGEXO3SXCA4YLM2Goc.jpg"
+      },
+      {
+        "id": 72118,
+        "name": "Anil Kapoor",
+        "character": "Vikrant Kaul",
+        "profilePath": "/dwvnpiwg9m2zj0VHzlgzEotFl0G.jpg"
+      },
+      {
+        "id": 77235,
+        "name": "Bobby Deol",
+        "character": "Unnamed",
+        "profilePath": "/2npVa3PduichY8e7qBiE54m9VVP.jpg"
+      },
+      {
+        "id": 2365591,
+        "name": "K.C. Shankar",
+        "character": "Gautam Gulati",
+        "profilePath": "/fbxJMM6YZGl3OLHhnqISzPjbSpB.jpg"
+      },
+      {
+        "id": 122498,
+        "name": "Varun Badola",
+        "character": "Vilasrao Sarang",
+        "profilePath": "/dzSBwofeP4dh3bP8TG6VxkHSjLy.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 2362874,
+        "name": "Benjamin Jasper",
+        "job": "Director of Photography",
+        "profilePath": null
+      },
+      {
+        "id": 87378,
+        "name": "Ayan Mukerji",
+        "job": "Director",
+        "profilePath": "/h2je0la48xmeXazM61bZ4hwlWcs.jpg"
+      },
+      {
+        "id": 35771,
+        "name": "Aditya Chopra",
+        "job": "Producer",
+        "profilePath": "/eXYKfA6bg12pn9LPrWeRfxYQwcb.jpg"
+      },
+      {
+        "id": 2224392,
+        "name": "Ankit Balhara",
+        "job": "Original Music Composer",
+        "profilePath": null
+      },
+      {
+        "id": 1544699,
+        "name": "Sanchit Balhara",
+        "job": "Original Music Composer",
+        "profilePath": "/uoT1EOft58kNXQCChW083XDvFSy.jpg"
+      },
+      {
+        "id": 85443,
+        "name": "Shridhar Raghavan",
+        "job": "Screenplay",
+        "profilePath": null
+      },
+      {
+        "id": 35771,
+        "name": "Aditya Chopra",
+        "job": "Story",
+        "profilePath": "/eXYKfA6bg12pn9LPrWeRfxYQwcb.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2025-08-14",
+        "status": "released",
+        "source": "https://www.themoviedb.org/movie/1109086/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1109086",
+      "https://www.themoviedb.org/movie/1109086/cast",
+      "https://www.themoviedb.org/movie/1109086/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "sintel": {
+    "tmdbId": 45745,
+    "overview": "A young woman forms a bond with an injured dragon and helps it recover. When they are separated, she sets out across unfamiliar lands to find her companion, discovering how deeply that search has changed her.",
+    "cast": [
+      {
+        "id": 39847,
+        "name": "Halina Reijn",
+        "character": "Sintel (voice)",
+        "profilePath": "/su9FMcM5wKfZiSNs35OLlot4hLd.jpg"
+      },
+      {
+        "id": 7572,
+        "name": "Thom Hoffman",
+        "character": "Shaman (voice)",
+        "profilePath": "/9idfzAANRjFDPnPHsRVVBb2LbNR.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 133631,
+        "name": "Colin Levy",
+        "job": "Director",
+        "profilePath": "/aGFVsKopffZafgZjeF7GLlUvxO7.jpg"
+      },
+      {
+        "id": 133632,
+        "name": "Ton Roosendaal",
+        "job": "Producer",
+        "profilePath": "/2iRRkA2oCsPLSSLz1HKDhwJZlgy.jpg"
+      },
+      {
+        "id": 133633,
+        "name": "Esther Wouda",
+        "job": "Writer",
+        "profilePath": null
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "US",
+        "date": "2010-09-30",
+        "status": "released",
+        "source": "https://www.themoviedb.org/movie/45745/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/45745",
+      "https://www.themoviedb.org/movie/45745/cast",
+      "https://www.themoviedb.org/movie/45745/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "thug-life": {
+    "tmdbId": 1045021,
+    "overview": "A gangster takes a boy into his family after a police confrontation changes their lives. Years later, an attempt on the gangster's life puts the bond between father and adopted son under strain and forces the family to confront conflicting loyalties.",
+    "cast": [
+      {
+        "id": 93193,
+        "name": "Kamal Haasan",
+        "character": "Rangaraya Sakthivel",
+        "profilePath": "/17zscZgz4wOlGDd3Gziw4YbI3G.jpg"
+      },
+      {
+        "id": 222760,
+        "name": "Silambarasan",
+        "character": "Amaran",
+        "profilePath": "/1T35CiKVldfxElZfQqaoN6GhvuU.jpg"
+      },
+      {
+        "id": 116925,
+        "name": "Trisha Krishnan",
+        "character": "Indrani",
+        "profilePath": "/8YkgaUlTshiDWHymBOEXZ948Yyn.jpg"
+      },
+      {
+        "id": 584496,
+        "name": "Abhirami",
+        "character": "Jeeva",
+        "profilePath": "/fLeOMTryyBPFrz5Wdxv3zBtx3V9.jpg"
+      },
+      {
+        "id": 1187398,
+        "name": "Ashok Selvan",
+        "character": "Jaikumar Royappa",
+        "profilePath": "/qA8w8hRmyw7IWxIuM64s7aPwqbe.jpg"
+      },
+      {
+        "id": 1861484,
+        "name": "Aishwarya Lekshmi",
+        "character": "Anna / Chandra",
+        "profilePath": "/b3yxjhc62X0JZghaRTYNMVrI78a.jpg"
+      },
+      {
+        "id": 130111,
+        "name": "Nassar",
+        "character": "Manikkam",
+        "profilePath": "/p3I0tSQY3C5qZW3NzFfbpjKPNL6.jpg"
+      },
+      {
+        "id": 1357376,
+        "name": "Joju George",
+        "character": "Kanjirapally Pathros",
+        "profilePath": "/jCObRH5idadzrTvyC9XnlnR8rXH.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 55073,
+        "name": "Ravi K. Chandran",
+        "job": "Director of Photography",
+        "profilePath": "/uq3bNhuBOEdK1Ul4LY00swoxrfZ.jpg"
+      },
+      {
+        "id": 78747,
+        "name": "Mani Ratnam",
+        "job": "Director",
+        "profilePath": "/iXRdku91Hp8nHSL3uWxnInxN6TH.jpg"
+      },
+      {
+        "id": 93193,
+        "name": "Kamal Haasan",
+        "job": "Producer",
+        "profilePath": "/17zscZgz4wOlGDd3Gziw4YbI3G.jpg"
+      },
+      {
+        "id": 78747,
+        "name": "Mani Ratnam",
+        "job": "Producer",
+        "profilePath": "/iXRdku91Hp8nHSL3uWxnInxN6TH.jpg"
+      },
+      {
+        "id": 3299515,
+        "name": "R. Mahendran",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 1823913,
+        "name": "Sivakumar Ananth",
+        "job": "Producer",
+        "profilePath": "/4j0jawJUErNpml1jyQ5OYr2mH9M.jpg"
+      },
+      {
+        "id": 5288,
+        "name": "A.R. Rahman",
+        "job": "Original Music Composer",
+        "profilePath": "/3po8IwdtONY72BuXr7ZhZZ0ugxQ.jpg"
+      },
+      {
+        "id": 93193,
+        "name": "Kamal Haasan",
+        "job": "Story",
+        "profilePath": "/17zscZgz4wOlGDd3Gziw4YbI3G.jpg"
+      },
+      {
+        "id": 78747,
+        "name": "Mani Ratnam",
+        "job": "Writer",
+        "profilePath": "/iXRdku91Hp8nHSL3uWxnInxN6TH.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2025-06-05",
+        "status": "released",
+        "source": "https://www.themoviedb.org/movie/1045021/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1045021",
+      "https://www.themoviedb.org/movie/1045021/cast",
+      "https://www.themoviedb.org/movie/1045021/release-dates"
+    ],
+    "checked": "2026-11-01",
+    "story": "Sakthivel and his brother encounter a young boy, Amaran, during a police confrontation that leaves the child's future uncertain. Taking him into their household creates a bond that becomes central to the family's life. Years later, violence against Sakthivel turns that relationship into a source of difficult questions. Loyalty within a criminal family can be both intensely personal and inseparable from power, and the people closest to him must navigate those competing pressures. The story follows how suspicion changes the meaning of family, without assuming that affection alone can protect the relationships built over many years."
+  },
+  "avengers-doomsday": {
+    "tmdbId": 1003596,
+    "overview": "Heroes from three different universes are brought into a dangerous collision as they confront a threat to their continued existence. The announced ensemble event brings together familiar teams; detailed story developments have not been publicly disclosed.",
+    "cast": [
+      {
+        "id": 3223,
+        "name": "Robert Downey Jr.",
+        "character": "Victor von Doom / Doctor Doom",
+        "profilePath": "/5qHNjhtjMD4YWH3UP0rm4tKwxCL.jpg"
+      },
+      {
+        "id": 16828,
+        "name": "Chris Evans",
+        "character": "Steve Rogers",
+        "profilePath": "/3bOGNsHlrswhyW79uvIHH1V43JI.jpg"
+      },
+      {
+        "id": 74568,
+        "name": "Chris Hemsworth",
+        "character": "Thor",
+        "profilePath": "/piQGdoIQOF3C1EI5cbYZLAW1gfj.jpg"
+      },
+      {
+        "id": 1253360,
+        "name": "Pedro Pascal",
+        "character": "Reed Richards / Mister Fantastic",
+        "profilePath": "/oKcMbVn0NJTNzQt0ClKKvVXkm60.jpg"
+      },
+      {
+        "id": 22226,
+        "name": "Paul Rudd",
+        "character": "Scott Lang / Ant-Man",
+        "profilePath": "/6jtwNOLKy0LdsRAKwZqgYMAfd5n.jpg"
+      },
+      {
+        "id": 53650,
+        "name": "Anthony Mackie",
+        "character": "Sam Wilson / Captain America",
+        "profilePath": "/vecvTm7SimizluJkyIwBxeLbvRm.jpg"
+      },
+      {
+        "id": 1373737,
+        "name": "Florence Pugh",
+        "character": "Yelena Belova",
+        "profilePath": "/1QfiLnofJFlOJOLCWaxyDpIN03v.jpg"
+      },
+      {
+        "id": 556356,
+        "name": "Vanessa Kirby",
+        "character": "Sue Storm / Invisible Woman",
+        "profilePath": "/a8a9U00KL2JJkkekzhNnueIGKKF.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 9040,
+        "name": "Newton Thomas Sigel",
+        "job": "Director of Photography",
+        "profilePath": "/lRpaXnvCCgMOZ2BBabDiqLHUkhu.jpg"
+      },
+      {
+        "id": 19271,
+        "name": "Anthony Russo",
+        "job": "Director",
+        "profilePath": "/xbINBnWn28YygYWUJ1aSAw0xPRv.jpg"
+      },
+      {
+        "id": 19272,
+        "name": "Joe Russo",
+        "job": "Director",
+        "profilePath": "/o0OXjFzL10jCy89iAs7UzzSbyoK.jpg"
+      },
+      {
+        "id": 1154553,
+        "name": "Jonathan Schwartz",
+        "job": "Producer",
+        "profilePath": "/vyp240KypKNXPbimx3vgUsJvYTj.jpg"
+      },
+      {
+        "id": 10850,
+        "name": "Kevin Feige",
+        "job": "Producer",
+        "profilePath": "/cQJJ24S5gAIC21ewye4Zu1oJsIi.jpg"
+      },
+      {
+        "id": 57027,
+        "name": "Louis D'Esposito",
+        "job": "Producer",
+        "profilePath": "/ewtzT2ZMIX2DNyGUUkHLn36fjgF.jpg"
+      },
+      {
+        "id": 37,
+        "name": "Alan Silvestri",
+        "job": "Original Music Composer",
+        "profilePath": "/feUZ0Oc1MGJJbUronBbkHTmJzgy.jpg"
+      },
+      {
+        "id": 1246890,
+        "name": "Chris McKenna",
+        "job": "Writer",
+        "profilePath": "/2yzbdhnpLdJg8NIh4SWqy6wGbZV.jpg"
+      },
+      {
+        "id": 1350918,
+        "name": "Erik Sommers",
+        "job": "Writer",
+        "profilePath": "/fvg1OA7xdYu7z44HdY5IA9lSqYl.jpg"
+      },
+      {
+        "id": 2094567,
+        "name": "Michael Waldron",
+        "job": "Writer",
+        "profilePath": "/qkvvUM56eHF2FqQvlsXjN6VLwCS.jpg"
+      },
+      {
+        "id": 5552,
+        "name": "Stephen McFeely",
+        "job": "Writer",
+        "profilePath": "/hkn9D5L8TguJUmv8fXy5sHyMEtq.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2026-12-17",
+        "status": "announced",
+        "source": "https://www.themoviedb.org/movie/1003596/release-dates"
+      },
+      {
+        "region": "US",
+        "date": "2026-12-18",
+        "status": "announced",
+        "source": "https://movies.disney.com/avengers-doomsday"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1003596",
+      "https://www.themoviedb.org/movie/1003596/cast",
+      "https://www.themoviedb.org/movie/1003596/release-dates",
+      "https://movies.disney.com/avengers-doomsday"
+    ],
+    "checked": "2026-11-01"
+  },
+  "dune-part-three": {
+    "tmdbId": 1170608,
+    "overview": "The next chapter follows Paul Atreides after his rise to imperial power. The consequences of that transformation, political opposition and the future of his closest relationships shape the announced continuation of the saga.",
+    "cast": [
+      {
+        "id": 1190668,
+        "name": "Timothée Chalamet",
+        "character": "Paul Atreides",
+        "profilePath": "/dFxpwRpmzpVfP1zjluH68DeQhyj.jpg"
+      },
+      {
+        "id": 505710,
+        "name": "Zendaya",
+        "character": "Chani",
+        "profilePath": "/qGkBlyn1AwQpuFnRARMRwj0iHZp.jpg"
+      },
+      {
+        "id": 117642,
+        "name": "Jason Momoa",
+        "character": "Hayt",
+        "profilePath": "/3troAR6QbSb6nUFMDu61YCCWLKa.jpg"
+      },
+      {
+        "id": 1373737,
+        "name": "Florence Pugh",
+        "character": "Princess Irulan",
+        "profilePath": "/1QfiLnofJFlOJOLCWaxyDpIN03v.jpg"
+      },
+      {
+        "id": 933238,
+        "name": "Rebecca Ferguson",
+        "character": "Lady Jessica",
+        "profilePath": "/ty8ZPzaCBBlqIr5qzpOXI24iC8j.jpg"
+      },
+      {
+        "id": 4812,
+        "name": "Isaach de Bankolé",
+        "character": "Farok",
+        "profilePath": "/aGjABQBgTA3tduuh54hzWx0aQ44.jpg"
+      },
+      {
+        "id": 44079,
+        "name": "Charlotte Rampling",
+        "character": "Reverend Mother Mohiam",
+        "profilePath": "/7fhg5FCcl0VfYERP5D0unpybqgx.jpg"
+      },
+      {
+        "id": 1397778,
+        "name": "Anya Taylor-Joy",
+        "character": "Alia Atreides",
+        "profilePath": "/qYNofOjlRke2MlJVihmJmEdQI4v.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 969171,
+        "name": "Linus Sandgren",
+        "job": "Director of Photography",
+        "profilePath": "/ihiOYVxA7XwgSJva5C7HZuGopY5.jpg"
+      },
+      {
+        "id": 137427,
+        "name": "Denis Villeneuve",
+        "job": "Director",
+        "profilePath": "/xzQYqb4nR8xT7Zdw5itbEL9K3fd.jpg"
+      },
+      {
+        "id": 17315,
+        "name": "Cale Boyter",
+        "job": "Producer",
+        "profilePath": "/jeRsKRHuSJcTdciWmkO6LrBULw2.jpg"
+      },
+      {
+        "id": 137427,
+        "name": "Denis Villeneuve",
+        "job": "Producer",
+        "profilePath": "/xzQYqb4nR8xT7Zdw5itbEL9K3fd.jpg"
+      },
+      {
+        "id": 10570,
+        "name": "Joseph M. Caracciolo Jr.",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 114408,
+        "name": "Mary Parent",
+        "job": "Producer",
+        "profilePath": "/jTh9ngfGF8DQvKwGM8rXSmfbQTj.jpg"
+      },
+      {
+        "id": 1905971,
+        "name": "Tanya Lapointe",
+        "job": "Producer",
+        "profilePath": "/fSIQqm9PqqyPexLDRU5WCwS76L6.jpg"
+      },
+      {
+        "id": 947,
+        "name": "Hans Zimmer",
+        "job": "Original Music Composer",
+        "profilePath": "/tpQnDeHY15szIXvpnhlprufz4d.jpg"
+      },
+      {
+        "id": 209343,
+        "name": "Brian K. Vaughan",
+        "job": "Screenplay",
+        "profilePath": "/9w2ATQ4YW4Kpp9zA90jMEWzstow.jpg"
+      },
+      {
+        "id": 137427,
+        "name": "Denis Villeneuve",
+        "job": "Screenplay",
+        "profilePath": "/xzQYqb4nR8xT7Zdw5itbEL9K3fd.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2026-12-18",
+        "status": "announced",
+        "source": "https://www.themoviedb.org/movie/1170608/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1170608",
+      "https://www.themoviedb.org/movie/1170608/cast",
+      "https://www.themoviedb.org/movie/1170608/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "spirit": {
+    "tmdbId": 881903,
+    "overview": "Prabhas leads Sandeep Reddy Vanga's announced film. A sufficiently detailed, verified official synopsis has not been published in the sources checked, so story specifics are being held back here.",
+    "cast": [
+      {
+        "id": 237045,
+        "name": "Prabhas",
+        "character": "Ajanubahudu",
+        "profilePath": "/u6RVP8ukgLaymeoi5VmX0JRAcCn.jpg"
+      },
+      {
+        "id": 85668,
+        "name": "Vivek Oberoi",
+        "character": "Role not announced",
+        "profilePath": "/60T3Q8CsxF4kF6RIHZ1yis2Q0wA.jpg"
+      },
+      {
+        "id": 2100209,
+        "name": "Triptii Dimri",
+        "character": "Role not announced",
+        "profilePath": "/d4eKm8PqGPHdInHB6zzFDclJbxc.jpg"
+      },
+      {
+        "id": 1047330,
+        "name": "Kanchana",
+        "character": "Role not announced",
+        "profilePath": "/3jTcZqiiTDyPMPrYubbVmvNkEkx.jpg"
+      },
+      {
+        "id": 2707240,
+        "name": "Aishwarya Desai",
+        "character": "Role not announced",
+        "profilePath": "/kWRXmtBnQ2mlSXnvGqnLypoXYh2.jpg"
+      },
+      {
+        "id": 586625,
+        "name": "Ajay",
+        "character": "Role not announced",
+        "profilePath": "/uByCHJa3eaCL0SgFGDYYLlsVggC.jpg"
+      },
+      {
+        "id": 4412296,
+        "name": "Manjjot Singhh",
+        "character": "Role not announced",
+        "profilePath": null
+      }
+    ],
+    "crew": [
+      {
+        "id": 1631586,
+        "name": "Raju Thota",
+        "job": "Director of Photography",
+        "profilePath": null
+      },
+      {
+        "id": 1879517,
+        "name": "Sandeep Reddy Vanga",
+        "job": "Director",
+        "profilePath": "/ik1rXY6ci6i7LDm9cV178W3txgb.jpg"
+      },
+      {
+        "id": 83595,
+        "name": "Bhushan Kumar",
+        "job": "Producer",
+        "profilePath": "/luUFnGoGwjwZ5CHAePRIQpAwT5b.jpg"
+      },
+      {
+        "id": 141882,
+        "name": "Krishan Kumar",
+        "job": "Producer",
+        "profilePath": "/gw2jzzkdRyIHglwieCiFSQ9cLZZ.jpg"
+      },
+      {
+        "id": 5768287,
+        "name": "Prabhakar Reddy Vanga",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 1877793,
+        "name": "Pranay Reddy Vanga",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 1340549,
+        "name": "Harshavardhan Rameshwar",
+        "job": "Original Music Composer",
+        "profilePath": null
+      },
+      {
+        "id": 1879517,
+        "name": "Sandeep Reddy Vanga",
+        "job": "Writer",
+        "profilePath": "/ik1rXY6ci6i7LDm9cV178W3txgb.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": null,
+        "status": "unconfirmed",
+        "source": "https://www.themoviedb.org/movie/881903/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/881903",
+      "https://www.themoviedb.org/movie/881903/cast",
+      "https://www.themoviedb.org/movie/881903/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "hexed": {
+    "tmdbId": 1538497,
+    "overview": "Teenager Billie discovers that she has magical abilities and travels into a world of witches with her cautious mother, Alice. Their journey into Hexe reveals unfamiliar possibilities and questions about their own family.",
+    "cast": [
+      {
+        "id": 130640,
+        "name": "Hailee Steinfeld",
+        "character": "Billie Doe (voice)",
+        "profilePath": "/qDInsG0cxWNxS1X4t59TBZ5S6x5.jpg"
+      },
+      {
+        "id": 80591,
+        "name": "Rashida Jones",
+        "character": "Alice Doe (voice)",
+        "profilePath": "/cgWGm9eYCretBWeljPVtpRV7n6V.jpg"
+      },
+      {
+        "id": 1038,
+        "name": "Jodie Foster",
+        "character": "Queen Celeste (voice)",
+        "profilePath": "/5emVgsLFlU6SmeBIFsF2Y7aqwtG.jpg"
+      },
+      {
+        "id": 27740,
+        "name": "Walton Goggins",
+        "character": "Beef Roger Crummchuk (voice)",
+        "profilePath": "/5lcVMJbWrNDFiWa1WxK4oR8zwev.jpg"
+      },
+      {
+        "id": 30364,
+        "name": "Tracey Ullman",
+        "character": "Ms. Quill (voice)",
+        "profilePath": "/cmug3uUXKBo9fhCcJk3pkgt1nvM.jpg"
+      },
+      {
+        "id": 11275,
+        "name": "Stephen Fry",
+        "character": "Elias Quire (voice)",
+        "profilePath": "/dH7GuUZ8QPM9RN99ak9KKOkSkdS.jpg"
+      },
+      {
+        "id": 31903,
+        "name": "Henry Winkler",
+        "character": "Nigel (voice)",
+        "profilePath": "/5Y51B0maVYvKRoS43lwlYh1M52X.jpg"
+      },
+      {
+        "id": 221018,
+        "name": "Dan Stevens",
+        "character": "Hieronymous (voice)",
+        "profilePath": "/fFsgginZKH527o38ZfdDxuzx7Ew.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 2375591,
+        "name": "Fawn Veerasunthorn",
+        "job": "Director",
+        "profilePath": "/xk9R1RsUOcckKRgcqVqZNbxv12P.jpg"
+      },
+      {
+        "id": 1461394,
+        "name": "Jason Hand",
+        "job": "Director",
+        "profilePath": "/gepbkgavGdDXdNbQzdFaxayTpoH.jpg"
+      },
+      {
+        "id": 56612,
+        "name": "Roy Conli",
+        "job": "Producer",
+        "profilePath": "/dGvEOrR2GtGiI95CHVQzgrPH1D5.jpg"
+      },
+      {
+        "id": 1999218,
+        "name": "Yvett Merino",
+        "job": "Producer",
+        "profilePath": "/lWDGq9RsYDayXIqdyXz1yHzo2tU.jpg"
+      },
+      {
+        "id": 1802871,
+        "name": "Kris Bowers",
+        "job": "Original Music Composer",
+        "profilePath": "/qL0TnImRmCRIcoQy1d3GjTPKCLn.jpg"
+      },
+      {
+        "id": 69697,
+        "name": "Jon Robin Baitz",
+        "job": "Story",
+        "profilePath": null
+      },
+      {
+        "id": 69697,
+        "name": "Jon Robin Baitz",
+        "job": "Writer",
+        "profilePath": null
+      },
+      {
+        "id": 1447307,
+        "name": "Josie Trinidad",
+        "job": "Story",
+        "profilePath": "/rMwIL53SKwZJu7WFW1fcYIVTxhP.jpg"
+      },
+      {
+        "id": 1513971,
+        "name": "Dana Ledoux Miller",
+        "job": "Writer",
+        "profilePath": "/1I3PoFUABjxIxuPQKI9zAaoyMj3.jpg"
+      },
+      {
+        "id": 1318201,
+        "name": "Jared Bush",
+        "job": "Writer",
+        "profilePath": "/50XtrC5NMcqiYMXNmuNVY5tUl34.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "US",
+        "date": "2026-11-25",
+        "status": "announced",
+        "source": "https://www.themoviedb.org/movie/1538497/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1538497",
+      "https://www.themoviedb.org/movie/1538497/cast",
+      "https://www.themoviedb.org/movie/1538497/release-dates",
+      "https://thewaltdisneycompany.com/news/disney-movies-theaters-fall-2026/"
+    ],
+    "checked": "2026-11-01"
+  },
+  "angry-birds-3": {
+    "tmdbId": 1300926,
+    "overview": "Red faces the unfamiliar responsibilities of fatherhood while another adventure threatens the world around him. Further details of the animated sequel are being kept under wraps.",
+    "cast": [
+      {
+        "id": 58224,
+        "name": "Jason Sudeikis",
+        "character": "Red (voice)",
+        "profilePath": "/uuacnP9DOHMsmj8FhBi0cWWDgrn.jpg"
+      },
+      {
+        "id": 54415,
+        "name": "Josh Gad",
+        "character": "Chuck (voice)",
+        "profilePath": "/17iKlfWZBDTAucqjkhRKHr9xjIz.jpg"
+      },
+      {
+        "id": 62862,
+        "name": "Danny McBride",
+        "character": "Bomb (voice)",
+        "profilePath": "/sVFPzl2t5QlGudQKWAszIWZCXZv.jpg"
+      },
+      {
+        "id": 1453801,
+        "name": "Rachel Bloom",
+        "character": "Silver (voice)",
+        "profilePath": "/hfnU70X7QOdiURFEd1hM7gQIe6J.jpg"
+      },
+      {
+        "id": 2604515,
+        "name": "Emma Myers",
+        "character": "June (voice)",
+        "profilePath": "/v1Y8RP39135ZOary9M4MbkrCAdn.jpg"
+      },
+      {
+        "id": 2867506,
+        "name": "Walker Scobell",
+        "character": "Glider (voice)",
+        "profilePath": "/gfIZFH6SpwpOU8zc04e5MkeJcj2.jpg"
+      },
+      {
+        "id": 2439826,
+        "name": "Psalm West",
+        "character": "Olly (voice)",
+        "profilePath": null
+      },
+      {
+        "id": 1756597,
+        "name": "James Austin Johnson",
+        "character": "Fuzzy (voice)",
+        "profilePath": "/g9y0aABiKtB1FOIKmklDlgRpDof.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 93883,
+        "name": "John Rice",
+        "job": "Director",
+        "profilePath": "/mJ1A7pv4NlvfpD8ZqqXGLo8IGAm.jpg"
+      },
+      {
+        "id": 4759096,
+        "name": "Carla Connor",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 65327,
+        "name": "Dan Chuba",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 58224,
+        "name": "Jason Sudeikis",
+        "job": "Producer",
+        "profilePath": "/uuacnP9DOHMsmj8FhBi0cWWDgrn.jpg"
+      },
+      {
+        "id": 1011957,
+        "name": "John Cohen",
+        "job": "Producer",
+        "profilePath": "/2ItA4bGkHMC11Z7JSJAyPwALHXD.jpg"
+      },
+      {
+        "id": 3348438,
+        "name": "Namit Malhotra",
+        "job": "Producer",
+        "profilePath": "/uAMUDrZlkSruuSnXcdO9K5Mf6xU.jpg"
+      },
+      {
+        "id": 59706,
+        "name": "Heitor Pereira",
+        "job": "Original Music Composer",
+        "profilePath": "/6ar1oObMu4Ge1aTXybzPLTBTEZ8.jpg"
+      },
+      {
+        "id": 1245730,
+        "name": "Thurop Van Orman",
+        "job": "Screenplay",
+        "profilePath": "/kKiWFAtDPInyBltWzdCKsDkmZsZ.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2027-01-01",
+        "status": "announced",
+        "source": "https://www.themoviedb.org/movie/1300926/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1300926",
+      "https://www.themoviedb.org/movie/1300926/cast",
+      "https://www.themoviedb.org/movie/1300926/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "richard-anthony": {
+    "tmdbId": 849546,
+    "overview": "Rakshit Shetty returns to the world associated with Ulidavaru Kandanthe in this announced project. The available material establishes a mysterious crime story, but does not support a detailed account of the plot.",
+    "cast": [
+      {
+        "id": 1306152,
+        "name": "Rakshit Shetty",
+        "character": "Richard 'Richie' Anthony",
+        "profilePath": "/ylgsp6ktY8ZwiJLbBeFswjhU7ii.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 1447999,
+        "name": "Karm Chawla",
+        "job": "Director of Photography",
+        "profilePath": null
+      },
+      {
+        "id": 1306152,
+        "name": "Rakshit Shetty",
+        "job": "Director",
+        "profilePath": "/ylgsp6ktY8ZwiJLbBeFswjhU7ii.jpg"
+      },
+      {
+        "id": 2182293,
+        "name": "Vijay Kiragandur",
+        "job": "Producer",
+        "profilePath": "/pg7DHf5WArf8YIIIOLd3qObOEDa.jpg"
+      },
+      {
+        "id": 1306152,
+        "name": "Rakshit Shetty",
+        "job": "Writer",
+        "profilePath": "/ylgsp6ktY8ZwiJLbBeFswjhU7ii.jpg"
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": null,
+        "status": "unconfirmed",
+        "source": "https://www.themoviedb.org/movie/849546/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/849546",
+      "https://www.themoviedb.org/movie/849546/cast",
+      "https://www.themoviedb.org/movie/849546/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "kathanar": {
+    "tmdbId": 1109369,
+    "overview": "Inspired by stories of Kadamattathu Kathanar, the film explores the legend of a priest associated with extraordinary supernatural powers. The setting draws on Kerala's folklore rather than a verified historical account of those powers.",
+    "cast": [
+      {
+        "id": 591070,
+        "name": "Jayasurya",
+        "character": "Kadamattathu Kathanar",
+        "profilePath": "/m3M0skefVc1wMJBKW5CMjKt4orJ.jpg"
+      },
+      {
+        "id": 88167,
+        "name": "Anushka Shetty",
+        "character": "Nila",
+        "profilePath": "/zpe6Es8kdNOXuPdXiJvqxzsmN6z.jpg"
+      },
+      {
+        "id": 89154,
+        "name": "Prabhu Deva",
+        "character": "Virtuoso",
+        "profilePath": "/lfVxoyweEPkIu6zFa44ajPuSJA1.jpg"
+      },
+      {
+        "id": 2112010,
+        "name": "Sandy",
+        "character": "Role not announced",
+        "profilePath": "/hyZHicpeea7dtOBUo7nuCEYXsS2.jpg"
+      },
+      {
+        "id": 1490116,
+        "name": "Sanoop Santhosh",
+        "character": "Ira",
+        "profilePath": "/dkmEQRbWAkpwh9QLUtQ3HhFc63j.jpg"
+      },
+      {
+        "id": 2287157,
+        "name": "Devika Sanjay",
+        "character": "Role not announced",
+        "profilePath": "/ctWxXFauEPTO7auGSktGixUs9WP.jpg"
+      },
+      {
+        "id": 544988,
+        "name": "Vineeth Radhakrishnan",
+        "character": "Role not announced",
+        "profilePath": "/dvni43nbWY6J6DPh4W6CyE5oiiW.jpg"
+      },
+      {
+        "id": 1243973,
+        "name": "Nitish Bharadwaj",
+        "character": "Role not announced",
+        "profilePath": "/w4KMK4mAaypOwTpRU0mmGEOpMZ9.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 1272892,
+        "name": "Neil D'Cunha",
+        "job": "Director of Photography",
+        "profilePath": "/nBV2TzAax4UOsgH2rexGWAp4tQU.jpg"
+      },
+      {
+        "id": 1272886,
+        "name": "Rojin Thomas",
+        "job": "Director",
+        "profilePath": null
+      },
+      {
+        "id": 1167753,
+        "name": "Gokulam Gopalan",
+        "job": "Producer",
+        "profilePath": "/d2ZmCrzouBldcsBlC9f51giRSeG.jpg"
+      },
+      {
+        "id": 1272891,
+        "name": "Rahul Subrahmanian",
+        "job": "Original Music Composer",
+        "profilePath": null
+      },
+      {
+        "id": 3996308,
+        "name": "R Ramanand",
+        "job": "Screenplay",
+        "profilePath": null
+      },
+      {
+        "id": 1272886,
+        "name": "Rojin Thomas",
+        "job": "Screenplay",
+        "profilePath": null
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": null,
+        "status": "unconfirmed",
+        "source": "https://www.themoviedb.org/movie/1109369/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1109369",
+      "https://www.themoviedb.org/movie/1109369/cast",
+      "https://www.themoviedb.org/movie/1109369/release-dates"
+    ],
+    "checked": "2026-11-01"
+  },
+  "tumbbad-2": {
+    "tmdbId": 1356563,
+    "overview": "A follow-up to Tumbbad has been announced. A verified detailed synopsis is not available in the checked sources; this listing does not assume which characters return or how the original story will continue.",
+    "cast": [
+      {
+        "id": 1061615,
+        "name": "Sohum Shah",
+        "character": "Role not announced",
+        "profilePath": "/5B7hSdq9hWEICHVxZtiL2ekwpzx.jpg"
+      },
+      {
+        "id": 85047,
+        "name": "Nawazuddin Siddiqui",
+        "character": "Role not announced",
+        "profilePath": "/w1eXF7T60QlEC2gNfr99J3n8CgX.jpg"
+      },
+      {
+        "id": 1837688,
+        "name": "Nimisha Sajayan",
+        "character": "Role not announced",
+        "profilePath": "/r1tiqFWXlWDFlZx966yOeBYs2qY.jpg"
+      },
+      {
+        "id": 1108120,
+        "name": "Alia Bhatt",
+        "character": "Role not announced",
+        "profilePath": "/lAgBZgHKTo6amIO9CfNxUbm1usH.jpg"
+      }
+    ],
+    "crew": [
+      {
+        "id": 2094973,
+        "name": "Adesh Prasad",
+        "job": "Director",
+        "profilePath": null
+      },
+      {
+        "id": 1676015,
+        "name": "Jayantilal Gada",
+        "job": "Producer",
+        "profilePath": null
+      },
+      {
+        "id": 1061615,
+        "name": "Sohum Shah",
+        "job": "Producer",
+        "profilePath": "/5B7hSdq9hWEICHVxZtiL2ekwpzx.jpg"
+      },
+      {
+        "id": 2094973,
+        "name": "Adesh Prasad",
+        "job": "Writer",
+        "profilePath": null
+      }
+    ],
+    "production": [],
+    "releaseDates": [
+      {
+        "region": "IN",
+        "date": "2027-12-03",
+        "status": "announced",
+        "source": "https://www.themoviedb.org/movie/1356563/release-dates"
+      }
+    ],
+    "sources": [
+      "https://www.themoviedb.org/movie/1356563",
+      "https://www.themoviedb.org/movie/1356563/cast",
+      "https://www.themoviedb.org/movie/1356563/release-dates"
+    ],
+    "checked": "2026-11-01"
+  }
+}

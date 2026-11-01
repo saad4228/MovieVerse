@@ -42,3 +42,25 @@ TypeScript and all 17 unit tests passed, including business rules, projection ge
 ## Current video and camera refinement
 
 The DOM screen overlay has been removed and replaced by actual depth-tested video/artwork meshes. The custom player supports MP4, HLS, fallback, custom controls and quality. Camera arrows, free view, clearance transitions, seat preview and collision boundaries share one camera owner. PBR material isolation fixes shared repeat scaling; contoured instanced seating and architectural details improve close views. See [full changes and verification](VIDEO_AND_CAMERA_REFINEMENT.md).
+
+## Catalogue expansion — 1 November 2026
+
+This update modifies the existing implementation. The initial empty-workspace assessment above is historical. See EXPANSION_AUDIT.md for this update's audit.
+
+- Carousel pointer displacement and visual geometry share one responsive spacing function. Release uses the nearest rendered poster; the old two-poster clamp and inertial projection are removed. Active information follows that same index. Autoplay is opt-in and pauses for interaction, focus, hover, hidden tabs and animation.
+- 18 detailed movie records, cast portraits matched by person ID, character names, role-specific crew, expandable stories, regional dates, promotional stills and source credits.
+- Nine curated HD backdrops, responsive variants, twelve alternatives, Thug Life posters and 129 locally cached catalogue/portrait assets.
+- Coming Soon filters against current regional dates, offers India/US selection, highlights Avengers: Doomsday, and includes Indian, Hollywood and animated releases. Unannounced runtimes, ratings and dates are displayed as unknown.
+- 108 real cinema directory records across ten cities, with searchable locality/aliases, verification, formats, amenities and venue details. No live operational or screening status is inferred from directory inclusion.
+- Separate metadata, image, directory, showtime, seat inventory and booking interfaces are connected to the app. An optional TMDB adapter refreshes metadata; authorised operator feeds remain optional.
+- Six daily demo times where no custom schedule is supplied, with language and price variants. Explicit screenings support a shared auditorium hosting several films at non-overlapping times; schema checks enforce consistent blueprints and a turnaround interval. Generated demo rooms are virtual programme rooms, not real cinema architecture.
+- Availability filtering uses persisted seat inventory instead of decorative random urgency. Unknown inventory is labelled Check seats.
+
+Commercial direct trailer streams, exhaustive live ticketing coverage, real payments and verified architectural measurements remain external integration requirements. Demonstration auditorium visuals and playback controls are retained from the preceding implementation.
+
+## Change index
+
+- Interaction and presentation: `components/CinematicCarousel.tsx`, `components/Discovery.tsx`, `components/Home.tsx`, `components/MovieInformation.tsx`, `components/CinemaDirectory.tsx`, `components/CityCinemaListings.tsx`, `components/auditorium/AuditoriumCamera.tsx`, `app/globals.css`.
+- Connected data and booking boundaries: `lib/carousel.ts`, `lib/catalog.ts`, `lib/catalog-config.ts`, `lib/catalog-upgrade.ts`, `lib/movie-information.ts`, `lib/movie-media.ts`, `lib/image-provider.ts`, `lib/asset-cache.ts`, `lib/metadata-provider.ts`, `lib/cinema-directory.ts`, `lib/cinema-listings.ts`, `lib/providers.ts`, `app/api/[action]/route.ts`, `components/BookingFlow.tsx`.
+- Sourced content: `data/movie-details.json`, `data/coming-soon-movies.json`, `data/cinema-venues.json`, `data/media-catalog.json`, `data/image-audit.json`, `data/catalog-asset-cache.json`, `data/trailer-sources.json` and local artwork in `public/assets/`.
+- Maintenance and verification: `scripts/cache-catalog-assets.mjs`, `scripts/sync-hd-media.mjs`, `.env.example`, `tests/expansion.test.ts`, `tests/e2e/expansion.spec.ts`, updated media regression tests, and the coverage/source/testing documents.

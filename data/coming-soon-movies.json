@@ -1,0 +1,297 @@
+[
+  {
+    "id": "thug-life",
+    "title": "Thug Life",
+    "tagline": "Discover the story",
+    "description": "A gangster takes a boy into his family after a police confrontation changes their lives. Years later, an attempt on the gangster's life puts the bond between father and adopted son under strain and forces the family to confront conflicting loyalties.",
+    "genre": [
+      "Action",
+      "Crime"
+    ],
+    "languages": [
+      "Tamil"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "/assets/thug-life.webp",
+    "backdrop": "/assets/movie-backdrop.webp",
+    "release": "2025-06-05",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Kamal Haasan",
+      "Silambarasan",
+      "Trisha Krishnan",
+      "Abhirami",
+      "Ashok Selvan",
+      "Aishwarya Lekshmi",
+      "Nassar",
+      "Joju George"
+    ],
+    "trailer": null,
+    "accent": "#ffc13b"
+  },
+  {
+    "id": "avengers-doomsday",
+    "title": "Avengers: Doomsday",
+    "tagline": "Worth the wait",
+    "description": "Heroes from three different universes are brought into a dangerous collision as they confront a threat to their continued existence. The announced ensemble event brings together familiar teams; detailed story developments have not been publicly disclosed.",
+    "genre": [
+      "Action",
+      "Science Fiction"
+    ],
+    "languages": [
+      "English"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "https://image.tmdb.org/t/p/original/bqAHPSEyRkM4BpkncGFCKjBXf9p.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
+    "release": "2026-12-17",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Robert Downey Jr.",
+      "Chris Evans",
+      "Chris Hemsworth",
+      "Pedro Pascal",
+      "Paul Rudd",
+      "Anthony Mackie",
+      "Florence Pugh",
+      "Vanessa Kirby"
+    ],
+    "trailer": null,
+    "accent": "#ffc13b"
+  },
+  {
+    "id": "dune-part-three",
+    "title": "Dune: Part Three",
+    "tagline": "Worth the wait",
+    "description": "The next chapter follows Paul Atreides after his rise to imperial power. The consequences of that transformation, political opposition and the future of his closest relationships shape the announced continuation of the saga.",
+    "genre": [
+      "Science Fiction",
+      "Drama"
+    ],
+    "languages": [
+      "English"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "https://image.tmdb.org/t/p/original/glt0v4I89rMWstDNCaFXc5SNyO1.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/i5E9H7Ik0u61ylDDTbmUpTL3Yw.jpg",
+    "release": "2026-12-18",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Timothée Chalamet",
+      "Zendaya",
+      "Jason Momoa",
+      "Florence Pugh",
+      "Rebecca Ferguson",
+      "Isaach de Bankolé",
+      "Charlotte Rampling",
+      "Anya Taylor-Joy"
+    ],
+    "trailer": null,
+    "accent": "#ffc13b"
+  },
+  {
+    "id": "hexed",
+    "title": "Hexed",
+    "tagline": "Worth the wait",
+    "description": "Teenager Billie discovers that she has magical abilities and travels into a world of witches with her cautious mother, Alice. Their journey into Hexe reveals unfamiliar possibilities and questions about their own family.",
+    "genre": [
+      "Animation",
+      "Fantasy"
+    ],
+    "languages": [
+      "English"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "https://image.tmdb.org/t/p/original/3zxrelHqoPJwOP4oj4Wq1cNOUdG.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/wZ9Me7OndzgBOEAa8nSBNPu3Sl4.jpg",
+    "release": "2026-11-25",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Hailee Steinfeld",
+      "Rashida Jones",
+      "Jodie Foster",
+      "Walton Goggins",
+      "Tracey Ullman",
+      "Stephen Fry",
+      "Henry Winkler",
+      "Dan Stevens"
+    ],
+    "trailer": null,
+    "accent": "#ffc13b"
+  },
+  {
+    "id": "angry-birds-3",
+    "title": "The Angry Birds Movie 3",
+    "tagline": "Worth the wait",
+    "description": "Red faces the unfamiliar responsibilities of fatherhood while another adventure threatens the world around him. Further details of the animated sequel are being kept under wraps.",
+    "genre": [
+      "Animation",
+      "Comedy"
+    ],
+    "languages": [
+      "English"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "https://image.tmdb.org/t/p/original/oxaW6X3xohnzdFSBKCrCjRDckMe.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/ieAytQ8YcWEZGQpbBy7vHVddwd.jpg",
+    "release": "2027-01-01",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Jason Sudeikis",
+      "Josh Gad",
+      "Danny McBride",
+      "Rachel Bloom",
+      "Emma Myers",
+      "Walker Scobell",
+      "Psalm West",
+      "James Austin Johnson"
+    ],
+    "trailer": null,
+    "accent": "#ffc13b"
+  },
+  {
+    "id": "spirit",
+    "title": "Spirit",
+    "tagline": "Worth the wait",
+    "description": "Prabhas leads Sandeep Reddy Vanga's announced film. A sufficiently detailed, verified official synopsis has not been published in the sources checked, so story specifics are being held back here.",
+    "genre": [
+      "Action",
+      "Drama"
+    ],
+    "languages": [
+      "Telugu",
+      "Hindi"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "https://image.tmdb.org/t/p/original/5N3e8nCYZdOyEyh1IuQDdkKF9sQ.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/yzu6Gb2fbC8GPxSKIn9BAHt9hFw.jpg",
+    "release": "",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Prabhas",
+      "Vivek Oberoi",
+      "Triptii Dimri",
+      "Kanchana",
+      "Aishwarya Desai",
+      "Ajay",
+      "Manjjot Singhh"
+    ],
+    "trailer": null,
+    "accent": "#ffc13b"
+  },
+  {
+    "id": "richard-anthony",
+    "title": "Richard Anthony",
+    "tagline": "Worth the wait",
+    "description": "Rakshit Shetty returns to the world associated with Ulidavaru Kandanthe in this announced project. The available material establishes a mysterious crime story, but does not support a detailed account of the plot.",
+    "genre": [
+      "Crime",
+      "Drama"
+    ],
+    "languages": [
+      "Kannada"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "https://image.tmdb.org/t/p/original/jRJ0inN0EHOWEwaVjyixqAVdQGX.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/rZYrd1GY4nFmMKkg6f6h8mgGe72.jpg",
+    "release": "",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Rakshit Shetty"
+    ],
+    "trailer": null,
+    "accent": "#ffc13b"
+  },
+  {
+    "id": "kathanar",
+    "title": "Kathanar - The Wild Sorcerer",
+    "tagline": "Worth the wait",
+    "description": "Inspired by stories of Kadamattathu Kathanar, the film explores the legend of a priest associated with extraordinary supernatural powers. The setting draws on Kerala's folklore rather than a verified historical account of those powers.",
+    "genre": [
+      "Fantasy",
+      "Adventure"
+    ],
+    "languages": [
+      "Malayalam"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "https://image.tmdb.org/t/p/original/3iW3PXLYhgsSRyKRg94z2VXyZtV.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/ulN4jZWiEY7AX46O047Ob3HyJTc.jpg",
+    "release": "",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Jayasurya",
+      "Anushka Shetty",
+      "Prabhu Deva",
+      "Sandy",
+      "Sanoop Santhosh",
+      "Devika Sanjay",
+      "Vineeth Radhakrishnan",
+      "Nitish Bharadwaj"
+    ],
+    "trailer": null,
+    "accent": "#ffc13b"
+  },
+  {
+    "id": "tumbbad-2",
+    "title": "Tumbbad II",
+    "tagline": "Worth the wait",
+    "description": "A follow-up to Tumbbad has been announced. A verified detailed synopsis is not available in the checked sources; this listing does not assume which characters return or how the original story will continue.",
+    "genre": [
+      "Horror",
+      "Fantasy"
+    ],
+    "languages": [
+      "Hindi"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "https://image.tmdb.org/t/p/original/zk7YgxTN6yRylkA684C51bt20n1.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/zk7YgxTN6yRylkA684C51bt20n1.jpg",
+    "release": "2027-12-03",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Sohum Shah",
+      "Nawazuddin Siddiqui",
+      "Nimisha Sajayan",
+      "Alia Bhatt"
+    ],
+    "trailer": null,
+    "accent": "#ffc13b"
+  }
+]

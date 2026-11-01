@@ -1,5 +1,7 @@
 import { enrichMovieMedia } from "./movie-media";
 import type { TrailerSource } from "./video/sources";
+import additions from "../data/coming-soon-movies.json" with { type: "json" };
+import { enrichMovieInformation, type MovieInformation } from "./movie-information";
 export type Movie = {
   id: string;
   title: string;
@@ -25,6 +27,12 @@ export type Movie = {
   trailerLabel?: string;
   mediaCredit?: string;
   mediaSource?: string;
+  metadata?: MovieInformation;
+  backdropSmall?: string;
+  backdropWidth?: number;
+  backdropHeight?: number;
+  backdropPosition?: string;
+  alternativeBackdrops?: string[];
 };
 const base = {
   certificate: "UA 16+",
@@ -187,7 +195,7 @@ const seedMovies: Movie[] = [
     formats: ["2D", "Dolby Atmos"],
   },
 ];
-export const movies: Movie[] = seedMovies.map(enrichMovieMedia);
+export const movies: Movie[] = [...seedMovies, ...(additions as Movie[]).filter(m => !seedMovies.some(s => s.id === m.id))].map(m => enrichMovieInformation(enrichMovieMedia(m)));
 export type City = {
   id: string;
   name: string;
@@ -350,6 +358,7 @@ export type Venue = {
   price: number;
   image: string;
   times?: string[];
+  screenings?: {key:string;movieId:string;auditoriumId:string;blueprintId:string;time:string;language:string;format:string;price:number;date?:string}[];
 };
 const locations: Record<string, [string, string, string][]> = {
   chennai: [
@@ -518,6 +527,8 @@ export type Show = {
   format: string;
   language: string;
   price: number;
+  auditoriumId: string;
+  source: "demo";
 };
 export const localDate = (date = new Date()) =>
   new Intl.DateTimeFormat("en-CA", {
@@ -540,17 +551,23 @@ export function showsFor(
   if (!venue.movieIds.includes(movieId) || !dates().includes(date)) return [];
   const movie = configuredMovies.find((m) => m.id === movieId);
   if (!movie) return [];
-  return (venue.times || ["10:30", "14:15", "18:30", "21:45"]).map(
+  if (venue.screenings) return venue.screenings.filter(s=>s.movieId===movieId && (!s.date || s.date===date)).map(s=>({
+    ...s,id:[venue.id,movieId,date,s.key].join("~"),venueId:venue.id,date,source:"demo" as const,
+  }));
+  const times = venue.times || ["10:30", "12:15", "14:15", "16:30", "18:30", "21:45"];
+  return times.map(
     (time, i) => ({
       id: [venue.id, movieId, date, time.replace(":", "")].join("~"),
       movieId,
       venueId: venue.id,
-      blueprintId: venue.blueprints[i % venue.blueprints.length],
+      blueprintId: venue.blueprints[(["10:30","14:15","18:30","21:45"].includes(time) ? ["10:30","14:15","18:30","21:45"].indexOf(time) : i) % venue.blueprints.length],
       date,
       time,
-      format: i === 2 && venue.formats.includes("IMAX") ? "IMAX" : "2D",
-      language: movie.languages[0],
-      price: venue.price,
+      format: time === "18:30" && venue.formats.includes("IMAX") ? "IMAX" : "2D",
+      language: ["12:15","16:30"].includes(time) ? movie.languages[(time === "12:15" ? 1 : 2) % movie.languages.length] : movie.languages[0],
+      price: venue.price + (time === "12:15" ? 20 : time === "16:30" ? 40 : 0),
+      auditoriumId: `${venue.id}-${movieId}-demo-${i + 1}`,
+      source: "demo" as const,
     }),
   );
 }

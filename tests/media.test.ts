@@ -5,7 +5,7 @@ import { cinemaListings } from "../lib/cinema-listings";
 
 describe("movie media configuration", () => {
   it("assigns distinct film trailers and matching full-resolution artwork", () => {
-    const films = movies.filter((m) => m.id !== "sintel");
+    const films = movies.filter((m) => !!m.youtubeId);
     expect(new Set(films.map((m) => m.youtubeId)).size).toBe(films.length);
     expect(new Set(films.map((m) => m.backdrop)).size).toBe(films.length);
     films.forEach((movie) => {

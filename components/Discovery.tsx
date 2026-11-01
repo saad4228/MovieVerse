@@ -38,6 +38,12 @@ import { MovieCard, Trailer } from "./Home";
 import HeroPreview from "./HeroPreview";
 import { posterSet } from "@/lib/movie-media";
 import CityCinemaListings from "./CityCinemaListings";
+import MovieInformation, { MovieBackdrop, useMovieInformation } from "./MovieInformation";
+import { isUpcoming, releaseLabel, releaseState } from "@/lib/movie-information";
+import { directSources } from "@/lib/video/sources";
+import CinemaDirectory, { DirectoryDetail } from "./CinemaDirectory";
+import { cinemaDirectoryProvider } from "@/lib/cinema-directory";
+import { demoShowtimeProvider, type AvailabilitySummary } from "@/lib/providers";
 const amenities: Record<string, typeof Car> = {
   Parking: Car,
   "Wheelchair access": Accessibility,
@@ -54,12 +60,13 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
   const [sort, setSort] = useState("Recommended");
   const [query, setQuery] = useState("");
   const [minRating, setMinRating] = useState("Any rating");
+  const [region,setRegion] = useState("IN");
   useEffect(() => {
     setLanguage(params.get("language") || "All");
     setGenre(params.get("genre") || "All genres");
   }, [params]);
   const list = (
-    upcoming ? movies.filter((m) => m.status === "upcoming") : cityMovies(city)
+    upcoming ? movies.filter((m) => isUpcoming(m,region)) : cityMovies(city)
   )
     .filter(
       (m) =>
@@ -76,7 +83,7 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
           ? a.title.localeCompare(b.title)
           : sort === "Shortest first"
             ? a.duration - b.duration
-            : 0,
+            : upcoming ? (a.id === "avengers-doomsday" ? -1 : b.id === "avengers-doomsday" ? 1 : a.release.localeCompare(b.release)) : 0,
     );
   const changeLanguage = (l: string) => {
     setLanguage(l);
@@ -111,8 +118,9 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
         </p>
       </div>
       <div className="discovery-toolbar">
+        {upcoming && <label className="sort-label">Release market <select aria-label="Release market" value={region} onChange={e=>setRegion(e.target.value)}><option value="IN">India</option><option value="US">United States</option></select></label>}
         <div className="chips">
-          {["All", "Tamil", "Telugu", "Hindi", "Kannada", "English"].map(
+          {["All", "Tamil", "Telugu", "Hindi", "Kannada", "Malayalam", "English"].map(
             (l) => (
               <button
                 key={l}
@@ -147,18 +155,7 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
         >
-          {[
-            "All genres",
-            "Action",
-            "Thriller",
-            "Adventure",
-            "Mythology",
-            "Drama",
-            "Animation",
-            "Spy",
-            "Crime",
-            "Gangster",
-          ].map((g) => (
+          {["All genres",...new Set(movies.flatMap(m=>m.genre))].map((g) => (
             <option key={g}>{g}</option>
           ))}
         </select>
@@ -184,7 +181,7 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
       {list.length ? (
         <div className="movie-grid">
           {list.map((m, i) => (
-            <MovieCard movie={m} key={m.id} index={i} />
+            <div key={m.id}><MovieCard movie={m} index={i} />{upcoming && <p className="release-card-date">{releaseLabel(m,region)}<span>{releaseState(m,region).replaceAll("-"," ")}</span></p>}</div>
           ))}
         </div>
       ) : (
@@ -205,8 +202,7 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
         </Empty>
       )}
       <p className="demo-note">
-        Curated demonstration catalog. Ratings, release dates and screenings are
-        sample data.
+        Sourced film information and regional release dates. Ratings and local screenings are demonstration data; unconfirmed release dates are labelled.
       </p>
     </main>
   );
@@ -248,6 +244,8 @@ function DateStrip({
   );
 }
 export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
+  const [availability,setAvailability]=useState<Record<string,AvailabilitySummary>>({});
+  const [availabilityFilter,setAvailabilityFilter]=useState("All availability");
   const city = useApp((s) => s.city);
   const [date, setDate] = useState(dates()[0]);
   const [format, setFormat] = useState("All formats");
@@ -281,13 +279,14 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
         (format === "All formats" || s.format === format) &&
         (language === "All languages" || s.language === language) &&
         (maxPrice === "Any price" || s.price <= 200) &&
+        (availabilityFilter === "All availability" || (availabilityFilter === "Seats available" ? ["available","limited"].includes(availability[s.id]?.status) : availability[s.id]?.status === "sold-out")) &&
         (period === "All times" ||
           (period === "Before 6 PM" ? s.time < "18:00" : s.time >= "18:00")),
     );
   const listings = relevant
     .flatMap((v) =>
       (movie ? [movie] : movies.filter((m) => v.movieIds.includes(m.id))).map(
-        (m) => ({ v, m, shows: filterShows(showsFor(v, m.id, date)) }),
+        (m) => ({ v, m, shows: filterShows(demoShowtimeProvider.list(v, m.id, date)) }),
       ),
     )
     .filter((x) => x.shows.length > 0)
@@ -300,6 +299,17 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
             ? b.shows.length - a.shows.length
             : 0,
     );
+  const showKeys=relevant.flatMap(v=>(movie?[movie]:movies.filter(m=>v.movieIds.includes(m.id))).flatMap(m=>demoShowtimeProvider.list(v,m.id,date).map(s=>s.id))).join(",");
+  useEffect(()=>{
+    const controller=new AbortController();setAvailability({});
+    const ids=showKeys.split(",").filter(Boolean);
+    const refresh=async()=>{
+      const chunks=[];for(let i=0;i<ids.length;i+=40) chunks.push(ids.slice(i,i+40));
+      const results=await Promise.all(chunks.map(chunk=>fetch(`/api/show-availability?shows=${encodeURIComponent(chunk.join(","))}`,{signal:controller.signal}).then(r=>r.ok?r.json():{summaries:{}}).catch(()=>({summaries:{}}))));
+      if(!controller.signal.aborted)setAvailability(Object.assign({},...results.map(r=>(r as {summaries:Record<string,AvailabilitySummary>}).summaries)));
+    };
+    void refresh();const timer=setInterval(refresh,20000);return()=>{controller.abort();clearInterval(timer);};
+  },[showKeys]);
   return (
     <section className="showtimes-section section-container" id="showtimes">
       <SectionTitle
@@ -342,7 +352,7 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
         >
           {[
             "All languages",
-            ...new Set((movie ? [movie] : movies).map((m) => m.languages[0])),
+            ...new Set((movie ? [movie] : movies).flatMap((m) => m.languages)),
           ].map((x) => (
             <option key={x}>{x}</option>
           ))}
@@ -364,6 +374,7 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
           <option>Any price</option>
           <option>From ₹200 or less</option>
         </select>
+        <select aria-label="Show availability" value={availabilityFilter} onChange={e=>setAvailabilityFilter(e.target.value)}><option>All availability</option><option>Seats available</option><option>Sold out</option></select>
       </div>
       <div className="showtime-legend">
         <span>
@@ -438,7 +449,8 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
               {shows.map((s, j) => (
                 <button
                   key={s.id}
-                  className={`time-slot ${(i + j) % 3 === 2 ? "filling" : ""}`}
+                  className={`time-slot ${availability[s.id]?.status === "limited" ? "filling" : ""}`}
+                  disabled={availability[s.id]?.status === "sold-out"}
                   onClick={() => choose(s)}
                   aria-label={`${s.time} ${m.title} at ${v.name}`}
                 >
@@ -457,11 +469,12 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
                     {s.format} · {s.language}
                   </span>
                   <small>from {rupees(s.price)}</small>
+                  <small className="show-availability">{availability[s.id]?.available != null ? `${availability[s.id].available} seats left` : "Check seats"}</small>
                 </button>
               ))}
             </div>
             <p className="showtime-disclaimer">
-              Cancellation available before showtime · Sample availability
+              Demo schedule · Availability is checked against this screening's inventory
             </p>
           </article>
         ))}
@@ -485,6 +498,7 @@ export function MovieDetail({
   notify: (s: string) => void;
 }) {
   const m = movies.find((m) => m.id === id);
+  const info = useMovieInformation(m);
   const city = useApp((s) => s.city);
   const [trailer, setTrailer] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -512,9 +526,9 @@ export function MovieDetail({
     <main>
       <section
         className={`movie-hero ${m.id === "sintel" ? "sample-film" : ""}`}
-        style={{ backgroundImage: `url(${m.backdrop})` }}
       >
-        {(m.trailer || m.youtubeId || m.trailers?.length) && (
+        <MovieBackdrop key={m.id} movie={m} />
+        {directSources(m).length > 0 && (
           <HeroPreview movie={m} suspended={trailer} />
         )}
         <div className="movie-hero-shade" />
@@ -534,24 +548,24 @@ export function MovieDetail({
             <div>
               <div className="movie-kicker">
                 <span>
-                  {m.status === "upcoming"
+                  {isUpcoming(m)
                     ? "COMING SOON"
                     : "THE BIG SCREEN AWAITS"}
                 </span>
                 <span className="certificate">{m.certificate}</span>
                 <span>
                   {m.languages.slice(0, 2).join(" · ")} ·{" "}
-                  {Math.floor(m.duration / 60)}h {m.duration % 60}m
+                  {m.duration ? `${Math.floor(m.duration / 60)}h ${m.duration % 60}m` : "Runtime TBA"}
                 </span>
               </div>
               <h1>{m.title}</h1>
               <p>
                 <strong className="movie-rating">
                   <Star size={15} fill="currentColor" />
-                  {m.rating}
+                  {m.rating || "Not rated"}
                 </strong>
                 <span>{m.genre.join(" · ")}</span>
-                <span>{m.cast.slice(0, 2).join(", ")}</span>
+                <span>{info?.cast.slice(0,2).map(p=>p.name).join(", ") || m.cast.slice(0, 2).join(", ")}</span>
               </p>
             </div>
           </div>
@@ -563,7 +577,7 @@ export function MovieDetail({
               <Play size={14} fill="currentColor" />
               {m.trailer ? "Play trailer" : "Trailer preview"}
             </button>
-            {m.status === "showing" && available ? (
+            {!isUpcoming(m) && available ? (
               <a className="btn btn-gold" href="#showtimes">
                 Book tickets ↓
               </a>
@@ -602,54 +616,21 @@ export function MovieDetail({
           </div>
         </div>
       </section>
-      <section className="movie-about section-container">
-        <div>
-          <span className="eyebrow">BEHIND THE STORY</span>
-          <h2>{m.tagline}</h2>
-          <p>{m.description}</p>
-          <div className="chips">
-            {m.formats.map((f) => (
-              <span className="chip static" key={f}>
-                {f}
-              </span>
-            ))}
-            <span className="chip static">{m.genre.join(" · ")}</span>
-          </div>
-        </div>
-        <div className="movie-facts">
-          <div>
-            <span>STARRING</span>
-            <strong>{m.cast.slice(0, 2).join(" · ")}</strong>
-          </div>
-          <div>
-            <span>{m.id === "sintel" ? "CREATED BY" : "FILMMAKER"}</span>
-            <strong>{m.cast.at(-1)}</strong>
-          </div>
-          <div>
-            <span>DEMO RELEASE</span>
-            <strong>
-              {new Date(m.release).toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </strong>
-          </div>
-        </div>
-      </section>
-      {m.status === "showing" ? (
+      <MovieInformation key={m.id} movie={m} info={info} />
+      {!isUpcoming(m) ? (
         available ? (
           <Showtimes key={city + m.id} movie={m} />
         ) : (
           <section className="section-container">
             <Empty
-              title={`Not screening in ${cities.find((c) => c.id === city)!.name} today`}
+              title={`No demo screenings configured in ${cities.find((c) => c.id === city)!.name}`}
             >
               Choose another city from the header or{" "}
               <Link href="/movies" className="text-link">
                 explore available movies.
               </Link>
             </Empty>
+            <CityCinemaListings city={city} movie={m.id} date={dates()[0]} />
           </section>
         )
       ) : (
@@ -657,12 +638,7 @@ export function MovieDetail({
           <span className="eyebrow">A LITTLE ANTICIPATION GOES A LONG WAY</span>
           <h2>The next big thing is on its way.</h2>
           <p>
-            Demo release:{" "}
-            {new Date(m.release).toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
+            {releaseLabel({...m,metadata:info})}
             . Showtimes will appear here when screenings are configured.
           </p>
           <Link href="/movies" className="btn btn-gold">
@@ -720,6 +696,8 @@ export function CinemaDiscovery() {
         </h1>
         <p>Find your favourite screen. Or discover a new one.</p>
       </div>
+      <CinemaDirectory key={city} city={city}/>
+      <div className="demo-cinemas-heading"><span className="eyebrow">TRY THE MOVIEVERSE EXPERIENCE</span><h2>Interactive demo cinemas.</h2><p>Explore illustrative 3D rooms and test the complete booking journey. These schedules are separate from the sourced venue directory above.</p></div>
       <div className="cinema-discovery-banner">
         <Building2 size={34} />
         <div>
@@ -872,6 +850,10 @@ export function CinemaCard({ venue: v }: { venue: Venue }) {
   );
 }
 export function CinemaDetail({ id }: { id: string }) {
+  if (cinemaDirectoryProvider.find(id)) return <DirectoryDetail id={id}/>;
+  return <DemoCinemaDetail id={id}/>;
+}
+function DemoCinemaDetail({ id }: { id:string }) {
   const v = venues.find((v) => v.id === id);
   const city = useApp((s) => s.city);
   const setCity = useApp((s) => s.setCity);
