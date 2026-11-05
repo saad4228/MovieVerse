@@ -4,114 +4,108 @@
 
 <h1 align="center">MovieVerse</h1>
 
-<p align="center"><strong>Your universe. Your movie. Your seat.</strong><br />Movie discovery meets an interactive cinema booking demo.</p>
-
 <p align="center">
-  <a href="https://github.com/saad4228/MovieVerse"><img alt="React 19" src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white" /></a>
-  <a href="https://github.com/saad4228/MovieVerse"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white" /></a>
-  <a href="https://github.com/saad4228/MovieVerse"><img alt="Three.js" src="https://img.shields.io/badge/Three.js-0.187-black?logo=threedotjs&logoColor=white" /></a>
-  <a href="https://github.com/saad4228/MovieVerse"><img alt="Cloudflare Workers" src="https://img.shields.io/badge/Cloudflare-Workers-F38020?logo=cloudflare&logoColor=white" /></a>
-  <a href="https://github.com/saad4228/MovieVerse"><img alt="Project status: interactive demo" src="https://img.shields.io/badge/status-interactive%20demo-26A269" /></a>
+  <strong>Your universe. Your movie. Your seat.</strong><br />
+  Discover your next film. Step inside the theatre. Find your seat.
 </p>
 
 <p align="center">
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-149ECA?style=flat-square&amp;logo=react&amp;logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&amp;logo=typescript&amp;logoColor=white" />
+  <img alt="Three.js" src="https://img.shields.io/badge/Three.js-0.187-151515?style=flat-square&amp;logo=threedotjs&amp;logoColor=white" />
+  <img alt="Cloudflare Workers" src="https://img.shields.io/badge/Cloudflare-Workers-F38020?style=flat-square&amp;logo=cloudflare&amp;logoColor=white" />
+  <img alt="Interactive demo" src="https://img.shields.io/badge/status-interactive%20demo-8B6A25?style=flat-square" />
+</p>
+
+<p align="center">
+  <a href="#the-3d-theatre">3D theatre</a> ·
   <a href="#screenshots">Screenshots</a> ·
-  <a href="#what-movieverse-does">What it does</a> ·
-  <a href="#technology">Technology</a> ·
-  <a href="#run-locally">Run locally</a> ·
-  <a href="#data-freshness-and-booking-availability">Data freshness</a>
+  <a href="#from-seats-to-a-demo-ticket">Booking experience</a> ·
+  <a href="#technology">Tech stack</a> ·
+  <a href="#run-locally">Run locally</a>
 </p>
 
-MovieVerse brings the cinema journey into one place: discover films, find a screening in the demo catalogue, explore a 3D auditorium, choose seats, add snacks, and follow a simulated checkout through to a digital ticket. It is a portfolio project focused on the experience and engineering of movie discovery and seat selection.
+MovieVerse brings movie discovery and an interactive cinema booking experience together. Explore films, save a personal Watchlist, step inside a 3D auditorium, preview the screen from your chosen chair, and follow a demo booking through to a digital ticket.
 
-> **Demo platform:** MovieVerse does not currently sell real cinema tickets or process real payments. Showtimes, seat inventory, snack orders, and checkout outcomes are clearly illustrative. TMDB movie metadata does not confirm that a film is screening in a particular cinema.
+![MovieVerse homepage with its cinematic carousel, featured artwork, and booking actions](docs/screenshots/homepage-booking-carousel.jpg)
 
-## Screenshots
+<p align="center"><em>The homepage: a cinematic carousel highlighting configured demo screenings in the selected city.</em></p>
 
-These are compressed captures of the MovieVerse application. Booking and checkout images show the demo flow.
-
-![MovieVerse homepage with its cinematic movie carousel and booking actions](docs/screenshots/homepage-booking-carousel.jpg)
-
-*The homepage carousel highlights films with configured demo screenings in the selected city.*
-
-## What MovieVerse does
-
-MovieVerse separates two different user needs:
-
-| Area | Question it answers | What the data means |
-| --- | --- | --- |
-| **Movies** | “What can I watch in a cinema?” | Movies connected to MovieVerse screening records. Until a licensed inventory provider is connected, these are labelled demo screenings. |
-| **Explore** | “What movies are worth discovering?” | A broader catalogue of films and collections. A listing here does not imply a local screening or booking availability. |
-
-### Movie discovery
-
-- Browse movies, search titles, explore genres, and view movie details.
-- Discover curated collections across Indian, Hindi-language, Hollywood, and international cinema.
-- Use the TMDB-backed discovery catalogue when the server-side integration and catalogue sync are configured.
-- Save and remove movies from a personal Watchlist.
-
-### Cinema journey
-
-- Browse cinemas and switch between supported city directories.
-- Enter the illustrative booking flow through a configured demo screening.
-- Select seats in a Three.js auditorium or use the 2D seat map.
-- Review seat classes, pricing, and selections; continue to snacks and a demo checkout.
-- View a booking confirmation and digital ticket for a simulated booking.
-
-### Accounts and preferences
-
-- Register and sign in to a MovieVerse account.
-- Save a Watchlist to the signed-in account.
-- Keep browsing preferences and guest booking state in the application’s supported session/local storage flows.
-
-<details>
-<summary><strong>Browse the application gallery</strong> — Movies, Explore, details, cinemas, Watchlist, and profile</summary>
-<br />
-<table>
-  <tr>
-    <td width="50%"><strong>Movies</strong><br /><img src="docs/screenshots/movies-discovery.jpg" alt="Movie browsing with poster cards" /></td>
-    <td width="50%"><strong>Explore collections</strong><br /><img src="docs/screenshots/explore-collections.jpg" alt="Explore MovieVerse film collections" /></td>
-  </tr>
-  <tr>
-    <td><strong>Movie details</strong><br /><img src="docs/screenshots/movie-details.jpg" alt="Movie artwork, metadata, and actions on the detail page" /></td>
-    <td><strong>Cinema discovery</strong><br /><img src="docs/screenshots/cinema-discovery.jpg" alt="Cinema directory with city-specific listings" /></td>
-  </tr>
-  <tr>
-    <td><strong>Watchlist</strong><br /><img src="docs/screenshots/watchlist.jpg" alt="Saved movies in a personal Watchlist" /></td>
-    <td><strong>Profile</strong><br /><img src="docs/screenshots/profile.jpg" alt="Profile for a test account with Watchlist, tickets, and photo controls" /></td>
-  </tr>
-</table>
-</details>
+> **Portfolio demo:** Movie discovery uses TMDB when configured. Cinema bookings, inventory, snack orders, payments, and tickets are simulations; no real money is charged or cinema admission issued.
 
 ## The 3D theatre
 
-The auditorium is rendered in the browser with React Three Fiber and Three.js. Auditorium layouts describe rows, aisles, screen dimensions, seat identifiers, and seating categories; the renderer turns those descriptions into interactive geometry. Seat selection is connected to the same booking summary and inventory checks used by the 2D map.
+The signature MovieVerse experience: explore a cinema auditorium before choosing your seats.
 
-Camera presets, orbit/zoom/pan, selected-seat previews, category-aware pricing, and a 2D alternative support different ways to explore the room. The projection surface can show official YouTube embeds or configured, authorized hosted MP4/HLS media. Hosted video uses an HTML video element and Three.js `VideoTexture`; YouTube remains subject to YouTube’s own branding, embedding, and playback behaviour. Media playback is not a source of ticket or showtime data.
+![MovieVerse 3D auditorium with a projection screen, balcony seating, camera presets, and booking sidebar](docs/screenshots/3d-seat-selection.jpg)
 
-The supplied auditorium blueprints and demo inventory are illustrative. They are not measured architectural plans or a connection to a cinema’s live seat map.
+| Explore the room | Choose your seats | Preview your experience |
+| --- | --- | --- |
+| Overview, Balcony, Bird's Eye, guided Tour, and free camera controls. | Interactive chairs, availability indicators, seat classes, quick pick, and a 2D alternative. | Move to a selected chair's actual position and look toward the projection screen. |
 
-![MovieVerse auditorium with balcony seating, projection screen, and selected-seat summary](docs/screenshots/3d-seat-selection.jpg)
+The auditorium is rendered with **Three.js and React Three Fiber**. The 3D chairs, 2D map, booking summary, pricing, and backend inventory share the same seat identifiers. The balcony includes an elevated deck and selectable upper-level seating.
 
-*The same seat identifiers connect the 3D chairs, 2D map, price calculation, and backend inventory.*
+The screen supports official YouTube embeds and configured, authorized MP4/HLS sources. Hosted media uses a `VideoTexture`; YouTube retains its provider-owned playback and branding behaviour. Auditorium blueprints are illustrative demo layouts.
 
-### From seats to a demo ticket
+## Screenshots
 
-Continuing from seat selection acquires an eight-minute server-side hold. Snack selection and coupon calculations feed the checkout summary. The backend recalculates the amount, checks ownership and hold expiry, and records a simulated payment and booking in a D1 transaction. A repeated checkout request uses an idempotency key to return the existing booking. Confirmation, My Tickets, QR verification, and image/print exports use that saved booking snapshot.
+A closer look at the application. Each image is a real capture stored in this repository; click a screenshot to inspect it at full size.
 
-<details>
-<summary><strong>View snacks, checkout, and My Tickets</strong></summary>
-<br />
+### Discover films and cinemas
 
-![MovieVerse snack ordering and booking summary](docs/screenshots/snack-selection.jpg)
+| Movies | Explore the MovieVerse |
+| --- | --- |
+| [![Movies page with city-specific demo screening choices](docs/screenshots/movies-discovery.jpg)](docs/screenshots/movies-discovery.jpg) | [![Explore page with Hollywood, Indian, and international movie collections](docs/screenshots/explore-collections.jpg)](docs/screenshots/explore-collections.jpg) |
+| Films connected to configured cinema screenings. | A wider catalogue of films, genres, and collections. |
 
-![MovieVerse checkout with offers and explicitly simulated payment methods](docs/screenshots/demo-checkout.jpg)
+| Movie details | Cinema discovery |
+| --- | --- |
+| [![Movie details with cinematic artwork, metadata, cast information, and actions](docs/screenshots/movie-details.jpg)](docs/screenshots/movie-details.jpg) | [![Cinema directory with city-specific venue listings](docs/screenshots/cinema-discovery.jpg)](docs/screenshots/cinema-discovery.jpg) |
+| Movie artwork, story, release information, and trailers. | Browse venues and discover cinema experiences by city. |
 
-![My Tickets page with a backend-confirmed demo booking](docs/screenshots/my-tickets.jpg)
+### Your corner of MovieVerse
 
-*Profile and My Tickets captures use a test account and a real local demo booking. No real payment or cinema admission is involved.*
+| Watchlist | Personal profile |
+| --- | --- |
+| [![Personal Watchlist displaying saved movie poster cards](docs/screenshots/watchlist.jpg)](docs/screenshots/watchlist.jpg) | [![MovieVerse profile with account information, photo controls, and personal shortcuts](docs/screenshots/profile.jpg)](docs/screenshots/profile.jpg) |
+| Account-backed saved films with synchronized heart controls. | Custom profile photo, account details, and personal shortcuts. |
 
-</details>
+## From seats to a demo ticket
+
+**Choose a screening → select seats → add snacks → review checkout → receive a demo ticket.**
+
+### Snacks and checkout
+
+| Add something for the movie | Review your booking |
+| --- | --- |
+| [![Snacks page showing food choices and the current booking summary](docs/screenshots/snack-selection.jpg)](docs/screenshots/snack-selection.jpg) | [![Checkout page with customer details, offers, demo payment methods, and itemized summary](docs/screenshots/demo-checkout.jpg)](docs/screenshots/demo-checkout.jpg) |
+| Browse snacks and update quantities alongside your seat selection. | Apply or remove an offer and review the final demo amount. |
+
+Continuing from seat selection requests an **eight-minute server-side hold**. Checkout recalculates pricing, verifies ownership and expiry, and confirms the demo booking in a D1 transaction. An idempotency key prevents repeated checkout requests from creating duplicate bookings.
+
+### My Tickets and booking confirmation
+
+![My Tickets page with a confirmed demo booking, movie artwork, dynamically generated QR code, and ticket actions](docs/screenshots/my-tickets.jpg)
+
+The confirmation experience prints the ticket into view and applies the BOOKED stamp after confirmation. Saved tickets retain their booking snapshot, dynamically generated verification QR, download action, and dedicated print layout. Download produces a ticket image; browser printing also supports Save as PDF.
+
+*Profile and ticket screenshots use a test account and a backend-confirmed local demo booking.*
+
+## What MovieVerse does
+
+| Feature | What it brings to the experience |
+| --- | --- |
+| **Movie discovery** | TMDB-backed collections, genre browsing, title search, regional release information, and cinematic movie details. |
+| **Personal Watchlist** | Save/remove films, prevent duplicates, and synchronize saved state across pages against an authenticated account. |
+| **Cinema discovery** | City-aware venue directory, individual cinema pages, and separately configured demo screenings. |
+| **Interactive seat selection** | 3D auditorium, camera presets, actual-seat previews, class-aware pricing, quick pick, and 2D map. |
+| **Booking and checkout** | Timed holds, snacks, single-coupon pricing, itemized totals, and explicit simulated payment outcomes. |
+| **Digital tickets** | Confirmation animation, saved booking details, QR verification, image download, and print preparation. |
+| **Accounts** | Registration, sign-in, custom profile photos, persistent Watchlists, and owned booking history. |
+
+**Movies** answers “What can I watch in a cinema?” using configured screenings. **Explore** answers “What movies are worth discovering?” using the broader discovery catalogue. A film appearing in Explore does not establish local booking availability.
+
+---
 
 ## Technology
 
