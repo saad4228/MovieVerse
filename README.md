@@ -51,24 +51,12 @@ The screen supports official YouTube embeds and configured, authorized MP4/HLS s
 
 A closer look at the application. Each image is a real capture stored in this repository; click a screenshot to inspect it at full size.
 
-### Discover films and cinemas
+### Movie discovery and details
 
-| Movies | Explore the MovieVerse |
+| Movies | Movie details |
 | --- | --- |
-| [![Movies page with city-specific demo screening choices](docs/screenshots/movies-discovery.jpg)](docs/screenshots/movies-discovery.jpg) | [![Explore page with Hollywood, Indian, and international movie collections](docs/screenshots/explore-collections.jpg)](docs/screenshots/explore-collections.jpg) |
-| Films connected to configured cinema screenings. | A wider catalogue of films, genres, and collections. |
-
-| Movie details | Cinema discovery |
-| --- | --- |
-| [![Movie details with cinematic artwork, metadata, cast information, and actions](docs/screenshots/movie-details.jpg)](docs/screenshots/movie-details.jpg) | [![Cinema directory with city-specific venue listings](docs/screenshots/cinema-discovery.jpg)](docs/screenshots/cinema-discovery.jpg) |
-| Movie artwork, story, release information, and trailers. | Browse venues and discover cinema experiences by city. |
-
-### Your corner of MovieVerse
-
-| Watchlist | Personal profile |
-| --- | --- |
-| [![Personal Watchlist displaying saved movie poster cards](docs/screenshots/watchlist.jpg)](docs/screenshots/watchlist.jpg) | [![MovieVerse profile with account information, photo controls, and personal shortcuts](docs/screenshots/profile.jpg)](docs/screenshots/profile.jpg) |
-| Account-backed saved films with synchronized heart controls. | Custom profile photo, account details, and personal shortcuts. |
+| [![Movies page with city-specific demo screening choices](docs/screenshots/movies-discovery.jpg)](docs/screenshots/movies-discovery.jpg) | [![Movie details with cinematic artwork, metadata, cast information, and actions](docs/screenshots/movie-details.jpg)](docs/screenshots/movie-details.jpg) |
+| Films connected to configured cinema screenings. | Movie artwork, story, release information, and trailers. |
 
 ## From seats to a demo ticket
 
@@ -89,7 +77,7 @@ Continuing from seat selection requests an **eight-minute server-side hold**. Ch
 
 The confirmation experience prints the ticket into view and applies the BOOKED stamp after confirmation. Saved tickets retain their booking snapshot, dynamically generated verification QR, download action, and dedicated print layout. Download produces a ticket image; browser printing also supports Save as PDF.
 
-*Profile and ticket screenshots use a test account and a backend-confirmed local demo booking.*
+*The ticket screenshot uses a test account and a backend-confirmed local demo booking.*
 
 ## What MovieVerse does
 
