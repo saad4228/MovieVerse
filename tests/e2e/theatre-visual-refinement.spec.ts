@@ -1,0 +1,43 @@
+import {test,expect} from "@playwright/test";
+import {screenFrame} from "../../lib/auditorium";
+test("booking theatre uses compact charcoal navigation and a proportional larger screen",async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  const inventoryResponse=page.waitForResponse(response=>response.url().includes("/api/inventory?"));
+  await page.goto("/movies/sintel");
+  await page.getByRole("button",{name:/TOMORROW/}).click();
+  await page.locator(".time-slot").first().click();
+  const inventory=await (await inventoryResponse).json();
+  const base=screenFrame(inventory.blueprint);
+  const canvas=page.locator("canvas");
+  await expect(canvas).toHaveAttribute("data-video-status","playing",{timeout:60000});
+  const current=JSON.parse((await canvas.getAttribute("data-screen-frame"))!);
+  expect(current.width).toBeGreaterThanOrEqual(base.width);
+  expect(current.width).toBeLessThanOrEqual(base.width*1.025+.0001);
+  expect(current.width/current.height).toBeCloseTo(base.width/base.height);
+  await expect(page.locator(".header")).toHaveClass(/theatre-navbar/);
+  await expect(page.locator(".header")).toHaveCSS("backdrop-filter","none");
+  await expect(page.locator(".header")).toHaveCSS("border-bottom-width","1px");
+  expect((await page.locator(".header").boundingBox())!.height).toBe(72);
+  expect((await page.locator(".booking-topbar").boundingBox())!.height).toBeLessThanOrEqual(58);
+  await page.getByRole("button",{name:"Best 2 seats",exact:true}).click();
+  await expect(page.locator(".selected-seats-list>div:not(.seat-row-leaving)")).toHaveCount(2);
+  const selected=(await page.locator(".selected-seats-list").textContent())!;
+  await page.getByRole("button",{name:"Overview",exact:true}).click();
+  await expect(canvas).toHaveAttribute("data-camera-moving","false");
+  const centre=await canvas.evaluate((element:any)=>element.movieverseDiagnostics().screen);
+  if(centre && centre.x>0 && centre.y>0 && centre.x<1000 && centre.y<900) {
+    await page.mouse.click(centre.x,centre.y);
+    await expect(page.locator(".selected-seats-list")).toHaveText(selected);
+  }
+  await page.screenshot({path:"test-results/theatre-refined-1440.png"});
+  await page.setViewportSize({width:390,height:844});
+  expect((await page.locator(".header").boundingBox())!.height).toBe(68);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1)).toBe(true);
+  await page.screenshot({path:"test-results/theatre-refined-mobile.png"});
+  await page.setViewportSize({width:1440,height:900});
+  await expect(page.locator(".selected-seats-list")).toHaveText(selected);
+  await page.getByRole("button",{name:"Continue · Add snacks",exact:true}).click();
+  await expect(page).toHaveURL(/\/snacks$/);
+  await expect(page.locator(".header")).toHaveClass(/theatre-navbar/);
+  await expect(page.locator(".header")).toHaveCSS("height","72px");
+});

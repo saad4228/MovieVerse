@@ -2,14 +2,17 @@ import { describe, expect, it } from "vitest";
 import { blueprints, makeSeats, movies } from "../lib/catalog";
 import {
   cameraObstructed,
+  auditoriumEnvelope,
   cameraView,
   clampRoom,
   safeCameraPath,
   screenFrame,
+  seatEye,
   viewpoints,
   type Point,
 } from "../lib/auditorium";
 import {
+  youtubeEmbedUrl,
   directSources,
   officialTrailerLink,
   fitScreen,
@@ -50,12 +53,32 @@ describe("physical auditorium navigation", () => {
       expect(p[2]).toBeGreaterThan(screenFrame(b).z);
       const high = clampRoom(b, [999, 999, 999]);
       expect(high[0]).toBeLessThan(b.width / 2);
-      expect(high[1]).toBeLessThan(b.height);
+      expect(high[1]).toBeLessThan(auditoriumEnvelope(b).height);
       expect(high[2]).toBeLessThan(b.depth / 2);
       const seat = makeSeats(b)[5];
       expect(
         cameraObstructed(b, [seat], [seat.x, seat.y + 1.1, seat.z + 0.3]),
       ).toBe(true);
+    });
+    it(`${b.id}: large screen, frame and valance fit while first-row sightlines remain usable`, () => {
+      const frame = screenFrame(b), room = auditoriumEnvelope(b);
+      const seats = makeSeats(b);
+      expect(frame.width / (b.width - 1.6)).toBeGreaterThanOrEqual(.75);
+      expect(frame.width / (b.width - 1.6)).toBeLessThanOrEqual(.85 + Number.EPSILON);
+      expect(frame.width / frame.height).toBeCloseTo(16 / 9, 8);
+      expect(frame.width / 2 + .325).toBeLessThan(b.width / 2 - .4);
+      expect(frame.y - frame.height / 2 - .325).toBeGreaterThan(.9);
+      expect(frame.y + frame.height / 2 + .725).toBeLessThan(room.height - .3);
+      expect(frame.z - .335).toBeGreaterThan(room.front + .15);
+      const firstRow = seats.filter(s => s.row === seats[0].row);
+      for (const seat of firstRow) {
+        const eye = seatEye(seat);
+        const angle = Math.atan2(frame.y - eye[1], Math.hypot(frame.x - eye[0], frame.z - eye[2])) * 180 / Math.PI;
+        expect(angle).toBeLessThanOrEqual(35.01);
+      }
+      const view = cameraView(b, "From stage", seats, null, 0);
+      expect(view.position[2]).toBeGreaterThan(frame.z);
+      expect(view.target).toEqual([frame.x, frame.y, frame.z]);
     });
   }
   it("uses a smaller route in compact rooms and respects a custom screen", () => {
@@ -122,4 +145,22 @@ describe("direct media selection", () => {
     expect(fit).toEqual({ width: 24, height: 10 });
     expect(fitScreen(24, 13.5, 1).width).toBe(13.5);
   });
+});
+
+it("embedded trailers disable standard controls and fullscreen on every URL", () => {
+  for (const id of ["first", "second"]) {
+    const url = new URL(youtubeEmbedUrl(id, "http://localhost:5173"));
+    for (const [key, value] of Object.entries({controls:"0",fs:"0",disablekb:"1",enablejsapi:"1",autoplay:"1",playsinline:"1",rel:"0"})) expect(url.searchParams.get(key)).toBe(value);
+  }
+});
+for (const b of blueprints) it(`${b.id}: camera clearance blocks under-seat volumes and uses walls, not the screen plane`, () => {
+ const seats=makeSeats(b), room=auditoriumEnvelope(b);
+ for(const seat of seats) {
+   expect(cameraObstructed(b,seats,[seat.x,seat.y+.3,seat.z])).toBe(true);
+   expect(cameraObstructed(b,seats,[seat.x,seat.y+1.3,seat.z+.4])).toBe(true);
+   expect(cameraObstructed(b,seats,seatEye(seat),seat.id)).toBe(false);
+ }
+ const nearScreen:Point=[0,5,screenFrame(b).z+.8];
+ expect(clampRoom(b,nearScreen)).toEqual(nearScreen);
+ expect(clampRoom(b,[0,5,-999])[2]).toBeCloseTo(room.front+.65);
 });

@@ -1,26 +1,59 @@
 "use client";
+import "./checkout-background.css";
+import "./explore.css";
+import "./watchlist.css";
+import "./home-atmosphere.css";
+import "./movie-detail-polish.css";
+
+
+import BrowseScrollRestoration from "./BrowseScrollRestoration";
+import WatchlistSync from "./WatchlistSync";
 import { useEffect, useState, Suspense, lazy } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, X } from "lucide-react";
 import Navigation from "./Navigation";
-import Home from "./Home";
-import {
-  CinemaDetail,
-  CinemaDiscovery,
-  MovieDetail,
-  MovieDiscovery,
-} from "./Discovery";
-import { Auth, Account, MyTickets, VerifyTicket } from "./Account";
+import CinemaBackground from "./CinemaBackground";
+import MoviesBackground from "./MoviesBackground";
+import AmberCinemaBackground from "./AmberCinemaBackground";
+import TicketsBackground from "./TicketsBackground";
+
+
+
+
 import { Logo } from "./ui";
 import { api } from "@/lib/client";
 import { applyClientCatalog, type Catalog } from "@/lib/catalog-config";
 import { useApp } from "@/lib/store";
+
+
+const Home=lazy(()=>import("./Home"));
+const ExplorePage=lazy(()=>import("./ExplorePage"));
+const CinemaMoviesPage=lazy(()=>import("./ExplorePage").then(m=>({default:m.CinemaMoviesPage})));
+const WatchlistPage=lazy(()=>import("./WatchlistPage"));
+const AboutCreator=lazy(()=>import("./Creator"));
+const LiveMovieDetail=lazy(()=>import("./LiveMovieDetail"));
+const GenrePage=lazy(()=>import("./GenreDiscovery").then(m=>({default:m.GenrePage})));
+const CinemaDetail=lazy(()=>import("./Discovery").then(m=>({default:m.CinemaDetail})));
+const CinemaDiscovery=lazy(()=>import("./Discovery").then(m=>({default:m.CinemaDiscovery})));
+const MovieDetail=lazy(()=>import("./Discovery").then(m=>({default:m.MovieDetail})));
+const MovieDiscovery=lazy(()=>import("./Discovery").then(m=>({default:m.MovieDiscovery})));
+const Auth=lazy(()=>import("./Account").then(m=>({default:m.Auth})));
+const Account=lazy(()=>import("./Account").then(m=>({default:m.Account})));
+const MyTickets=lazy(()=>import("./Account").then(m=>({default:m.MyTickets})));
+const VerifyTicket=lazy(()=>import("./Account").then(m=>({default:m.VerifyTicket})));
 const BookingFlow = lazy(() => import("./BookingFlow"));
 const Admin = lazy(() => import("./Admin"));
 export default function MovieVerse() {
   const path = usePathname() || "/";
   const parts = path.split("/").filter(Boolean).map(decodeURIComponent);
+  const isWatchlistPage=parts[0]==="watchlist";
+  const isCinemaPage = parts[0] === "cinemas";
+  const isMovieListingPage = parts[0] === "explore" || parts[0] === "genres" || (parts[0] === "movies" || parts[0] === "coming-soon") && !parts[1];
+  const isMovieDetail = parts[0] === "movies" && Boolean(parts[1]);
+  const isAmberPage = parts[0] === "account" || parts[0] === "admin";
+  const isAuthPage = (parts[0] === "login" || parts[0] === "register") && !parts[1];
+  const isTicketPage = parts[0] === "my-tickets" || (parts[0] === "booking" && parts[1] === "confirmation");
   const [toast, setToast] = useState("");
   const [ready, setReady] = useState(false);
   useEffect(() => {
@@ -50,19 +83,6 @@ export default function MovieVerse() {
     const t = setTimeout(() => setToast(""), 6500);
     return () => clearTimeout(t);
   }, [toast]);
-  useEffect(() => {
-    if (window.location.hash) {
-      const timer = setTimeout(
-        () =>
-          document
-            .getElementById(window.location.hash.slice(1))
-            ?.scrollIntoView({ behavior: "smooth" }),
-        250,
-      );
-      return () => clearTimeout(timer);
-    }
-    window.scrollTo(0, 0);
-  }, [path]);
   let page;
   if (!ready)
     page = (
@@ -72,13 +92,16 @@ export default function MovieVerse() {
       </div>
     );
   else if (!parts.length) page = <Home />;
+  else if (parts[0] === "about-the-creator") page = <AboutCreator />;
   else if (parts[0] === "movies")
-    page = parts[1] ? (
-      <MovieDetail key={parts[1]} id={parts[1]} notify={setToast} />
+    page = parts[1]?.startsWith("tmdb-") ? <LiveMovieDetail key={parts[1]} id={parts[1]}/> : parts[1] ? (
+      <MovieDetail key={parts[1]} id={parts[1]} />
     ) : (
-      <MovieDiscovery />
+      <CinemaMoviesPage />
     );
-  else if (parts[0] === "coming-soon") page = <MovieDiscovery upcoming />;
+  else if (parts[0] === "explore") page = <ExplorePage/>;
+  else if (parts[0] === "genres") page = <GenrePage key={parts[1]} slug={parts[1] || "action"}/>;
+  else if (parts[0] === "coming-soon") page = <MovieDiscovery key="coming-soon" upcoming />;
   else if (parts[0] === "cinemas")
     page = parts[1] ? (
       <CinemaDetail key={parts[1]} id={parts[1]} />
@@ -106,13 +129,13 @@ export default function MovieVerse() {
           notify={setToast}
         />
       );
+  else if (isWatchlistPage) page=<WatchlistPage/>;
   else if (parts[0] === "my-tickets")
     page = <MyTickets id={parts[1]} notify={setToast} />;
   else if (parts[0] === "ticket") page = <VerifyTicket token={parts[1]} />;
   else if (parts[0] === "login" || parts[0] === "register")
     page = (
       <Auth
-        key={parts[0]}
         register={parts[0] === "register"}
         notify={setToast}
       />
@@ -130,13 +153,20 @@ export default function MovieVerse() {
       </main>
     );
   const booking = parts[0] === "booking" && parts[1] !== "confirmation";
+  const isCheckoutStep = booking && ["snacks", "checkout"].includes(parts[2]);
   return (
-    <>
+    <div className={isAmberPage ? `amber-route-shell ${parts[0] === "account" ? "profile-route-shell" : ""}` : isAuthPage ? "auth-route-shell" : isCheckoutStep ? "checkout-route-shell" : booking && parts[2] === "seats" ? "seat-route-shell" : isCinemaPage ? "cinema-route-shell" : isMovieListingPage || isWatchlistPage ? "movies-route-shell" : isTicketPage ? "tickets-route-shell" : undefined}>
+      {isCinemaPage && <CinemaBackground detail={Boolean(parts[1])} />}
+      {(isMovieListingPage || isWatchlistPage) && <MoviesBackground />}
+      <WatchlistSync notify={setToast}/>
+      <BrowseScrollRestoration/>
+      {isTicketPage && <TicketsBackground />}
+      {isAmberPage && <AmberCinemaBackground/>}
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <Navigation notify={setToast} />
-      <div id="main-content" className="route-frame" key={path}>
+      {!isMovieDetail && <Navigation notify={setToast} />}
+      <div id="main-content" className="route-frame" key={isAuthPage ? "auth" : path}>
         <Suspense
           fallback={
             <div className="initial-loading">
@@ -147,7 +177,7 @@ export default function MovieVerse() {
           {page}
         </Suspense>
       </div>
-      {!booking && ready && (
+      {!booking && !isAuthPage && ready && (
         <footer className="footer section-container">
           <div className="footer-top">
             <div>
@@ -156,9 +186,11 @@ export default function MovieVerse() {
             </div>
             <div>
               <Link href="/movies">Movies</Link>
+              <Link href="/explore">Explore</Link>
               <Link href="/cinemas">Cinemas</Link>
               <Link href="/coming-soon">Coming soon</Link>
               <Link href="/my-tickets">My tickets</Link>
+                <Link href="/watchlist">Watchlist</Link>
               <Link href="/admin">
                 Demo studio
                 <ArrowUpRight size={12} />
@@ -204,6 +236,6 @@ export default function MovieVerse() {
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 }

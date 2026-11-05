@@ -3,6 +3,9 @@ import { z } from "zod";
 import { cinemaDirectoryProvider } from "./cinema-directory";
 
 const listingSchema = z.object({
+  mode: z.literal("production"),
+  providerId: z.string().min(1).max(100),
+  checked: z.string().datetime(),
   cityId: z.string(),
   movieId: z.string(),
   date: z.string(),
@@ -14,17 +17,19 @@ const listingSchema = z.object({
       address: z.string(),
       shows: z.array(
         z.object({
-          time: z.string(),
+          id: z.string().min(1).max(200),
+          time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
           format: z.string(),
           language: z.string(),
-          auditoriumId: z.string().optional(),
+          auditoriumId: z.string().min(1),
           price: z.number().nonnegative().optional(),
+          currency: z.literal("INR").optional(),
           availability: z.enum(["available","limited","sold-out","unknown"]).optional(),
           bookingUrl: z
             .string()
             .url()
             .refine((url) => url.startsWith("https://")),
-        }),
+        }).refine(show=>show.price === undefined || show.currency === "INR", "Prices require their currency"),
       ),
     }),
   ),
@@ -37,6 +42,8 @@ export type CinemaDirectoryResult = {
   source: string;
   checked: string;
   complete: boolean;
+  providerId?: string;
+  error?: string;
   venues: z.infer<typeof listingSchema>["venues"];
 };
 /** A directory is never treated as evidence that a film is screening. */
@@ -68,10 +75,15 @@ export async function cinemaListings(
       shows: [],
     })),
   };
-  if (!settings.LIVE_SHOWTIMES_ENDPOINT) return fallback;
+  // The production path cannot select the local demo showtime generator.
+  const mode = settings.SHOWTIMES_MODE || (settings.LIVE_SHOWTIMES_ENDPOINT ? "production" : "directory");
+  if (mode === "directory") return fallback;
+  const unavailable = (error: string): CinemaDirectoryResult => ({ ...fallback, status: "provider-unavailable", venues: [], checked: "", error });
+  if (mode !== "production") return unavailable("Unsupported cinema provider mode. Demo screenings are available separately.");
+  if (!settings.LIVE_SHOWTIMES_ENDPOINT || settings.LIVE_SHOWTIMES_APPROVED !== "true") return unavailable("Licensed cinema inventory is not connected or approved.");
   try {
     const endpoint = new URL(settings.LIVE_SHOWTIMES_ENDPOINT);
-    if (endpoint.protocol !== "https:") return fallback;
+    if (endpoint.protocol !== "https:" || endpoint.username || endpoint.password) throw new Error("Invalid provider configuration");
     endpoint.searchParams.set("city", cityId);
     endpoint.searchParams.set("movie", movieId);
     endpoint.searchParams.set("date", date);
@@ -80,23 +92,28 @@ export async function cinemaListings(
         ? { Authorization: `Bearer ${settings.LIVE_SHOWTIMES_TOKEN}` }
         : {},
       signal: AbortSignal.timeout(6000),
+      cache: "no-store",
+      redirect: "error",
     });
     if (!response.ok) throw new Error("Listings provider unavailable");
     const data = listingSchema.parse(await response.json());
     if (
       data.cityId !== cityId ||
       data.movieId !== movieId ||
-      data.date !== date
+      data.date !== date ||
+      Date.now() - Date.parse(data.checked) > 2 * 3600_000 ||
+      Date.parse(data.checked) > Date.now() + 60_000 ||
+      new Set(data.venues.map(v=>v.id)).size !== data.venues.length ||
+      data.venues.some(v=>new Set(v.shows.map(s=>s.id)).size !== v.shows.length)
     )
       throw new Error("Listings context mismatch");
     return {
       ...data,
       status: "live",
       source: endpoint.origin,
-      checked: new Date().toISOString(),
       complete: data.complete === true,
     };
   } catch {
-    return { ...fallback, status: "provider-unavailable" };
+    return unavailable("Cinema inventory is temporarily unavailable. No live screenings could be verified.");
   }
 }

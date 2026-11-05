@@ -1,14 +1,11 @@
 "use client";
 import { useEffect, useRef, type ReactNode } from "react";
-import { X, Ticket, ArrowRight, Search } from "lucide-react";
+import { X, ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 export function Logo() {
   return (
     <Link href="/" className="logo" aria-label="MovieVerse home">
-      <span className="logo-mark">
-        <Ticket size={19} fill="currentColor" />
-      </span>
-      <span>MOVIEVERSE</span>
+      <img className="official-logo" src="/assets/movieverse-logo.png" alt="MovieVerse" width={649} height={117} />
     </Link>
   );
 }
@@ -66,15 +63,20 @@ export function Modal({
 export function Empty({
   title,
   children,
+  action,
+  className = "",
 }: {
   title: string;
   children?: ReactNode;
+  action?: ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="empty">
+    <div className={`empty ${className}`}>
       <Search size={30} />
       <h3>{title}</h3>
       <p>{children || "Try a different search or change your filters."}</p>
+      {action}
     </div>
   );
 }

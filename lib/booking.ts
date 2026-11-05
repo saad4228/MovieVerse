@@ -1,3 +1,4 @@
+import { couponDiscount } from "./checkout-offers";
 import {
   categories,
   snacks,
@@ -15,7 +16,7 @@ export type Inventory = Record<
 >;
 export function seatPrice(seat: Seat, show: Show) {
   return (
-    (categories.find((c) => c.id === seat.category)?.price ?? 160) +
+    (seat.classDefinition?.price ?? categories.find((c) => c.id === seat.category)?.price ?? 160) +
     show.price -
     160
   );
@@ -34,10 +35,7 @@ export function calculatePrice(
   );
   const fee = seats.length * 28;
   const tax = Math.round(fee * 0.18);
-  const discount =
-    promo.toUpperCase() === "FIRSTSHOW"
-      ? Math.min(100, Math.round(tickets * 0.1))
-      : 0;
+  const discount = couponDiscount(promo,tickets,food);
   return {
     tickets,
     food,

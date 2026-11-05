@@ -1,10 +1,12 @@
 import vinext from "vinext";
 import { defineConfig } from "vite";
 import hostingConfig from "./.openai/hosting.json";
+import deployment from "./deployment.public.json";
 import { readExecutionProfile } from "./scripts/execution-profile.mjs";
 import { configureToolEnvironment } from "./scripts/tool-environment.mjs";
 import { sites } from "./scripts/vite/sites-vite-plugin";
 import { connectorPreview } from "./scripts/vite/connector-preview-plugin.mjs";
+import { vinextNavigation } from "./scripts/vite/vinext-navigation";
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
@@ -16,14 +18,17 @@ const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
 
 const localBindingConfig = {
+  name:deployment.workerName,
   main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
+  triggers:{crons:["0 3 * * *","0 */6 * * *"]},
   d1_databases: d1
     ? [
         {
           binding: d1,
-          database_name: "site-creator-d1",
-          database_id: SITE_CREATOR_PLACEHOLDER_DATABASE_ID,
+          database_name: deployment.d1DatabaseName,
+          database_id: deployment.d1DatabaseId || SITE_CREATOR_PLACEHOLDER_DATABASE_ID,
+          migrations_dir:"drizzle",
         },
       ]
     : [],
@@ -48,11 +53,13 @@ export default defineConfig(async ({ command }) => {
       ...(managedLinux
         ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] }
         : {}),
-      ...(isCodexSeatbeltSandbox
-        ? { watch: { useFsEvents: false, usePolling: true } }
-        : {}),
+      watch: {
+        ignored: ["**/test-results*/**", "**/playwright-report/**", "**/outputs/**", "**/work/**", "**/.wrangler/**", "**/dist/**"],
+        ...(isCodexSeatbeltSandbox ? {useFsEvents:false,usePolling:true} : {}),
+      },
     },
     plugins: [
+      vinextNavigation(),
       vinext(),
       sites({ mockAuth: !managedLinux }),
       connectorPreview(),
@@ -63,9 +70,12 @@ export default defineConfig(async ({ command }) => {
           ...localBindingConfig,
           ...(command === "serve"
             ? {
-                vars: process.env.ADMIN_TOKEN
-                  ? { ADMIN_TOKEN: process.env.ADMIN_TOKEN }
-                  : {},
+                // Runtime bindings for local server processes only. Never bundle
+                // credentials into browser defines or generated production config.
+                vars: Object.fromEntries([
+                  "ADMIN_TOKEN", "TMDB_READ_TOKEN", "TMDB_API_KEY", "SHOWTIMES_MODE",
+                  "LIVE_SHOWTIMES_ENDPOINT", "LIVE_SHOWTIMES_TOKEN", "LIVE_SHOWTIMES_APPROVED",
+                ].filter(key=>process.env[key]).map(key=>[key,process.env[key]!])),
                 services: [
                   {
                     binding: "CONNECTORS",

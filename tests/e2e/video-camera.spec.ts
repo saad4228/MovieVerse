@@ -176,10 +176,10 @@ test("camera arrows, free view and seat preview retain selection and continuous 
     .getByRole("button", { name: "Previous auditorium viewpoint" })
     .click();
   await expect(page.locator(".viewpoint-label")).toContainText("Front left");
-  await page.getByRole("button", { name: "My view", exact: true }).click();
+  await page.getByRole("button", { name: "View from this seat", exact: true }).click();
   await expect(page.locator(".viewpoint-label")).toContainText("Your view");
   await page.getByLabel("Preview selected seat").selectOption({ index: 0 });
-  await page.getByRole("button", { name: "Return to auditorium" }).click();
+  await page.getByRole("button", { name: "Exit Preview" }).click();
   const region = page.getByRole("region", { name: "Interactive auditorium" });
   await region.focus();
   await page.keyboard.press("ArrowRight");

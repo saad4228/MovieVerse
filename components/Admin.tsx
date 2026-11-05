@@ -5,26 +5,21 @@ import {
   Download,
   Save,
   Box,
-  Settings2,
-  Film,
-  Building2,
-  MapPin,
-  Armchair,
   Info,
 } from "lucide-react";
 import {
   blueprints,
-  cities,
   movies,
-  venues,
   makeSeats,
   type Blueprint,
 } from "@/lib/catalog";
+import { blueprintSchema } from "@/lib/blueprint-config";
 import { seededUnavailable } from "@/lib/booking";
 const Scene = lazy(() => import("./SeatScene"));
 export default function Admin({ notify }: { notify: (s: string) => void }) {
   const [tab, setTab] = useState("Auditoriums");
   const [draft, setDraft] = useState<Blueprint>({ ...blueprints[0] });
+  const [configuration, setConfiguration] = useState("");
   const [token, setToken] = useState("");
   const [busy, setBusy] = useState(false);
   const [map, setMap] = useState("{}");
@@ -38,7 +33,7 @@ export default function Admin({ notify }: { notify: (s: string) => void }) {
     [localUrl],
   );
   function update(key: keyof Blueprint, value: unknown) {
-    setDraft((d) => ({ ...d, [key]: value, rowLengths: undefined }));
+    setDraft((d) => ({ ...d, [key]: value, ...(["rows","columns"].includes(key) ? {rowLengths:undefined,rowConfig:undefined} : {}) }));
   }
   const seats = makeSeats(draft);
   const inventory = Object.fromEntries(
@@ -104,6 +99,7 @@ export default function Admin({ notify }: { notify: (s: string) => void }) {
                   setPreview(false);
                 }}
               >
+                {!blueprints.some(b=>b.id===draft.id) && <option value={draft.id}>{draft.name} (custom draft)</option>}
                 {blueprints.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}
@@ -263,6 +259,18 @@ export default function Admin({ notify }: { notify: (s: string) => void }) {
               >
                 Apply model configuration
               </button>
+            </details>
+            <details>
+              <summary>Advanced auditorium configuration</summary>
+              <p className="fine-print">Load the draft to edit a unique auditorium ID, row overrides, balcony, custom seat classes, stage and materials. Applying changes previews them locally; publishing remains separate.</p>
+              <button className="btn btn-outline" onClick={()=>setConfiguration(JSON.stringify(draft,null,2))}>Load current configuration</button>
+              <label>Auditorium configuration JSON
+                <textarea rows={16} value={configuration} onChange={e=>setConfiguration(e.target.value)} spellCheck={false} style={{width:"100%",fontFamily:"monospace"}} />
+              </label>
+              <button className="btn btn-outline" disabled={!configuration.trim()} onClick={()=>{
+                try {const next=blueprintSchema.parse(JSON.parse(configuration));setDraft(next);setModel(next.modelUrl??"");setMap(JSON.stringify(next.seatMap??{}));setPreview(false);notify("Validated auditorium configuration applied to the draft.");}
+                catch(error){notify(error instanceof Error ? error.message : "Invalid configuration.");}
+              }}>Apply auditorium configuration</button>
             </details>
             <div className="admin-buttons">
               <button className="btn btn-gold" onClick={() => setPreview(true)}>

@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type Hls from "hls.js";
 import type { Movie } from "@/lib/catalog";
+import { createMovieVideo, claimPreparedVideo } from "@/lib/video/preparation";
+import { playbackDiagnostic } from "@/lib/video/diagnostics";
 import {
   directSources,
   hasFailed,
@@ -15,10 +17,11 @@ export type PlaybackStatus =
   | "buffering"
   | "playing"
   | "paused"
+  | "ended"
   | "blocked";
 export function useMoviePlayback(
   movie: Movie,
-  { paused = false, muted = true, active = true } = {},
+  { paused = false, muted = true, active = true, auditorium = false } = {},
 ) {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const [status, setStatus] = useState<PlaybackStatus>("poster");
@@ -34,6 +37,10 @@ export function useMoviePlayback(
   desired.current = { paused, muted, active };
   const seekOnLoad = useRef(0);
   const resumeVisible = useRef(false);
+  const generation = useRef(0);
+  const failureHandler = useRef<(() => void) | null>(null);
+  const identity = useRef(movie);
+  identity.current = movie;
   const sources = directSources(movie);
   const sourceKey = JSON.stringify(sources);
   const ordered = choice
@@ -44,12 +51,9 @@ export function useMoviePlayback(
     : sources;
   const source = ordered[index];
   useEffect(() => {
-    const v = document.createElement("video");
-    v.crossOrigin = "anonymous";
-    v.playsInline = true;
-    v.loop = true;
-    v.preload = "metadata";
-    v.muted = true;
+    if (!sources.length) { setVideo(null); return; }
+    const v = (auditorium && claimPreparedVideo(movie)) || createMovieVideo();
+    v.loop = !auditorium;
     v.setAttribute("aria-label", `${movie.title} video`);
     setVideo(v);
     return () => {
@@ -58,7 +62,7 @@ export function useMoviePlayback(
       v.load();
       v.remove();
     };
-  }, [movie.id, movie.title]);
+  }, [movie.id, movie.title, auditorium, sourceKey]);
   useEffect(() => {
     setIndex(0);
     setChoice(null);
@@ -66,14 +70,25 @@ export function useMoviePlayback(
   }, [movie.id, sourceKey]);
   const play = useCallback(async () => {
     if (!video) return;
+    const current = generation.current;
+    playbackDiagnostic(identity.current, "play-attempt", { readyState: video.readyState, muted: video.muted });
     try {
       await video.play();
+      if (current !== generation.current) return;
+      playbackDiagnostic(identity.current, "play-resolved", { readyState: video.readyState });
+      setStatus("playing");
+      setReady(true);
     } catch (e) {
-      if ((e as DOMException).name === "NotAllowedError") setStatus("blocked");
+      if (current !== generation.current) return;
+      const error = e as DOMException;
+      playbackDiagnostic(identity.current, "play-rejected", { reason: error.name, readyState: video.readyState });
+      if (error.name === "NotAllowedError") setStatus("blocked");
+      else if (error.name !== "AbortError") failureHandler.current?.();
     }
   }, [video]);
   useEffect(() => {
     if (!video) return;
+    generation.current++;
     let disposed = false,
       failed = false;
     let timeout: ReturnType<typeof setTimeout> | undefined;
@@ -83,23 +98,28 @@ export function useMoviePlayback(
     setProgress({ time: 0, duration: 0, height: 0 });
     if (!active || !source) {
       setStatus("poster");
+      playbackDiagnostic(identity.current, "artwork-fallback", { sourceType: source?.provider || "none", urlAvailable: !!source?.url });
       return;
     }
     const fail = () => {
       if (disposed || failed) return;
       failed = true;
+      playbackDiagnostic(identity.current, "source-failed", { sourceType: source.provider, mediaError: video.error?.code, readyState: video.readyState });
       markFailed(source.url);
       video.pause();
       setReady(false);
       setIndex((i) => i + 1);
     };
+    failureHandler.current = fail;
     if (hasFailed(source.url)) {
       setIndex((i) => i + 1);
       return;
     }
     setStatus("loading");
+    playbackDiagnostic(identity.current, "source-loading", { sourceType: source.provider, sourceId: source.id, urlAvailable: !!source.url, readyState: video.readyState });
     const armTimeout = () => {
       clearTimeout(timeout);
+      playbackDiagnostic(identity.current, "can-play", { readyState: video.readyState, height: video.videoHeight });
       timeout = setTimeout(() => {
         if (!document.hidden) fail();
       }, 15000);
@@ -131,17 +151,24 @@ export function useMoviePlayback(
     };
     const waiting = () => {
       setStatus("buffering");
-      armTimeout();
+      // A temporary stall must not destroy the decoded last frame or player.
+      // Fatal media/HLS errors still take the normal alternate-source path.
+      if (!ready && video.readyState < 2 && video.currentTime === 0) armTimeout();
     };
     const onPause = () => {
-      if (!failed && !disposed) setStatus("paused");
+      if (!failed && !disposed) setStatus(video.ended ? "ended" : "paused");
     };
-    const time = () =>
+    const ended = () => { clearTimeout(timeout); setStatus("ended"); };
+    const time = () => {
+      // Projection has no progress readout. Decoded frames drive VideoTexture
+      // independently; avoid rebuilding its React subtree on every timeupdate.
+      if (auditorium) return;
       setProgress({
         time: video.currentTime,
         duration: Number.isFinite(video.duration) ? video.duration : 0,
         height: video.videoHeight,
       });
+    };
     const visibility = () => {
       if (document.hidden) {
         resumeVisible.current = !video.paused;
@@ -152,10 +179,11 @@ export function useMoviePlayback(
         armTimeout();
       }
     };
-    video.addEventListener("loadeddata", loaded);
+    video.addEventListener("canplay", loaded);
     video.addEventListener("playing", playing);
     video.addEventListener("waiting", waiting);
     video.addEventListener("pause", onPause);
+    video.addEventListener("ended", ended);
     video.addEventListener("timeupdate", time);
     video.addEventListener("error", fail);
     document.addEventListener("visibilitychange", visibility);
@@ -179,7 +207,10 @@ export function useMoviePlayback(
               enableWorker: false,
               maxBufferLength: 20,
               maxMaxBufferLength: 40,
-              capLevelToPlayerSize: true,
+              backBufferLength: 20,
+              // The texture's media element has no CSS box; capping to its
+              // dimensions would incorrectly force the lowest HLS rendition.
+              capLevelToPlayerSize: !auditorium,
             });
             hls.current = instance;
             instance.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -201,18 +232,27 @@ export function useMoviePlayback(
           }
           return;
         }
-      } else video!.src = source.url;
+      } else {
+        // Reuse the media unlocked by the showtime gesture without resetting it.
+        if (video!.getAttribute("src") === source.url) {
+          if (video!.readyState >= 2) loaded();
+          return;
+        }
+        video!.src = source.url;
+      }
       video!.load();
-      if (!desired.current.paused && !document.hidden) void play();
     }
     void load();
     return () => {
       disposed = true;
+      generation.current++;
+      failureHandler.current = null;
       clearTimeout(timeout);
-      video.removeEventListener("loadeddata", loaded);
+      video.removeEventListener("canplay", loaded);
       video.removeEventListener("playing", playing);
       video.removeEventListener("waiting", waiting);
       video.removeEventListener("pause", onPause);
+      video.removeEventListener("ended", ended);
       video.removeEventListener("timeupdate", time);
       video.removeEventListener("error", fail);
       document.removeEventListener("visibilitychange", visibility);
@@ -222,13 +262,16 @@ export function useMoviePlayback(
       video.removeAttribute("src");
       video.load();
     };
-  }, [video, source?.url, source?.provider, active, attempt, play]);
+  }, [video, source?.url, source?.provider, active, attempt, play, auditorium]);
   useEffect(() => {
     if (!video) return;
     video.muted = muted;
+  }, [video, muted]);
+  useEffect(() => {
+    if (!video) return;
     if (paused || !active) video.pause();
-    else if (video.readyState >= 2 && !document.hidden) void play();
-  }, [video, muted, paused, active, play]);
+    else if (video.readyState >= 2 && !document.hidden && !video.ended) void play();
+  }, [video, paused, active, play]);
   function selectQuality(value: string) {
     if (value.startsWith("hls:")) {
       const level = Number(value.slice(4));

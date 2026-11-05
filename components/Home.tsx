@@ -1,113 +1,45 @@
 "use client";
+import "./home-atmosphere.css";
+import {useBrowseState} from "@/lib/use-browse-state";
+import WatchlistButton from "./WatchlistButton";
+import {useDiscoveryHome,useCatalogueResource} from "@/lib/discovery-client";
 import { useRef, useState, type CSSProperties } from "react";
-import Link from "next/link";
+import Link from "./MovieLink";
 import {
-  ArrowRight,
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
   Play,
-  Star,
-  MoveUpRight,
   Armchair,
   MapPin,
 } from "lucide-react";
-import { cities, cityMovies, movies, venues, type Movie } from "@/lib/catalog";
+import { cities, venues, type Movie } from "@/lib/catalog";
 import { useApp } from "@/lib/store";
-import { SectionTitle, Modal, Empty } from "./ui";
+import { SectionTitle, Empty } from "./ui";
 import PosterWall from "./PosterWall";
 import CinematicCarousel, { type CarouselHandle } from "./CinematicCarousel";
-import MovieVideoPlayer from "./video/MovieVideoPlayer";
+import MovieRail from "./MovieRail";
+import { discoveryStatus, externalListings } from "@/lib/movie-discovery";
 import { posterSet } from "@/lib/movie-media";
-import { isUpcoming, releaseLabel } from "@/lib/movie-information";
-import { cinemaDirectoryProvider } from "@/lib/cinema-directory";
-export function MovieCard({
-  movie: m,
-  index = 0,
-  tilt = 0,
-}: {
-  movie: Movie;
-  index?: number;
-  tilt?: number;
-}) {
-  return (
-    <article
-      className="movie-card"
-      style={{ "--tilt": `${tilt}deg` } as CSSProperties}
-    >
-      <Link href={`/movies/${m.id}`} className="movie-art">
-        <img
-          src={m.poster}
-          srcSet={posterSet(m)}
-          sizes="(max-width: 760px) 46vw, 280px"
-          alt={`${m.title} movie poster`}
-          loading="lazy"
-          decoding="async"
-        />
-        <div className="card-top">
-          <span className="card-number">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <span className="rating">
-            <Star size={12} fill="currentColor" />
-            <b>{m.rating || "Coming soon"}</b>
-            <span>· {m.votes}</span>
-          </span>
-        </div>
-        <div className="card-copy">
-          <small>
-            {m.certificate} · {m.genre.join(" / ")}
-          </small>
-          <h3>{m.title}</h3>
-          <p>{m.languages.slice(0, 3).join(" · ")}</p>
-          <span className="card-book">
-            {isUpcoming(m) ? "Explore movie" : "Book tickets"}
-            <ArrowRight size={15} />
-          </span>
-        </div>
-      </Link>
-    </article>
-  );
-}
-export function Trailer({
-  movie,
-  onClose,
-}: {
-  movie: Movie;
-  onClose: () => void;
-}) {
-  return (
-    <Modal
-      title={`${movie.title} trailer`}
-      onClose={onClose}
-      wide
-      variant="trailer"
-    >
-      <span className="eyebrow">{movie.trailerLabel || "THE BIG PICTURE"}</span>
-      <h2>{movie.title}</h2>
-      <MovieVideoPlayer key={movie.id} movie={movie} />
-    </Modal>
-  );
-}
+import { releaseLabel } from "@/lib/movie-information";
+import { useHomepageMotion } from "@/lib/use-homepage-motion";
+import { CreatorSection } from "./Creator";
+import {MovieCard,Trailer} from "./MovieCards";
+import ExploreMovieBanner from "./ExploreMovieBanner";
+export {MovieCard,Trailer} from "./MovieCards";
 export default function Home() {
   const cityId = useApp((s) => s.city);
   const city = cities.find((c) => c.id === cityId)!;
-  const [active, setActive] = useState(3);
-  const [language, setLanguage] = useState("All");
+  const [{active,language},setBrowse,browseLoaded]=useBrowseState(`movieverse-home-browse:${cityId}`,{active:3,language:"All"});
+  const setActive=(active:number)=>setBrowse(state=>({...state,active}));
+  const setLanguage=(language:string)=>setBrowse(state=>({...state,language}));
   const [trailer, setTrailer] = useState<Movie | null>(null);
   const carousel = useRef<CarouselHandle>(null);
-  const preferred = [
-    "vikram",
-    "leo",
-    "coolie",
-    "varanasi",
-    "toxic",
-    "jailer-2",
-    "ramayana",
-  ]
-    .map((id) => movies.find((m) => m.id === id))
-    .filter((m): m is Movie => !!m);
-  const panorama = preferred.length ? preferred : movies.slice(0, 7);
+  const pageRef = useRef<HTMLElement>(null);
+  const {data:discovery}=useDiscoveryHome();
+  const {data:bookable,error:bookingError,retry:retryBookings}=useCatalogueResource<{featured:Movie[]}>(`/api/bookable-featured?city=${encodeURIComponent(cityId)}`);
+  useHomepageMotion(pageRef, `${cityId}-${language}-${discovery?.lastSync}-${bookable?.featured.length}`);
+  const panorama = bookable?.featured ?? [];
   const featured = panorama[active % panorama.length];
   const accent =
     (
@@ -120,15 +52,18 @@ export default function Home() {
         "jailer-2": "#78b6ed",
         ramayana: "#e9b65d",
       } as Record<string, string>
-    )[featured.id] || featured.accent;
+    )[featured?.id??""] || featured?.accent || "#f9be3c";
   const rotate = (direction: number) => carousel.current?.step(direction);
-  const showing = cityMovies(cityId).filter(
-    (m) => language === "All" || m.languages.includes(language),
-  );
+  const nowPlaying=discovery?.collections["now-playing-IN"]??[];
+  const showing = nowPlaying.filter(m=>language==="All"||m.languages.includes(language));
+  const upcoming=[...new Map([...(discovery?.collections.upcoming??[]),...(discovery?.collections["upcoming-global"]??[])].map(m=>[m.id,m])).values()];
+  const sections={advance:[] as Movie[],released:discovery?.collections.popular??[],coming:upcoming.slice(0,6),trending:discovery?.collections["trending-day"]??[],regional:discovery?.regional??[]};
+  const advance = sections.advance;
+  const coming = sections.coming;
   return (
-    <main>
-      <section
-        className="cinema-lobby"
+    <main ref={pageRef} className="movieverse-home">
+      {featured ? <section
+        className="cinema-lobby moonlit-lobby"
         aria-label="Interactive movie panorama"
         data-featured-movie={featured.id}
         style={{ "--lobby-accent": accent } as CSSProperties}
@@ -139,24 +74,24 @@ export default function Home() {
           if (e.key === "ArrowRight") rotate(1);
         }}
       >
-        <div className="stars" />
-        <div className="planet" />
-        <div className="spotlight" />
+        <img className="lobby-backdrop" src="/assets/moonlit-theater.png" alt="" aria-hidden="true" fetchPriority="high" decoding="async" />
+        <div className="lobby-atmosphere" aria-hidden="true" />
         <div className="lobby-heading">
           <span className="lobby-kicker">WELCOME TO YOUR NEXT ESCAPE</span>
-          <h1>
-            MOVIE<span>VERSE</span>
+          <h1 aria-label="MOVIEVERSE">
+            <img className="hero-official-logo" src="/assets/movieverse-logo.png" alt="MovieVerse" width={649} height={117}/>
           </h1>
           <p>
             DRAG TO EXPLORE <span>·</span> TAP A SCREEN TO BOOK
           </p>
         </div>
-        <CinematicCarousel
+        {browseLoaded && <CinematicCarousel initial={active}
+          key={cityId}
           ref={carousel}
           movies={panorama}
           onChange={setActive}
-        />
-        <div className="cinema-floor" />
+        />}
+        <div className="cinema-floor" aria-hidden="true" />
         <div className="lobby-controls">
           <button
             className="round-button"
@@ -166,26 +101,21 @@ export default function Home() {
             <ChevronLeft size={21} />
           </button>
           <div className="featured-movie">
-            <span className="slide-counter">
-              {String((active % panorama.length) + 1).padStart(2, "0")}{" "}
-              <span>/ {String(panorama.length).padStart(2, "0")}</span>
-            </span>
-            <div className="featured-info" key={featured.id} aria-live="polite">
+            <div className={`featured-info${featured.title.length > 30 ? " long-title" : ""}`} key={featured.id} aria-live="polite">
               <span className="booking-status">
                 <i />
-                {isUpcoming(featured)
-                  ? "COMING TO YOUR UNIVERSE"
-                  : "NOW SHOWING · BOOKING OPEN"}
+                {({"coming-soon":"COMING TO YOUR UNIVERSE","now-showing":"NOW SHOWING · BOOKING OPEN","advance-booking":"ADVANCE BOOKING OPEN","released":"RELEASED · EXPLORE THE FILM","unconfirmed":"DISCOVER THE FILM"})[discoveryStatus(featured,cityId,venues)]}
               </span>
               <h2>{featured.title}</h2>
               <p>
                 <span className="certificate">{featured.certificate}</span>
                 {featured.languages[0]} · {featured.genre.join(", ")} ·{" "}
-                {Math.floor(featured.duration / 60)}h {featured.duration % 60}m{" "}
-                <span className="gold">★ {featured.rating}</span>
+                {featured.duration ? `${Math.floor(featured.duration / 60)}h ${featured.duration % 60}m` : "Runtime to be confirmed"}{" "}
+                <span className="gold">{featured.rating ? `★ ${featured.rating}` : "Not rated"}</span>
               </p>
             </div>
             <div className="featured-actions">
+              <WatchlistButton movie={featured} variant="icon"/>
               <button
                 className="btn btn-outline"
                 onClick={() => setTrailer(featured)}
@@ -194,7 +124,7 @@ export default function Home() {
                 Trailer
               </button>
               <Link className="btn btn-gold" href={`/movies/${featured.id}`}>
-                {isUpcoming(featured) ? "Explore" : "Book tickets"}
+                {["now-showing","advance-booking"].includes(discoveryStatus(featured,cityId,venues)) ? "Book tickets" : "Explore"}
                 <ArrowUpRight size={14} />
               </Link>
             </div>
@@ -214,15 +144,15 @@ export default function Home() {
           </a>
           <span>AN ENTIRELY NEW POINT OF VIEW</span>
         </div>
-      </section>
+      </section> : <section className="cinema-lobby moonlit-lobby"><img className="lobby-backdrop" src="/assets/moonlit-theater.png" alt=""/><div className="section-container empty"><h1>Your universe of cinema.</h1><p role="status">{bookingError || (bookable ? "No bookable screenings in this city right now. Explore the worldwide catalogue." : "Finding bookable screenings...")}</p><button className="btn btn-outline" onClick={retryBookings}>Refresh screenings</button><Link className="text-link" href="/movies">Explore movies</Link></div></section>}
       <section className="home-showing" id="now-showing">
-        <div className="section-container">
+        <div className="section-container" data-home-reveal>
           <SectionTitle
-            eyebrow="THE BIG SCREEN IS CALLING"
-            title={`Now showing in ${city.name}`}
-            subtitle="A great story deserves a great seat."
-            link="/movies"
-            label={`See all (${cityMovies(cityId).length})`}
+            eyebrow="DEMO SCREENINGS · SIMULATED BOOKINGS"
+            title="Now playing in India"
+            subtitle="TMDB movie discovery for India, not live cinema schedules. Available demo screenings and seat bookings are simulations."
+            link="/movies?collection=now-playing-IN"
+            label={`See all (${nowPlaying.length})`}
           />
           <div className="chips" aria-label="Filter by language">
             {[
@@ -244,7 +174,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <div className="movie-carousel">
+        <MovieRail key={`${cityId}-${language}`} label={`Now showing in ${city.name}`} curved>
           {showing.length ? (
             showing.map((m, i) => (
               <MovieCard
@@ -257,7 +187,7 @@ export default function Home() {
           ) : (
             <Empty title="No films in this language today" />
           )}
-        </div>
+        </MovieRail>
         <div className="cinema-marquee">
           <div>
             Your seat is <span>waiting.</span> <i>✦</i> Lights down.{" "}
@@ -269,7 +199,14 @@ export default function Home() {
         </div>
         <p className="carousel-hint">SWIPE TO EXPLORE · PICK YOUR NEXT STORY</p>
       </section>
-      <PosterWall />
+      <section className={`section-container discovery-section advance-section${advance.length ? "" : " is-empty"}`}>
+        <SectionTitle eyebrow="SAVED PARTNER REFERENCES" title="Partner listings to explore" subtitle={`Saved listings for ${city.name}; check the partner for current screenings and availability.`} link="/coming-soon" label="Explore all" />
+        {advance.length ? <MovieRail label={`Advance booking in ${city.name}`}>
+          {advance.map((m,i)=><div key={m.id} className="discovery-rail-card"><MovieCard movie={m} index={i}/><span className="external-listing-note">Partner booking · {externalListings(m.id,cityId)[0]?.venueNames?.slice(0,2).join(" · ") || city.name}</span></div>)}
+        </MovieRail> : <p className="discovery-empty">No verified advance bookings are listed for {city.name} today.</p>}
+      </section>
+      <PosterWall movies={discovery?.collections.popular??[]} />
+      {!!sections.released.length && <section className="section-container discovery-section"><SectionTitle title="More stories to discover" subtitle="Released films without verified local showtimes. Explore their stories and cast." link="/movies" label="Browse all films"/><MovieRail label="Released films">{sections.released.map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}</MovieRail></section>}
       <section className="experience-section section-container">
         <div className="experience-copy">
           <span className="eyebrow">DON’T JUST PICK A SEAT. STEP INSIDE.</span>
@@ -320,9 +257,7 @@ export default function Home() {
           label="Coming soon"
         />
         <div className="upcoming-grid">
-          {movies
-            .filter((m) => isUpcoming(m))
-            .sort((a,b)=>a.id === "avengers-doomsday" ? -1 : b.id === "avengers-doomsday" ? 1 : a.release.localeCompare(b.release))
+          {coming
             .map((m) => (
               <Link
                 key={m.id}
@@ -338,7 +273,7 @@ export default function Home() {
                 />
                 <div>
                   <span className="eyebrow">
-                    {releaseLabel(m)}
+                    {m.metadata?.releaseDates.some(r=>r.region==="IN"&&r.date)?releaseLabel(m):m.release ? `Global release: ${m.release}` : "Release to be confirmed"}
                   </span>
                   <h3>{m.title}</h3>
                   <p>{m.tagline}</p>
@@ -351,26 +286,22 @@ export default function Home() {
             ))}
         </div>
       </section>
-      <section className="cinema-callout section-container">
-        <div>
-          <span className="eyebrow">SAME CITY. NEW EXPERIENCES.</span>
-          <h2>
-            Your neighbourhood.
-            <br />
-            Your kind of cinema.
-          </h2>
-          <p>
-            From intimate lounges to larger-than-life IMAX screens.
-            <br />
-            Explore {cinemaDirectoryProvider.list(cityId).length} listed
-            cinemas in {city.name}.
-          </p>
-        </div>
-        <Link href="/cinemas" className="btn btn-gold">
-          Discover cinemas
-          <ArrowRight size={18} />
-        </Link>
+      <section className="section-container discovery-section">
+        {sections.trending.length > 0 && <>
+          <SectionTitle eyebrow="TRENDING WORLDWIDE" title="The stories everyone is discovering" subtitle="Fresh TMDB trends. Popularity does not confirm local screenings." link="/movies" label="Explore all" />
+          <MovieRail label={"Trending movies"}>
+            {sections.trending.slice(0, 8).map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}
+          </MovieRail>
+        </>}
       </section>
+      <section className="section-container discovery-section">
+        <SectionTitle eyebrow="FRESH FROM EVERY CORNER" title={`Popular regional picks in ${city.name}`} subtitle="Fresh Indian-language discoveries. Local screenings are separate from movie popularity." link="/movies" label="Browse movies" />
+        <MovieRail label={`Regional movies in ${city.name}`}>
+          {sections.regional.slice(0, 12).map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}
+        </MovieRail>
+      </section>
+      <ExploreMovieBanner collections={discovery?.collections}/>
+      <CreatorSection />
       {trailer && <Trailer movie={trailer} onClose={() => setTrailer(null)} />}
     </main>
   );

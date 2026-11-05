@@ -1,4 +1,5 @@
 let bootstrap: Promise<any> | null = null;
+export function invalidateSession(){bootstrap=null;}
 async function ensureSession() {
   if (!bootstrap)
     bootstrap = fetch("/api/session", { cache: "no-store" })

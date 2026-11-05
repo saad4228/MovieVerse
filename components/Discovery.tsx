@@ -1,6 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import MovieBackLink from "./MovieBackLink";
+import WatchlistButton from "./WatchlistButton";
+import {useCataloguePage} from "@/lib/discovery-client";
+import {exploreCollections} from "@/lib/explore-collections";
+import {officialGenres} from "@/lib/discovery-collections";
+import { prepareAuditoriumPlayback } from "@/lib/video/preparation";
+import { useEffect, useRef, useState } from "react";
+import Link from "./MovieLink";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowRight,
@@ -9,16 +15,12 @@ import {
   SlidersHorizontal,
   Star,
   Play,
-  Volume2,
   ChevronLeft,
-  Heart,
   Armchair,
   Accessibility,
   Car,
   Utensils,
-  Clock,
   Building2,
-  Check,
 } from "lucide-react";
 import {
   cities,
@@ -26,7 +28,6 @@ import {
   dates,
   movies,
   venues,
-  showsFor,
   type Movie,
   type Venue,
   type Show,
@@ -34,15 +35,18 @@ import {
 import { useApp } from "@/lib/store";
 import { rupees } from "@/lib/booking";
 import { SectionTitle, Empty } from "./ui";
-import { MovieCard, Trailer } from "./Home";
+import { GenreDiscovery } from "./GenreDiscovery";
+import { MovieCard, Trailer } from "./MovieCards";
 import HeroPreview from "./HeroPreview";
 import { posterSet } from "@/lib/movie-media";
 import CityCinemaListings from "./CityCinemaListings";
+import MovieShowtimes from "./MovieShowtimes";
 import MovieInformation, { MovieBackdrop, useMovieInformation } from "./MovieInformation";
 import { isUpcoming, releaseLabel, releaseState } from "@/lib/movie-information";
 import { directSources } from "@/lib/video/sources";
 import CinemaDirectory, { DirectoryDetail } from "./CinemaDirectory";
 import { cinemaDirectoryProvider } from "@/lib/cinema-directory";
+import { externalListings, discoveryStatus, movieMatches } from "@/lib/movie-discovery";
 import { demoShowtimeProvider, type AvailabilitySummary } from "@/lib/providers";
 const amenities: Record<string, typeof Car> = {
   Parking: Car,
@@ -50,7 +54,7 @@ const amenities: Record<string, typeof Car> = {
   Recliners: Armchair,
   "Food court": Utensils,
 };
-export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
+export function MovieDiscovery({ upcoming = false, explore = false }: { upcoming?: boolean; explore?: boolean }) {
   const params = useSearchParams();
   const router = useRouter();
   const city = useApp((s) => s.city);
@@ -59,22 +63,58 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
   const [format, setFormat] = useState("All formats");
   const [sort, setSort] = useState("Recommended");
   const [query, setQuery] = useState("");
+  const [debouncedQuery,setDebouncedQuery]=useState("");
+  useEffect(()=>{const timer=setTimeout(()=>setDebouncedQuery(query),180);return()=>clearTimeout(timer);},[query]);
   const [minRating, setMinRating] = useState("Any rating");
   const [region,setRegion] = useState("IN");
+  const [country,setCountry]=useState("");
+  const [year,setYear]=useState("");
+  const [availability, setAvailability] = useState("All films");
+  const [collection,setCollection]=useState(params.get("collection")||"all");
+  const [page,setPage]=useState(()=>Math.max(1,Number(params.get("page"))||1));
   useEffect(() => {
+    setCollection(params.get("collection") || "all");
     setLanguage(params.get("language") || "All");
     setGenre(params.get("genre") || "All genres");
   }, [params]);
-  const list = (
-    upcoming ? movies.filter((m) => isUpcoming(m,region)) : cityMovies(city)
-  )
+  const restored = useRef(false);
+  const browseKey = `movieverse-browse:${explore ? "explore" : upcoming ? "coming" : "movies"}:${city}:${params.toString()}`;
+  useEffect(() => {
+    restored.current = false;
+    try {
+      const stored = JSON.parse(sessionStorage.getItem(browseKey) || "null");
+      if (stored) {
+        setLanguage(params.get("language") || stored.language || "All");
+        setGenre(params.get("genre") || stored.genre || "All genres");
+        setFormat(stored.format || "All formats"); setSort(stored.sort || "Recommended");
+        setQuery(stored.query || ""); setMinRating(stored.minRating || "Any rating");
+        setRegion(stored.region || "IN"); setAvailability(stored.availability || "All films");
+        setCountry(stored.country || ""); setYear(stored.year || "");
+        setCollection(params.get("collection") || stored.collection || "all");
+        setPage(Math.max(1,Number(stored.page)||1));
+      }
+    } catch { /* Browsing still works when session storage is unavailable. */ }
+    // Wait for restored state to render before saving.
+    const timer = setTimeout(() => { restored.current = true; }, 0);
+    return () => clearTimeout(timer);
+  }, [browseKey]);
+  useEffect(() => {
+    if (!restored.current) return;
+    try { sessionStorage.setItem(browseKey, JSON.stringify({language,genre,format,sort,query,minRating,region,availability,country,year,collection,page})); } catch {}
+  }, [browseKey,language,genre,format,sort,query,minRating,region,availability,country,year,collection,page]);
+  const languageCode:Record<string,string>={Hindi:"hi",Tamil:"ta",Telugu:"te",Malayalam:"ml",Kannada:"kn",English:"en",Korean:"ko",Japanese:"ja"};
+  const request=new URLSearchParams({collection:upcoming?"upcoming":collection,region,page:String(page),sort,language:languageCode[language]||"",genre:genre==="All genres"?"":genre,q:debouncedQuery,rating:minRating==="Any rating"?"0":"8.5",country,year});
+  const {data:catalogue,error:catalogueError,retry}=useCataloguePage(request.toString());
+  const demo=collection==="demo";
+  const catalogueMovies=demo?movies:catalogue?.movies??[];
+  const list = (demo&&upcoming ? catalogueMovies.filter((m) => isUpcoming(m,region)) : catalogueMovies)
     .filter(
       (m) =>
         (language === "All" || m.languages.includes(language)) &&
         (genre === "All genres" || m.genre.includes(genre)) &&
         (format === "All formats" || m.formats.includes(format)) &&
         (minRating === "Any rating" || m.rating >= 8.5) &&
-        m.title.toLowerCase().includes(query.toLowerCase()),
+        movieMatches(m,query) && (upcoming || availability === "All films" || discoveryStatus(m,city,venues) === availability),
     )
     .sort((a, b) =>
       sort === "Top rated"
@@ -83,15 +123,16 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
           ? a.title.localeCompare(b.title)
           : sort === "Shortest first"
             ? a.duration - b.duration
-            : upcoming ? (a.id === "avengers-doomsday" ? -1 : b.id === "avengers-doomsday" ? 1 : a.release.localeCompare(b.release)) : 0,
+            : upcoming ? a.release.localeCompare(b.release) : 0,
     );
   const changeLanguage = (l: string) => {
     setLanguage(l);
+    setPage(1);
     const p = new URLSearchParams(params.toString());
     if (l === "All") p.delete("language");
     else p.set("language", l);
     router.replace(
-      `${upcoming ? "/coming-soon" : "/movies"}${p.size ? "?" + p : ""}`,
+      `${explore ? "/explore" : upcoming ? "/coming-soon" : "/movies"}${p.size ? "?" + p : ""}`,
       { scroll: false },
     );
   };
@@ -99,28 +140,27 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
     <main className="discovery-page section-container">
       <div className="page-intro">
         <span className="eyebrow">
-          {upcoming ? "YOUR NEXT OBSESSION" : "MAKE IT A MOVIE DAY"}
+          {upcoming ? "YOUR NEXT OBSESSION" : "THE GLOBAL MOVIE COLLECTION"}
         </span>
         <h1>
           {upcoming ? (
             "Coming to your universe."
           ) : (
             <>
-              Now showing in{" "}
-              <span>{cities.find((c) => c.id === city)!.name}.</span>
+              Explore <span>the MovieVerse.</span>
             </>
           )}
         </h1>
         <p>
           {upcoming
             ? "Big stories. Bigger things to look forward to."
-            : "Find your film. Pick your cinema. Make a memory."}
+            : "From legendary classics to the latest global releases. Find your next favourite story."}
         </p>
       </div>
       <div className="discovery-toolbar">
-        {upcoming && <label className="sort-label">Release market <select aria-label="Release market" value={region} onChange={e=>setRegion(e.target.value)}><option value="IN">India</option><option value="US">United States</option></select></label>}
+        {upcoming && <label className="sort-label">Release market <select aria-label="Release market" value={region} onChange={e=>{setRegion(e.target.value);setPage(1);}}><option value="IN">India</option><option value="US">United States</option><option value="global">Worldwide (global release)</option></select></label>}
         <div className="chips">
-          {["All", "Tamil", "Telugu", "Hindi", "Kannada", "Malayalam", "English"].map(
+          {["All", "Tamil", "Telugu", "Hindi", "Kannada", "Malayalam", "English", "Korean", "Japanese"].map(
             (l) => (
               <button
                 key={l}
@@ -134,7 +174,7 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
         </div>
         <label className="sort-label">
           Sort by
-          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+          <select value={sort} onChange={(e) => {setSort(e.target.value);setPage(1);}}>
             {["Recommended", "Top rated", "A–Z", "Shortest first"].map((s) => (
               <option key={s}>{s}</option>
             ))}
@@ -143,26 +183,31 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
       </div>
       <div className="filter-row">
         <SlidersHorizontal size={16} />
+        {!upcoming && <select aria-label="Movie collection" value={collection} onChange={e=>{setCollection(e.target.value);setAvailability("All films");setPage(1);}}>
+          <option value="all">All movies ? Worldwide</option>{exploreCollections.map(([id,title])=><option key={id} value={id}>{title}</option>)}
+        </select>}
         <input
           className="filter-search"
           aria-label="Search movie titles"
           placeholder="Find a movie…"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {setQuery(e.target.value);setPage(1);}}
         />
         <select
           aria-label="Filter genre"
           value={genre}
-          onChange={(e) => setGenre(e.target.value)}
+          onChange={(e) => {setGenre(e.target.value);setPage(1);}}
         >
-          {["All genres",...new Set(movies.flatMap(m=>m.genre))].map((g) => (
+          {["All genres",...officialGenres.map(g=>g[2])].map((g) => (
             <option key={g}>{g}</option>
           ))}
         </select>
         <select
           aria-label="Filter format"
+          disabled={!demo}
+          title="Formats are available only for simulated cinema screenings"
           value={format}
-          onChange={(e) => setFormat(e.target.value)}
+          onChange={(e) => {setFormat(e.target.value);setPage(1);}}
         >
           {["All formats", "2D", "IMAX", "Dolby Atmos"].map((f) => (
             <option key={f}>{f}</option>
@@ -171,17 +216,19 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
         <select
           aria-label="Minimum rating"
           value={minRating}
-          onChange={(e) => setMinRating(e.target.value)}
+          onChange={(e) => {setMinRating(e.target.value);setPage(1);}}
         >
           <option>Any rating</option>
           <option>8.5 and above</option>
         </select>
-        <span className="muted results-count">{list.length} films</span>
+        <span className="muted results-count" aria-live="polite">{demo?list.length:catalogue?.totalResults??0} films</span>
+        {explore&&<><select aria-label="Production country" value={country} onChange={e=>{setCountry(e.target.value);setPage(1);}}><option value="">All production countries</option>{[["US","United States"],["IN","India"],["GB","United Kingdom"],["KR","South Korea"],["JP","Japan"],["FR","France"],["ES","Spain"],["DE","Germany"],["IT","Italy"],["CN","China"]].map(([id,name])=><option key={id} value={id}>{name}</option>)}</select><input aria-label="Release year" type="number" min="1888" max={new Date().getFullYear()+10} placeholder="Release year" value={year} onChange={e=>{setYear(e.target.value);setPage(1);}}/></>}
       </div>
+      {catalogueError&&<p className="genre-notice" role="status">{catalogueError} <button className="text-link" onClick={retry}>Retry</button></p>}
       {list.length ? (
         <div className="movie-grid">
           {list.map((m, i) => (
-            <div key={m.id}><MovieCard movie={m} index={i} />{upcoming && <p className="release-card-date">{releaseLabel(m,region)}<span>{releaseState(m,region).replaceAll("-"," ")}</span></p>}</div>
+            <div className="browse-card-enter" style={{ animationDelay: `${Math.min(i, 5) * 35}ms` }} key={m.id}><MovieCard movie={m} index={i} catalogue={explore}/><p className="release-card-date">{region==="global" ? `Global release: ${m.release||"to be confirmed"}` : releaseLabel(m,region)}<span>{upcoming ? releaseState(m,region).replaceAll("-"," ") : discoveryStatus(m,city,venues)==="released" ? "No active local listings" : discoveryStatus(m,city,venues).replaceAll("-"," ")}</span></p></div>
           ))}
         </div>
       ) : (
@@ -195,15 +242,18 @@ export function MovieDiscovery({ upcoming = false }: { upcoming?: boolean }) {
               setFormat("All formats");
               setQuery("");
               setMinRating("Any rating");
+              setAvailability("All films");
+              setCountry("");setYear("");
+              setPage(1);
             }}
           >
             Reset filters
           </button>
         </Empty>
       )}
-      <p className="demo-note">
-        Sourced film information and regional release dates. Ratings and local screenings are demonstration data; unconfirmed release dates are labelled.
-      </p>
+      {!demo&&catalogue&&catalogue.totalPages>1&&<nav className="genre-pagination" aria-label="Movie catalogue pages"><button className="btn btn-outline" disabled={page<=1} onClick={()=>setPage(n=>n-1)}>Previous page</button><span>{page} / {catalogue.totalPages}</span><button className="btn btn-outline" disabled={page>=catalogue.totalPages} onClick={()=>setPage(n=>n+1)}>Next page</button></nav>}
+      <p className="demo-note">TMDB movie discovery. Production origin and original language are separate. Movie metadata does not confirm local showtimes. Cinema bookings and payments remain simulations.</p>
+      {!upcoming && !explore && <GenreDiscovery/>}
     </main>
   );
 }
@@ -243,7 +293,10 @@ function DateStrip({
     </div>
   );
 }
-export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
+export function Showtimes(props: { movie?: Movie; venue?: Venue }) {
+  return props.movie && !props.venue ? <MovieShowtimes movie={props.movie} /> : <VenueShowtimes {...props} />;
+}
+function VenueShowtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
   const [availability,setAvailability]=useState<Record<string,AvailabilitySummary>>({});
   const [availabilityFilter,setAvailabilityFilter]=useState("All availability");
   const city = useApp((s) => s.city);
@@ -262,6 +315,8 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
     setLanguage("All languages");
   }, [city, movie?.id, venue?.id]);
   function choose(show: Show) {
+    const selectedMovie = movies.find(m => m.id === show.movieId);
+    if (selectedMovie) prepareAuditoriumPlayback(selectedMovie);
     setShow(show.id);
     router.push(`/booking/${encodeURIComponent(show.id)}/seats`);
   }
@@ -405,7 +460,7 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
         className="showtime-list"
         key={`${city}-${date}-${format}-${language}-${period}`}
       >
-        {listings.map(({ v, m, shows }, i) => (
+        {listings.map(({ v, m, shows }) => (
           <article className="showtime-row" key={v.id + m.id}>
             <div className="showtime-venue">
               {!venue && (
@@ -446,7 +501,7 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
               </div>
             </div>
             <div className="showtime-slots">
-              {shows.map((s, j) => (
+              {shows.map((s) => (
                 <button
                   key={s.id}
                   className={`time-slot ${availability[s.id]?.status === "limited" ? "filling" : ""}`}
@@ -490,28 +545,12 @@ export function Showtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
     </section>
   );
 }
-export function MovieDetail({
-  id,
-  notify,
-}: {
-  id: string;
-  notify: (s: string) => void;
-}) {
+export function MovieDetail({ id }: { id: string }) {
   const m = movies.find((m) => m.id === id);
   const info = useMovieInformation(m);
   const city = useApp((s) => s.city);
   const [trailer, setTrailer] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const available = m && cityMovies(city).some((x) => x.id === m.id);
-  useEffect(() => {
-    try {
-      setSaved(
-        JSON.parse(localStorage.getItem("mv-watchlist") || "[]").includes(id),
-      );
-    } catch {
-      setSaved(false);
-    }
-  }, [id]);
+  const partnerListings = m ? externalListings(m.id, city) : [];
   if (!m)
     return (
       <main className="section-container">
@@ -532,10 +571,7 @@ export function MovieDetail({
           <HeroPreview movie={m} suspended={trailer} />
         )}
         <div className="movie-hero-shade" />
-        <Link href="/movies" className="back-link">
-          <ChevronLeft size={16} />
-          Back to movies
-        </Link>
+        <MovieBackLink/>
         <div className="movie-hero-bottom">
           <div className="movie-identity">
             <img
@@ -577,62 +613,20 @@ export function MovieDetail({
               <Play size={14} fill="currentColor" />
               {m.trailer ? "Play trailer" : "Trailer preview"}
             </button>
-            {!isUpcoming(m) && available ? (
-              <a className="btn btn-gold" href="#showtimes">
-                Book tickets ↓
-              </a>
-            ) : (
-              <button
-                className="btn btn-gold"
-                onClick={() => {
-                  const next = !saved;
-                  setSaved(next);
-                  try {
-                    const ids = JSON.parse(
-                      localStorage.getItem("mv-watchlist") || "[]",
-                    );
-                    localStorage.setItem(
-                      "mv-watchlist",
-                      JSON.stringify(
-                        next
-                          ? [...new Set([...ids, m.id])]
-                          : ids.filter((x: string) => x !== m.id),
-                      ),
-                    );
-                    notify(
-                      next
-                        ? "Added to your watchlist on this device."
-                        : "Removed from your watchlist.",
-                    );
-                  } catch {
-                    notify("Your browser couldn’t save the watchlist.");
-                  }
-                }}
-              >
-                {saved ? <Check size={16} /> : <Heart size={16} />}{" "}
-                {saved ? "On your watchlist" : "Add to watchlist"}
-              </button>
-            )}
+            {!isUpcoming(m)&&<a className="btn btn-gold" href="#showtimes">Book tickets</a>}
+            <WatchlistButton movie={m}/>
           </div>
         </div>
       </section>
       <MovieInformation key={m.id} movie={m} info={info} />
+      {partnerListings.length > 0 && <section className="movie-detail-external section-container" aria-label="Verified external ticket listings">
+        <span className="eyebrow">CITY LISTING · VERIFIED {new Date(partnerListings[0].verifiedAt).toLocaleDateString("en-IN", {day:"numeric",month:"short",timeZone:"Asia/Kolkata"})}</span>
+        <h2>Book with a cinema partner</h2>
+        <p>These show dates were listed by the partner when checked. Booking opens on their site; MovieVerse demo seat inventory and prices are separate.</p>
+        <div>{partnerListings.map(listing=><a className="external-booking-link" key={listing.bookingUrl} href={listing.bookingUrl} target="_blank" rel="noopener noreferrer">{listing.venueNames?.slice(0,2).join(" · ") || cities.find(c=>c.id===city)?.name || city} · {new Date(`${listing.screeningDate}T12:00:00+05:30`).toLocaleDateString("en-IN",{day:"numeric",month:"short",timeZone:"Asia/Kolkata"})} <ArrowUpRight size={15}/></a>)}</div>
+      </section>}
       {!isUpcoming(m) ? (
-        available ? (
-          <Showtimes key={city + m.id} movie={m} />
-        ) : (
-          <section className="section-container">
-            <Empty
-              title={`No demo screenings configured in ${cities.find((c) => c.id === city)!.name}`}
-            >
-              Choose another city from the header or{" "}
-              <Link href="/movies" className="text-link">
-                explore available movies.
-              </Link>
-            </Empty>
-            <CityCinemaListings city={city} movie={m.id} date={dates()[0]} />
-          </section>
-        )
+        <Showtimes key={m.id} movie={m} />
       ) : (
         <section className="upcoming-info section-container">
           <span className="eyebrow">A LITTLE ANTICIPATION GOES A LONG WAY</span>
@@ -688,14 +682,17 @@ export function CinemaDiscovery() {
               : 0,
     );
   return (
-    <main className="discovery-page section-container">
-      <div className="page-intro">
+    <main className="cinemas-page">
+      <section className="cinema-art-hero cinema-list-hero">
+      <div className="page-intro section-container">
         <span className="eyebrow">THE SPACE MAKES THE STORY</span>
         <h1>
           Cinemas in <span>{cities.find((c) => c.id === city)!.name}.</span>
         </h1>
         <p>Find your favourite screen. Or discover a new one.</p>
       </div>
+      </section>
+      <div className="discovery-page section-container cinema-list-content">
       <CinemaDirectory key={city} city={city}/>
       <div className="demo-cinemas-heading"><span className="eyebrow">TRY THE MOVIEVERSE EXPERIENCE</span><h2>Interactive demo cinemas.</h2><p>Explore illustrative 3D rooms and test the complete booking journey. These schedules are separate from the sourced venue directory above.</p></div>
       <div className="cinema-discovery-banner">
@@ -797,6 +794,7 @@ export function CinemaDiscovery() {
         Cinema names, distances, prices, addresses and screenings are
         illustrative demo data. These are not live venue listings.
       </p>
+      </div>
     </main>
   );
 }
@@ -886,8 +884,7 @@ function DemoCinemaDetail({ id }: { id:string }) {
   return (
     <main>
       <section
-        className="cinema-detail-hero"
-        style={{ backgroundImage: `url(${v.image})` }}
+        className="cinema-detail-hero cinema-art-hero cinema-art-detail"
       >
         <div>
           <Link className="back-link" href="/cinemas">

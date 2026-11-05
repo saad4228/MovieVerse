@@ -1,0 +1,24 @@
+/* Edge-to-edge artwork preserves proportions with natural responsive cropping. */
+.movie-backdrop .movie-backdrop-fill{position:absolute;inset:-18px;background-position:center;background-size:cover;filter:blur(18px) brightness(.35);pointer-events:none}
+.movie-backdrop .movie-backdrop-art{position:relative;display:block;width:100%;height:100%;margin:0;padding:0;object-fit:cover}
+.movie-backdrop.poster-composition .movie-backdrop-art{width:100%;height:100%;margin:0;padding:0;object-fit:cover}
+.movie-hero-actions{flex-wrap:wrap;justify-content:flex-end;max-width:460px}
+.watchlist-control{position:relative;display:inline-flex;max-width:100%}
+.watchlist-control .btn{gap:7px}
+.watchlist-control small{font-size:9px;font-weight:400;color:#c4b58c}
+.watchlist-notice{position:absolute;top:calc(100% + 8px);right:0;z-index:5;min-width:220px;max-width:calc(100vw - 40px);padding:10px 12px;border:1px solid #a98a4c66;border-radius:8px;background:#16151e;color:#eadfc5;font-size:11px;line-height:1.5;box-shadow:0 8px 24px #0005}
+@media(max-width:760px){
+ .movie-hero{height:auto;min-height:0;max-height:none;padding:64px 20px 28px}
+ .movie-hero .movie-backdrop{top:60px;bottom:auto;height:calc(100vw * 9 / 16)}
+ .movie-hero .movie-backdrop .movie-backdrop-art{object-position:center!important}
+ .movie-hero .movie-hero-bottom{position:relative;inset:auto;margin-top:calc(100vw * 9 / 16 + 20px);align-items:flex-start;flex-direction:column;gap:22px}
+ .movie-hero-actions{justify-content:flex-start;max-width:100%;gap:9px}
+ .movie-hero-actions .btn{min-height:44px}
+ .movie-identity{min-width:0;max-width:100%}
+ .movie-identity>div{min-width:0}
+ .movie-identity h1{overflow-wrap:anywhere}
+ .live-movie-hero{padding-block:56px 32px}
+ .live-movie-hero .movie-backdrop{top:56px;bottom:auto;height:calc(100vw * 9 / 16)}
+ .live-movie-hero .live-movie-heading{padding-top:calc(100vw * 9 / 16 + 24px)}
+ .watchlist-notice{left:0;right:auto}
+}

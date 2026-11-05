@@ -1,0 +1,136 @@
+/* Booking steps share navigation; only seat selection locks the workspace height. */
+.seat-route-shell{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(ellipse at 16% 0,#24304488,transparent 48%),radial-gradient(ellipse at 82% 0,#6c422e44,transparent 42%),#0b0d14}
+.seat-route-shell>.header{flex:none}
+:is(.seat-route-shell,.checkout-route-shell)>.header.theatre-navbar{height:72px;min-height:72px;border-bottom:1px solid #292a32;background:linear-gradient(110deg,#14161d,#11131a 70%);backdrop-filter:none;-webkit-backdrop-filter:none}
+@media(min-width:1500px){:is(.seat-route-shell,.checkout-route-shell)>.header.theatre-navbar .nav-wrap{max-width:1560px}}
+.seat-route-shell>.route-frame{flex:1;min-height:0;display:flex;flex-direction:column}
+.seat-route-shell .seat-page{flex:1;min-height:0;display:flex;flex-direction:column;animation:none}
+:is(.seat-page,.checkout-route-shell .booking-page) .booking-topbar{height:auto;min-height:52px;flex:none;padding:6px 20px;gap:12px;flex-wrap:nowrap;background:linear-gradient(90deg,#1a1b23,#171820 65%);border-bottom:1px solid #292a32}
+:is(.seat-page,.checkout-route-shell .booking-page) .booking-topbar>div{min-width:0}
+:is(.seat-page,.checkout-route-shell .booking-page) .booking-topbar h1{font-size:20px;line-height:1.15;margin:0 0 2px}
+:is(.seat-page,.checkout-route-shell .booking-page) .booking-topbar p{font-size:11px;line-height:1.4;max-width:none;color:#aab4c7}
+:is(.seat-page,.checkout-route-shell .booking-page) .booking-topbar>.certificate{flex-shrink:0;font-size:10px}
+.seat-page .seat-layout{flex:1;min-height:0;height:auto;display:grid;grid-template-columns:minmax(0,1fr) clamp(350px,26vw,440px)}
+.seat-page .auditorium-viewport{min-height:0;height:100%;max-height:none}
+.seat-page .seat-experience{min-height:0;height:100%}
+.seat-page .booking-sidebar{display:flex;flex-direction:column;min-height:0;position:relative;background:radial-gradient(ellipse at 100% 0,#80542b14,transparent 65%),linear-gradient(160deg,#18171e,#13141b 58%);box-shadow:-1px 0 0 #34313a;overflow:visible}
+.seat-page .sidebar-content{display:flex;flex-direction:column;gap:10px;min-height:0;padding:14px 16px 10px;overflow:hidden;flex:1}
+.seat-page .sidebar-content>.small-label{font-size:12px;letter-spacing:1.5px;flex:none}
+.seat-page .seat-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0;flex:none}
+.seat-page .seat-class{display:flex;align-items:center;position:static;min-height:46px;border-radius:8px;padding:7px 8px;gap:7px;background:linear-gradient(145deg,#24232d,#20212b);border-color:#39363e;text-align:left;transition:border-color .16s,background .16s}
+.seat-page .seat-class[aria-pressed=true]{border-color:#d8ad53;background:#282218}
+.seat-page .seat-class:hover{border-color:#b29153}
+.seat-page .seat-class>i{height:27px;width:3px}
+.seat-page .seat-class>span{gap:3px;min-width:0;padding:0}
+.seat-page .seat-class>span:last-child{position:static;flex-direction:column;align-items:flex-end;gap:3px}
+.seat-page .seat-class strong,.seat-page .seat-class>span:nth-child(2)>strong,.seat-page .seat-class>span:last-child strong{font-size:12px;line-height:1.3}
+.seat-page .seat-class .available-text{font-size:10px}
+.seat-page .seat-class-description{display:none}
+.seat-page .seat-legend{margin:0;gap:14px;font-size:11px;flex:none;flex-wrap:wrap}
+.seat-page .seat-legend .available{background:#78aaaf}
+.seat-page .quick-pick{margin:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:6px;flex:none}
+.seat-page .quick-pick>.small-label{grid-column:1/-1;font-size:12px;letter-spacing:1.5px}
+.seat-page .quick-pick>select{margin:0;width:100%;min-width:0;font-size:11px;padding:6px;min-height:36px}
+.seat-page .quick-pick>div{gap:6px;min-width:0}
+.seat-page .quick-pick .quantity-control{width:78px;min-width:78px;height:36px;gap:1px;padding:0 2px}
+.seat-page .quantity-control button{width:25px;min-height:32px}
+.seat-page .quick-pick .btn-white{height:36px;min-height:36px;font-size:11px;letter-spacing:0;white-space:nowrap;padding:6px 8px;gap:4px}
+.seat-page .quick-pick .btn-white svg{width:13px;flex-shrink:0}
+.seat-page .your-seats{position:relative;display:flex;flex-direction:column;min-height:55px;flex:1;margin:0;overflow:hidden}
+.seat-page .your-seats>.small-label{font-size:12px;letter-spacing:1px;min-height:24px;display:flex;align-items:center;gap:5px;flex:none}
+.seat-page .selection-undo{position:absolute;right:0;top:0;float:none;font-size:11px;min-height:24px}
+.seat-page .selected-seats-list{display:block;flex:1;min-height:0;max-height:none;margin:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#514655 transparent}
+.seat-page .selected-seats-list>div{min-height:44px;padding:5px 0;gap:8px}
+.seat-page .selected-seat-icon{width:28px;height:28px;flex-shrink:0}
+.seat-page .selected-seats-list>div>span:nth-child(2){flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:6px;min-width:0}
+.seat-page .selected-seats-list strong{font-size:13px}
+.seat-page .selected-seats-list small{font-size:11px}
+.seat-page .selected-seats-list .icon-btn{width:32px;height:32px;padding:7px;flex-shrink:0}
+.seat-page .no-seats{font-size:12px;line-height:1.6;padding:10px;margin:0;overflow:auto}
+.seat-page .layout-note{flex:none;margin:0;padding:7px 0 0;gap:7px}
+.seat-page .layout-note p{font-size:11px;line-height:1.4}
+.seat-page .sidebar-checkout{position:static;flex:none;padding:12px 16px 10px;display:block;background:linear-gradient(180deg,#1a191f,#13141b);border-top:1px solid #39343a;z-index:9}
+.seat-page .sidebar-checkout>div{margin-bottom:8px;gap:10px}
+.seat-page .sidebar-checkout>div>span{font-size:12px;flex-direction:row;align-items:center;flex-wrap:wrap;gap:4px 8px}
+.seat-page .sidebar-checkout>div small{font-size:11px}
+.seat-page .sidebar-checkout>div>strong{font-size:27px}
+.seat-page .sidebar-checkout>.btn{min-height:44px;font-size:12px;letter-spacing:.5px;padding:10px}
+.seat-page .sidebar-checkout>small{font-size:10px;margin-top:6px}
+.booking-summary-toggle{display:none}
+.seat-route-shell>.toast{bottom:104px;left:18px;transform:none;max-width:min(500px,calc(100vw - 390px))}
+.seat-page .view-bottom-controls{bottom:14px;left:16px;right:16px;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.seat-page .scene-hints{align-self:flex-start;font-size:10px;max-width:100%}
+.seat-page .scene-hints small{font-size:10px}
+.seat-page .scene-control-buttons{gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.seat-page .scene-control-buttons button{min-width:36px;min-height:36px;font-size:11px;padding:8px;justify-content:center;background:#171923e8;color:#f0ecf5;border:1px solid #ffffff29}
+.seat-page .scene-control-buttons button:hover{background:#38302a;border-color:#c59c50}
+.seat-page .scene-control-buttons svg{width:15px;height:15px}
+.seat-page .seat-hover{top:86px;left:18px;right:auto;bottom:auto;transform:none;max-width:min(240px,calc(100% - 36px));white-space:normal}
+.seat-page .seat-experience.is-touring .seat-hover{left:auto;right:18px}
+.seat-page .camera-presets button,.seat-page .map-toggle{font-size:11px;min-height:36px}
+.seat-page .seat-class:focus-visible,.booking-summary-toggle:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(min-width:901px) and (max-height:800px){.seat-page .sidebar-content{gap:7px;padding:10px 14px 8px}.seat-page .seat-class{min-height:44px;padding:5px 7px}.seat-page .sidebar-checkout{padding:10px 14px 8px}.seat-page .seat-preview-button-label{display:none}}
+@media(min-width:901px) and (max-width:1100px){.seat-page .seat-layout{grid-template-columns:minmax(0,1fr) 340px}.seat-page .camera-presets button{padding:8px}.seat-page .view-top-controls{justify-content:flex-start;left:10px;right:10px}.seat-page .seat-preview-button-label{display:none}.seat-page .scene-hints{max-width:90%}}
+@media(max-width:900px){
+  :is(.seat-route-shell,.checkout-route-shell)>.header.theatre-navbar{height:68px;min-height:68px}
+  .checkout-route-shell .booking-topbar{display:grid;grid-template-columns:auto minmax(0,1fr) auto}
+  .checkout-route-shell .booking-topbar>.hold-timer{grid-column:2/-1;justify-self:start;margin:0}
+  :is(.seat-page,.checkout-route-shell .booking-page) .booking-topbar{padding:6px 12px;gap:8px;min-height:52px}:is(.seat-page,.checkout-route-shell .booking-page) .booking-topbar h1{font-size:19px}:is(.seat-page,.checkout-route-shell .booking-page) .booking-topbar p{font-size:10px}:is(.seat-page,.checkout-route-shell .booking-page) .booking-topbar>.certificate{font-size:9px}
+  .seat-page .seat-layout{display:flex;flex-direction:column;min-height:0}
+  .seat-page .auditorium-viewport{flex:1;min-height:0;height:auto}
+  .seat-page .booking-sidebar{flex:none;border-left:0;z-index:12}
+  .booking-summary-toggle{display:block;width:100%;min-height:38px;text-align:center;background:#1c1925;color:#e4c17d;font-size:12px;border-top:1px solid #44384b}
+  .seat-page .sidebar-content{display:none;position:absolute;bottom:100%;left:0;right:0;height:min(55dvh,460px);padding:14px 16px;background:linear-gradient(150deg,#1b191f,#13141b);border:1px solid #39343a;border-radius:16px 16px 0 0;box-shadow:0 -12px 36px #0008}
+  .seat-page .summary-open .sidebar-content{display:flex;overflow-y:auto;overscroll-behavior:contain}
+  .seat-route-shell>.toast{bottom:210px;left:12px;max-width:calc(100vw - 24px)}
+  .seat-route-shell:has(.summary-open)>.toast{bottom:calc(min(55dvh,460px) + 132px)}
+  .seat-page .sidebar-checkout{padding:9px 14px max(9px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1.4fr;gap:4px 10px}
+  .seat-page .sidebar-checkout>div{margin:0;gap:8px}.seat-page .sidebar-checkout>div>span{font-size:11px;flex-direction:column;align-items:flex-start;gap:2px}.seat-page .sidebar-checkout>div small{font-size:10px}.seat-page .sidebar-checkout>.btn{font-size:10px;min-height:44px}.seat-page .sidebar-checkout>small{grid-column:1/-1;font-size:9px;margin-top:3px}
+  .seat-page .view-top-controls{top:8px;left:8px;right:8px;justify-content:flex-start;align-items:flex-start}.seat-page .camera-presets{max-width:calc(100% - 86px)}.seat-page .camera-presets button{padding:7px 9px;font-size:10px}.seat-page .map-toggle{font-size:10px;padding:7px;min-height:38px}
+  .seat-page .view-bottom-controls{bottom:9px;left:10px;right:10px;gap:5px}.seat-page .scene-hints,.seat-page .scene-hints small{font-size:9px}.seat-page .scene-control-buttons button{min-width:40px;min-height:40px}.seat-page .seat-hover{top:112px;left:10px;bottom:auto}
+  .seat-page .seat-experience.is-touring .seat-hover{top:166px;left:10px;right:auto}.seat-page .seat-preview-button-label{display:none}
+  .seat-page .quick-pick .quantity-control{width:84px;min-width:84px}.seat-page .quick-pick>select,.seat-page .quick-pick .btn-white,.seat-page .quick-pick .quantity-control{height:40px;min-height:40px}
+}
+@media(prefers-reduced-motion:reduce){.seat-page .seat-class{transition:none}}
+
+.trailer-loading-status{display:inline-flex;align-items:center;gap:6px;color:#d9c38a}
+.trailer-loading-status i{width:6px;height:6px;border-radius:50%;background:#e3b758;animation:trailer-wait 1.2s ease-in-out infinite alternate}
+@keyframes trailer-wait{to{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.trailer-loading-status i{animation:none}}
+
+/* Seat states share the same turquoise selection language in 2D and 3D. */
+.seat-page .map-seat.picked,.seat-page .seat-legend .picked{background:#35d8bc;color:#082b28;border-color:#8ff8e1}
+.seat-page .map-levels{display:flex;gap:8px;justify-content:center;margin:10px 0}
+.seat-page .map-levels button{padding:8px 18px;border:1px solid #645545;border-radius:20px;background:#191b24;color:#ddd}
+.seat-page .map-levels button[aria-pressed=true]{background:#e6bb64;color:#14121b}
+.seat-page .selected-seats-list{display:flex;flex-wrap:wrap;align-content:flex-start;gap:7px}
+.seat-page .selected-seats-list>div{flex:1 1 145px;max-width:100%;border:1px solid #367668;border-radius:22px;background:#12332e;padding:5px 8px;gap:6px;min-height:42px}
+.seat-page .selected-seats-list .selected-seat-icon{display:none}
+.seat-page .selected-seats-list>div>span:nth-child(2){display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+.seat-page .selected-seats-list small{font-size:10px;color:#b0cec7}
+.seat-page .selected-seats-list>div>strong{font-size:11px;margin-left:auto}
+
+.seat-page .map-row{position:relative;min-height:38px;justify-content:space-between;margin-inline:auto}
+.seat-page .map-row .map-seat{margin:0;width:28px;height:28px;top:5px}
+.seat-page .seat-class-description{display:block!important;font-size:9px;line-height:1.3;color:#aeb8c9}
+.seat-page .seat-class{min-height:66px}
+
+.seat-page .seat-class>span:nth-child(2){flex:1;overflow:hidden}
+.seat-page .seat-class>span:last-child{flex:none;min-width:36px}
+.seat-page .seat-class-description{white-space:normal;overflow-wrap:anywhere}
+
+/* Guided destinations are all places actually modelled in this auditorium. */
+.auditorium-tour-stops{position:absolute;z-index:6;left:18px;top:100px;display:grid;gap:7px;width:210px;padding:12px;border:1px solid #c4974b38;border-radius:14px;background:#101016d9;backdrop-filter:blur(10px)}
+.auditorium-tour-stops>span{font-size:9px;letter-spacing:.16em;color:#c6ab7d;padding:0 2px 4px}
+.auditorium-tour-stops button{display:flex;align-items:center;gap:8px;text-align:left;padding:7px;border:1px solid #ffffff12;background:#ffffff04;border-radius:8px;color:#eee;font-size:11px}
+.auditorium-tour-stops button:hover,.auditorium-tour-stops button:focus-visible{border-color:#e7ba68;background:#ae7e2920}
+.auditorium-tour-stops svg{width:52px;flex:none;fill:none;stroke:#766650;stroke-width:1.3}.auditorium-tour-stops .tour-screen{stroke:#e7bb72;stroke-width:2}.auditorium-tour-stops circle{fill:#6de2c5;stroke:none}
+.auditorium-tour-stops small{display:block;font-size:9px;line-height:1.4;color:#b4b0b9;margin-top:3px}
+@media(max-width:760px){.auditorium-tour-stops{left:8px;right:8px;top:92px;width:auto;display:flex;overflow-x:auto;padding:7px;gap:5px}.auditorium-tour-stops>span,.auditorium-tour-stops small{display:none}.auditorium-tour-stops button{flex:0 0 130px;padding:5px;font-size:10px}.auditorium-tour-stops svg{width:36px}}
+
+@media(max-width:760px){
+  .seat-page .camera-presets{max-width:100%;flex-shrink:0}
+  .seat-page .camera-presets button{flex:0 0 auto}
+  .seat-page .map-toggle{top:48px}
+  .seat-page .seat-experience.is-touring .viewpoint-label{display:none}
+}

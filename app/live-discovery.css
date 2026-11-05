@@ -1,0 +1,15 @@
+.live-movie-discovery { padding-block: 30px; }
+.live-movie-section .film-section-heading { margin-bottom: 14px; }
+.live-movie-section h2 { font-family: var(--font-display); font-size: 34px; letter-spacing: .7px; }
+.live-movie-section > .muted { margin-bottom: 20px; line-height: 1.6; }
+.live-movie-section [role="status"] { padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); line-height: 1.7; }
+.live-discovery-pagination { display: flex; align-items: center; gap: 16px; margin-block: 20px 10px; }
+.tmdb-attribution { margin-block: 24px; }
+.tmdb-attribution img { display: block; width: 100px; height: auto; margin-bottom: 10px; }
+.live-movie-hero { position: relative; isolation: isolate; min-height: 520px; padding-block: 84px 65px; }
+.live-movie-hero > .back-link { position: absolute; top: max(24px, env(safe-area-inset-top)); left: max(24px, calc((100vw - 1248px) / 2)); }
+.live-movie-hero .movie-backdrop { z-index: -1; }
+.live-movie-heading h1 { font-family: var(--font-display); font-size: clamp(38px, 6vw, 76px); margin-block: 15px; }
+.live-movie-heading p { max-width: 670px; line-height: 1.7; margin-block: 12px; }
+.live-movie-heading .btn { margin-top: 18px; }
+@media (max-width: 600px) { .live-discovery-pagination { gap: 10px; font-size: 11px; } .live-discovery-pagination .btn { padding: 10px 14px; } }

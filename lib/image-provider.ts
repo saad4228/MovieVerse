@@ -8,6 +8,9 @@ export function rankBackdrops(images: BackdropCandidate[]) {
   });
 }
 export interface MovieImageProvider { resolve(movie:Movie): { poster:string; backdrop:string; srcSet?:string; alternatives:string[]; position:string; width?:number; height?:number } }
+export function originalArtwork(src:string){
+  return /^https:\/\/image\.tmdb\.org\/t\/p\/w\d+\//.test(src)?src.replace(/\/t\/p\/w\d+\//,"/t/p/original/"):src;
+}
 export const movieImageProvider:MovieImageProvider = { resolve: m => ({
-  poster:m.poster,backdrop:m.backdrop,srcSet:backdropSet(m),alternatives:m.alternativeBackdrops || [],position:m.backdropPosition || "50% 40%",width:m.backdropWidth,height:m.backdropHeight,
+  poster:originalArtwork(m.poster),backdrop:originalArtwork(m.backdrop),srcSet:originalArtwork(m.backdrop)!==m.backdrop?undefined:backdropSet(m),alternatives:(m.alternativeBackdrops || []).map(originalArtwork),position:m.backdropPosition || "50% 50%",width:m.backdropWidth,height:m.backdropHeight,
 }) };

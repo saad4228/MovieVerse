@@ -1,0 +1,22 @@
+import {test,expect} from "@playwright/test";
+test("advanced auditorium draft validates without publishing and preserves irregular rows",async({page})=>{
+ await page.goto("/admin");
+ await page.getByText("Advanced auditorium configuration",{exact:true}).click();
+ await page.getByRole("button",{name:"Load current configuration",exact:true}).click();
+ const input=page.getByLabel("Auditorium configuration JSON");
+ const config=JSON.parse(await input.inputValue());
+ config.id="custom-preview-hall";config.name="Custom preview hall";
+ config.rowLengths=Array(config.rows).fill(config.columns-2);
+ config.rowConfig=[{label:"FR",omitted:[2]}];
+ await input.fill(JSON.stringify(config));
+ await page.getByRole("button",{name:"Apply auditorium configuration",exact:true}).click();
+ await expect(page.getByLabel("Auditorium name",{exact:true})).toHaveValue(config.name);
+ await page.getByLabel("Auditorium name",{exact:true}).fill("Renamed preview hall");
+ await page.getByRole("button",{name:"Load current configuration",exact:true}).click();
+ const next=JSON.parse(await input.inputValue());
+ expect(next.rowLengths).toEqual(config.rowLengths);expect(next.rowConfig).toEqual(config.rowConfig);
+ await input.fill(JSON.stringify({...next,rowConfig:[{omitted:[99]}]}));
+ await page.getByRole("button",{name:"Apply auditorium configuration",exact:true}).click();
+ await expect(page.locator(".toast")).toContainText("existing seat numbers");
+ await expect(page.getByLabel("Auditorium name",{exact:true})).toHaveValue("Renamed preview hall");
+});

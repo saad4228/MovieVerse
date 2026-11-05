@@ -1,0 +1,54 @@
+import {test,expect} from "@playwright/test";
+import sharp from "sharp";
+
+test("personal lounge uploads, persists, replaces and removes a private account photo",async({page,playwright})=>{
+  await page.goto("/register");
+  const email=`lounge-${Date.now()}@example.test`,password="Cinema-Lounge-2026";
+  await page.getByLabel("Your name",{exact:true}).fill("Cinema Lounge Tester");
+  await page.getByLabel("Email address",{exact:true}).fill(email);
+  await page.getByLabel("Password",{exact:true}).fill(password);
+  await page.getByRole("button",{name:"Create your account",exact:true}).click();
+  await expect(page).toHaveURL(/\/account/);
+  await expect(page.getByText("Your movie journey, all in one place.",{exact:true})).toBeVisible();
+  await expect(page.getByRole("button",{name:"Add profile photo",exact:true})).toBeVisible();
+  const photo=await sharp({create:{width:900,height:650,channels:3,background:"#ba8238"}}).png().toBuffer();
+  await page.getByLabel("Choose profile photo",{exact:true}).setInputFiles({name:"my-photo.png",mimeType:"image/png",buffer:photo});
+  await expect(page.getByRole("dialog",{name:"Preview profile photo"})).toBeVisible();
+  await page.getByRole("button",{name:"Save photo",exact:true}).click();
+  const avatar=page.getByAltText("Cinema Lounge Tester's profile photo",{exact:true});
+  await expect(avatar).toBeVisible();
+  await expect.poll(()=>avatar.evaluate(image=>(image as HTMLImageElement).naturalWidth)).toBe(512);
+  const ownPhoto=await page.request.get("/api/profile-photo");
+  expect(ownPhoto.status()).toBe(200);expect(ownPhoto.headers()["content-type"]).toBe("image/jpeg");
+  const firstBytes=await ownPhoto.body();
+  await page.reload();await expect(avatar).toBeVisible();
+  const bad=await page.request.post("/api/profile-photo",{data:{image:"data:image/svg+xml;base64,PHN2Zz4="}});expect(bad.status()).toBe(400);
+  const anonymous=await playwright.request.newContext({baseURL:"http://127.0.0.1:5173"});
+  expect((await anonymous.get("/api/profile-photo")).status()).toBe(401);
+  expect((await anonymous.post("/api/profile-photo",{data:{image:null}})).status()).toBe(401);
+  await anonymous.get("/api/session");
+  await anonymous.post("/api/register",{data:{name:"Another Cinema User",email:`other-${Date.now()}@example.test`,password}});
+  expect((await anonymous.get("/api/profile-photo")).status()).toBe(404);
+  expect((await anonymous.get("/api/profile")).ok()).toBe(true);
+  expect((await anonymous.post("/api/profile-photo",{data:{image:null}})).status()).toBe(200);
+  expect(await (await page.request.get("/api/profile-photo")).body()).toEqual(firstBytes);
+  await anonymous.dispose();
+  for(const [width,height] of [[1920,1080],[1440,900],[1366,768],[768,1024],[390,844]]){
+    await page.setViewportSize({width,height});
+    await expect(page.locator(".header")).toHaveCSS("background-color","rgba(0, 0, 0, 0)");
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    expect((await page.locator(".profile-identity").boundingBox())!.width).toBeGreaterThan(190);
+    await page.screenshot({path:`test-results/personal-lounge-${width}.png`,fullPage:width===390});
+  }
+  const replacement=await sharp({create:{width:600,height:600,channels:3,background:"#4d718c"}}).webp().toBuffer();
+  await page.getByLabel("Choose profile photo",{exact:true}).setInputFiles({name:"new-photo.webp",mimeType:"image/webp",buffer:replacement});
+  await page.getByRole("button",{name:"Save photo",exact:true}).click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  expect(await (await page.request.get("/api/profile-photo")).body()).not.toEqual(firstBytes);
+  await page.getByRole("button",{name:"Remove profile photo",exact:true}).click();
+  await expect(page.getByRole("button",{name:"Add profile photo",exact:true})).toBeVisible();
+  await page.reload();await expect(page.getByRole("button",{name:"Add profile photo",exact:true})).toBeVisible();
+  await page.locator(".account-links").getByRole("link",{name:/My tickets/i}).click();await expect(page).toHaveURL(/\/my-tickets/);
+  await page.goto("/account");await page.locator(".account-links").getByRole("link",{name:/Your next movie/i}).click();await expect(page).toHaveURL(/\/movies/);
+  await page.goto("/account");await page.getByRole("button",{name:"Sign out",exact:true}).click();await expect(page).toHaveURL(/\/$/);
+});

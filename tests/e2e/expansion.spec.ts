@@ -1,14 +1,42 @@
 import {test,expect} from '@playwright/test';
 import {dates,showsFor,type Venue,type Movie} from '../../lib/catalog';
+test('rotation starts while its button is hovered or focused, pauses, and includes the added films', async ({page}) => {
+ await page.goto('/');
+ const carousel=page.locator('.cinematic-panorama');
+ await expect(carousel).toHaveAttribute('data-position','3.0000');
+ const start=page.getByRole('button',{name:'Start automatic rotation',exact:true});
+ await start.focus();
+ await page.keyboard.press('Enter');
+ await expect.poll(async()=>Number(await carousel.getAttribute("data-position"))).toBeGreaterThan(3.1);
+ await page.keyboard.press('Space');
+ await expect(start).toHaveAttribute('aria-pressed','false');
+ const stopped=await carousel.getAttribute("data-position");
+ await page.waitForTimeout(600);
+ await expect(carousel).toHaveAttribute("data-position",stopped!);
+ await start.click();
+
+ // Leave the pointer over the rotation control: its hover must not stop playback.
+ await expect.poll(async()=>Number(await carousel.getAttribute("data-position"))).toBeGreaterThan(Number(stopped)+.1);
+ await page.getByRole('button',{name:'Pause automatic rotation',exact:true}).click();
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await expect(page.getByRole('button',{name:'Automatic rotation off · reduced motion',exact:true})).toBeDisabled();
+ const seen=new Set<string>();
+ for(let i=0;i<12;i++) {
+   await page.getByRole('button',{name:'Next movie',exact:true}).click();
+   seen.add((await carousel.getAttribute('data-active-movie'))!);
+ }
+ for(const id of ['udta-teer','drishyam-the-conclusion','prahaar-the-untold-story-of-ujjwal-nikam','clayface','hanuman-ansh']) expect(seen.has(id)).toBe(true);
+ expect(seen.size).toBe(12);
+});
 test('panorama exact drag targeting, side click, direction reversal and autoplay pause',async({page})=>{
  await page.setViewportSize({width:1920,height:1080});await page.goto('/');
  const carousel=page.locator('.cinematic-panorama');await expect(carousel).toHaveAttribute('data-position','3.0000');
  const box=(await carousel.boundingBox())!;const y=box.y+box.height*.4;
  const drag=async(dx:number,steps:number)=>{await page.mouse.move(1000,y);await page.mouse.down();await page.mouse.move(1000+dx,y,{steps});const pos=Number(await carousel.getAttribute('data-position'));await page.mouse.up();await expect.poll(async()=>Number(await carousel.getAttribute('data-position'))).toBe(Math.round(pos));expect(await carousel.getAttribute('data-active-movie')).toBe(await page.getByRole('region',{name:'Interactive movie panorama'}).getAttribute('data-featured-movie'));};
  await drag(-650,24);await drag(420,2);await drag(-230,8);
- const target=Number(await carousel.getAttribute('data-target'));await page.locator(`[data-carousel-index="${target+1}"] a`).click();await expect.poll(async()=>Number(await carousel.getAttribute('data-position'))).toBe(target+1);
- await page.getByRole('button',{name:'Start automatic rotation'}).click();await page.mouse.move(10,10);const before=Number(await carousel.getAttribute('data-target'));await expect.poll(async()=>Number(await carousel.getAttribute('data-target')),{timeout:12000}).toBe(before+1);
- await page.mouse.move(1000,y);await page.waitForTimeout(8500);expect(Number(await carousel.getAttribute('data-target'))).toBe(before+1);await drag(220,12);
+ await page.waitForTimeout(450);const target=Number(await carousel.getAttribute('data-target'));await page.locator(`[data-carousel-index="${target+1}"] a`).click();await expect.poll(async()=>Number(await carousel.getAttribute('data-position'))).toBe(target+1);
+ await page.getByRole('button',{name:'Start automatic rotation'}).click();await page.mouse.move(10,10);const before=Number(await carousel.getAttribute('data-target'));await expect.poll(async()=>Number(await carousel.getAttribute('data-target')),{timeout:12000}).toBeGreaterThan(before+.1);
+ await page.getByRole("button",{name:"Pause automatic rotation"}).click();await drag(220,12);
 });
 test('screening language and price variants use real persisted demo inventory summaries',async({request})=>{
  const catalog=await (await request.get('/api/catalog')).json();const venue=catalog.venues.find((v:Venue)=>v.cityId==='chennai');const movie=catalog.movies.find((m:Movie)=>m.id==='jailer-2');const shows=showsFor(venue,movie.id,dates()[2],catalog.movies);

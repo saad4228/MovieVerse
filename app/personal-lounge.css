@@ -1,0 +1,59 @@
+.amber-route-shell .personal-lounge { max-width: 1280px; padding-top: clamp(35px,5vh,62px); padding-bottom: 44px; min-height: auto; }
+.amber-route-shell .personal-lounge > h1 { font-size: clamp(36px,3.4vw,52px); letter-spacing: -1.5px; margin-bottom: 13px; }
+.personal-lounge .profile-welcome-copy { color: #b9b5c1; font-size: 15px; line-height: 1.7; margin: 0 0 32px; }
+.personal-lounge .profile-card { display: grid; grid-template-columns: 104px minmax(0,1fr) auto; gap: 28px; align-items: center; padding: 32px 34px; border-radius: 20px; border-color: #a885544d; background: radial-gradient(ellipse at 0 0,#b9812e12,transparent 55%),linear-gradient(115deg,#18151fe8,#21151be0); box-shadow: inset 0 1px 0 #ffe0aa08,0 18px 55px #0004; transition: border-color .25s; }
+.personal-lounge .profile-card:hover { border-color: #ba95536b; }
+.personal-lounge .profile-card h2 { font-size: clamp(23px,2.2vw,29px); letter-spacing: -.7px; }
+.personal-lounge .profile-card p { color: #beb8c7; font-size: 14px; }
+.personal-lounge .profile-card .demo-badge { border-radius: 30px; padding: 6px 11px; background: #bb8c3510; font-size: 9px; letter-spacing: 1.1px; }
+.personal-lounge .profile-card > .btn { background: #100e1599; border-radius: 10px; padding: 12px 17px; min-height: 44px; margin-left: 12px; }
+.personal-lounge .profile-card > .btn:hover { color: #ffe0a0; border-color: #bd995a99; background: #2a201fcc; }
+.personal-lounge .account-links { margin-top: 26px; gap: 24px; }
+.personal-lounge .account-links > a { padding: 26px; min-height: 135px; border-radius: 16px; background: radial-gradient(ellipse at 0 0,#9b562c12,transparent 60%),linear-gradient(125deg,#1a141fe3,#15131ddb); }
+.personal-lounge .account-links h3 { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; margin-bottom: 10px; }
+.personal-lounge .account-links p { font-size: 14px; line-height: 1.65; }
+.personal-lounge .account-links > a > svg:first-child { padding: 14px; width: 25px; height: 25px; background: linear-gradient(140deg,#d7a44914,#6d341e10); border-color: #c69c4d3b; transition: transform .2s; }
+.personal-lounge .account-links > a:hover > svg:first-child { transform: rotate(-4deg) translateY(-2px); }
+.personal-lounge .account-links > a > svg:last-child { color: #c6a66c; }
+.amber-route-shell .personal-lounge > .profile-guest-notice { display: flex; gap: 12px; padding: 17px 20px; border: 1px solid #b3946630; border-radius: 12px; background: #111019a8; font-size: 12px; color: #bcb7c4; max-width: none; margin: 26px 0 0; line-height: 1.8; animation: account-card-enter .3s 100ms ease-out both; }
+.profile-guest-notice > svg { color: #c2a779; flex-shrink: 0; margin-top: 3px; }
+.profile-route-shell .footer { max-width: 1280px; padding-top: 30px; margin-top: 0; }
+.profile-route-shell .footer-top { padding-bottom: 25px; }
+.profile-route-shell .footer-bottom { padding-top: 18px; }
+.profile-photo-control { width: 104px; position: relative; text-align: center; align-self: start; }
+.profile-photo-file { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; clip-path: inset(50%); overflow: hidden; }
+.profile-photo-avatar { position: relative; width: 104px; height: 104px; display: grid; place-items: center; border: 1px solid #d6ad6280; border-radius: 50%; background: radial-gradient(circle at 30% 20%,#513d2666,#22151f); color: #f6c86a; font-size: 38px; box-shadow: inset 0 0 0 5px #fff3d505,0 8px 25px #0003; }
+.profile-photo-avatar > img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.profile-photo-camera { position: absolute; bottom: 0; right: 0; display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: #302419; color: #ffcf75; border: 1px solid #a88648; }
+.photo-change { margin-top: 8px; font-size: 11px; line-height: 1.5; min-height: 28px; }
+.photo-remove { margin: 2px auto 0; display: flex; align-items: center; gap: 4px; font-size: 10px; line-height: 1.5; color: #b6a9b2; min-height: 26px; }
+.profile-photo-control .photo-feedback { margin: 10px -8px 0; font-size: 11px; line-height: 1.5; color: #f0ada3; }
+.profile-photo-preview { text-align: center; padding: 15px 0 5px; }
+.profile-photo-preview > h2 { font-size: 30px; margin: 13px 0 24px; }
+.profile-photo-preview > img { border-radius: 50%; border: 2px solid #c79d50; margin: 0 auto 24px; width: 200px; height: 200px; }
+.profile-photo-preview > p { max-width: 340px; margin: 12px auto; color: #bcb6c5; font-size: 14px; line-height: 1.7; }
+.profile-photo-preview .photo-file-hint { font-size: 11px; color: #8f8998; }
+.photo-preview-actions { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+@media(max-width:760px) {
+  .amber-route-shell .personal-lounge { padding-bottom: 35px; }
+  .personal-lounge .profile-welcome-copy { font-size: 14px; margin-bottom: 26px; }
+  .personal-lounge .profile-card { grid-template-columns: 76px minmax(0,1fr); gap: 22px 18px; padding: 24px 20px; border-radius: 16px; }
+  .personal-lounge .profile-card h2 { font-size: 23px; }
+  .personal-lounge .profile-card p { font-size: 13px; }
+  .personal-lounge .profile-card .demo-badge { font-size: 8px; letter-spacing: .7px; }
+  .personal-lounge .profile-card > .btn { grid-column: 2; margin-left: 0; }
+  .profile-photo-control,.profile-photo-avatar { width: 76px; }
+  .profile-photo-avatar { height: 76px; font-size: 29px; }
+  .profile-photo-camera { width: 25px; height: 25px; }
+  .photo-change,.photo-remove { min-height: 36px; }
+  .personal-lounge .account-links { gap: 16px; }
+  .personal-lounge .account-links > a { min-height: 126px; padding: 22px 20px; }
+  .personal-lounge .account-links h3 { font-size: 12px; letter-spacing: 1.2px; }
+  .personal-lounge .account-links p { font-size: 13px; }
+  .amber-route-shell .personal-lounge > .profile-guest-notice { padding: 16px; font-size: 12px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .personal-lounge .profile-card,.personal-lounge .account-links > a > svg:first-child { transition: none; }
+  .amber-route-shell .personal-lounge > .profile-guest-notice { animation: none; }
+  .personal-lounge .account-links > a:hover > svg:first-child { transform: none; }
+}

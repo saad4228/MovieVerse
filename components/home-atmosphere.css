@@ -1,0 +1,70 @@
+/* Homepage atmosphere only. Artwork and poster collections remain unchanged. */
+.movieverse-home{background:var(--bg)}
+.movieverse-home .home-showing{
+  position:relative;
+  background:
+    linear-gradient(180deg,#030b1480,transparent 120px),
+    radial-gradient(ellipse 75% 65% at 18% 24%,#54152b30,transparent 75%),
+    radial-gradient(ellipse 65% 55% at 88% 46%,#1d355122,transparent 75%),
+    var(--bg);
+}
+.movieverse-home .advance-section{
+  position:relative;isolation:isolate;
+  padding-top:36px;padding-bottom:32px;
+}
+.movieverse-home .advance-section::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at 12% 42%,#23344d20,transparent 68%);
+}
+.movieverse-home .advance-section.is-empty .section-heading{margin-bottom:16px}
+.movieverse-home .advance-section.is-empty .discovery-empty{
+  padding:14px 18px;margin:0;line-height:1.65;
+  border-left:2px solid #b28c4938;border-radius:0 8px 8px 0;
+  background:linear-gradient(90deg,#13141b9c,transparent);
+}
+.movieverse-home .universe-wall{
+  margin-top:0;margin-bottom:36px;border-color:transparent;
+}
+.movieverse-home .universe-wall::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,var(--bg),transparent 18%,transparent 82%,var(--bg));
+}
+.movieverse-home .experience-section{
+  position:relative;isolation:isolate;border-top-color:transparent;
+  padding-top:64px;padding-bottom:72px;
+}
+.movieverse-home .experience-section::before{
+  content:"";position:absolute;inset:-20px 0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 12% 44%,#591b3030,transparent 64%),
+    radial-gradient(ellipse at 83% 52%,#a2662720,transparent 60%);
+}
+.movieverse-home .coming-section,
+.movieverse-home .discovery-section:not(.advance-section){background:var(--bg)}
+.movieverse-home .cinema-callout{
+  background:linear-gradient(120deg,#171820,#11131b);
+  border-color:#a9a9bb24;margin-bottom:48px;
+}
+.movieverse-home .creator-invitation{box-shadow:0 14px 45px #00000018}
+.movieverse-home .scroll-reveal:not(.movie-card){translate:0 14px}
+.movieverse-home .scroll-reveal:not(.movie-card):is(.is-revealed,:focus-within){translate:0 0}
+@media(max-width:760px){
+  .movieverse-home .advance-section{padding-top:26px;padding-bottom:26px}
+  .movieverse-home .advance-section.is-empty .discovery-empty{padding:12px 14px}
+  .movieverse-home .universe-wall{margin-bottom:24px}
+  .movieverse-home .experience-section{padding-top:40px;padding-bottom:44px}
+  .movieverse-home .cinema-callout{margin-bottom:32px}
+}
+@media(prefers-reduced-motion:reduce){
+  .movieverse-home .scroll-reveal:not(.movie-card){opacity:1;translate:none;transition:none}
+}
+
+/* Keep the discovery cue below the information card, including short viewports. */
+.movieverse-home .moonlit-lobby .lobby-controls{bottom:58px}
+.movieverse-home .moonlit-lobby .lobby-bottom{bottom:2px}
+.movieverse-home .moonlit-lobby .featured-movie{min-height:108px;padding:15px 26px}
+@media(max-width:760px){
+  .movieverse-home .moonlit-lobby .featured-movie{min-height:149px;padding:13px 15px}
+}
+.moonlit-lobby .carousel-poster-fallback{display:none;pointer-events:none}
+.moonlit-lobby .poster-unavailable .carousel-poster-fallback{display:flex}

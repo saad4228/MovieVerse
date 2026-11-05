@@ -1,4 +1,5 @@
 "use client";
+import { checkoutOffer } from "./checkout-offers";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 type State = {
@@ -8,6 +9,8 @@ type State = {
   seats: string[];
   cart: Record<string, number>;
   holdExpires: number;
+  promoCode: string;
+  setPromo: (code: string) => void;
   setCity: (id: string) => void;
   setShow: (id: string) => void;
   setSeats: (ids: string[]) => void;
@@ -24,6 +27,8 @@ export const useApp = create<State>()(
       seats: [],
       cart: {},
       holdExpires: 0,
+      promoCode: "",
+      setPromo: (code) => set({promoCode:checkoutOffer(code)?.code ?? ""}),
       setCity: (id) =>
         set((s) => ({
           city: id,
@@ -35,12 +40,13 @@ export const useApp = create<State>()(
           seats: [],
           cart: {},
           holdExpires: 0,
+          promoCode: "",
         })),
       setShow: (id) =>
         set((s) =>
           s.showId === id
             ? {}
-            : { showId: id, seats: [], cart: {}, holdExpires: 0 },
+            : { showId: id, seats: [], cart: {}, holdExpires: 0, promoCode: "" },
         ),
       setSeats: (ids) => set({ seats: ids }),
       setCart: (id, n) =>
@@ -49,7 +55,7 @@ export const useApp = create<State>()(
         })),
       setExpiry: (n) => set({ holdExpires: n }),
       clearBooking: () =>
-        set({ showId: null, seats: [], cart: {}, holdExpires: 0 }),
+        set({ showId: null, seats: [], cart: {}, holdExpires: 0, promoCode: "" }),
     }),
     {
       name: "movieverse-v1",
@@ -60,6 +66,7 @@ export const useApp = create<State>()(
         seats: s.seats,
         cart: s.cart,
         holdExpires: s.holdExpires,
+        promoCode: s.promoCode,
       }),
     },
   ),

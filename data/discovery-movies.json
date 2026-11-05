@@ -1,0 +1,1481 @@
+[
+  {
+    "id": "udta-teer",
+    "title": "Udta Teer",
+    "aliases": [],
+    "tagline": "Discover the story",
+    "description": "A spy loses his memory in the middle of a dangerous assignment. Confused loyalties and a complicated marriage turn an international mission into a comedy of mistaken identity.",
+    "genre": [
+      "Spy",
+      "Comedy"
+    ],
+    "languages": [
+      "Hindi"
+    ],
+    "duration": 138,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "UA13+",
+    "poster": "/assets/discovery/udta-teer-poster.webp",
+    "posterSmall": "/assets/discovery/udta-teer-poster-small.webp",
+    "backdrop": "/assets/discovery/udta-teer-backdrop.webp",
+    "backdropSmall": "/assets/discovery/udta-teer-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-10-23",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Ayushmann Khurrana",
+      "Sara Ali Khan",
+      "Gulshan Grover",
+      "Ram Kapoor",
+      "Mukul Dev",
+      "Suhail Nayyar",
+      "Rahul Bose",
+      "Brijendra Kala",
+      "Naseem Mughal",
+      "Sandeep Anand"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "udta-teer-c9BTK0tKeLM",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=c9BTK0tKeLM",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Hindi"
+      }
+    ],
+    "youtubeId": "c9BTK0tKeLM",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/udta-teer-movie-tickets-MV219550",
+    "metadata": {
+      "tmdbId": 1375156,
+      "overview": "A spy loses his memory in the middle of a dangerous assignment. Confused loyalties and a complicated marriage turn an international mission into a comedy of mistaken identity.",
+      "cast": [
+        {
+          "name": "Ayushmann Khurrana",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Crew/ayushman-khurana.jpg"
+        },
+        {
+          "name": "Sara Ali Khan",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/sara-38ef9720-f3a6-11ed-b212-7bbea27a4ce9.jpg"
+        },
+        {
+          "name": "Gulshan Grover",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Guksh-647f2350-79c4-11f0-b721-799d63111324.jpg"
+        },
+        {
+          "name": "Ram Kapoor",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/77887103-42e6fa50-ed9f-11ed-82e8-cf24b6293ec4.jpg"
+        },
+        {
+          "name": "Mukul Dev",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Stills/Nirdosh/cast/Mukul-Dev.jpg"
+        },
+        {
+          "name": "Suhail Nayyar",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Suhail-Nayyar--99a42970-b265-423a-a1a1-434da33e7580.jpg"
+        },
+        {
+          "name": "Rahul Bose",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Rahu-30b92ed0-6405-11ed-9857-a75c44fafe71.jpg"
+        },
+        {
+          "name": "Brijendra Kala",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Crew/brijendra-kala.jpg"
+        },
+        {
+          "name": "Naseem Mughal",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Naseem%20Mughal%20(1)-aa703b20-b8fb-11f1-a7e7-c9f5d0d7aa07.jpg"
+        },
+        {
+          "name": "Sandeep Anand",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-25T214134.199-cc382650-b8fb-11f1-bdb8-5f374ca479aa.png"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Akash A Kaushik",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-10-23",
+          "status": "released",
+          "source": "https://www.district.in/movies/udta-teer-movie-tickets-MV219550"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/udta-teer-movie-tickets-MV219550"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "drishyam-the-conclusion",
+    "title": "Drishyam: The Conclusion",
+    "aliases": [
+      "Drishyam 3 Hindi"
+    ],
+    "tagline": "Discover the story",
+    "description": "Vijay Salgaonkar faces another threat to the secret his family has kept for years. With investigators returning to the case, he must find a way to protect them from the consequences of the past.",
+    "genre": [
+      "Drama",
+      "Mystery",
+      "Thriller"
+    ],
+    "languages": [
+      "Hindi"
+    ],
+    "duration": 150,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "UA16+",
+    "poster": "/assets/discovery/drishyam-the-conclusion-poster.webp",
+    "posterSmall": "/assets/discovery/drishyam-the-conclusion-poster-small.webp",
+    "backdrop": "/assets/discovery/drishyam-the-conclusion-backdrop.webp",
+    "backdropSmall": "/assets/discovery/drishyam-the-conclusion-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-10-02",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Ajay Devgn",
+      "Shriya Saran",
+      "Tabu",
+      "Rajat Kapoor",
+      "Prakash Raj",
+      "Jaideep Ahlawat",
+      "Ishita Dutta",
+      "Mrunal Jadhav",
+      "Kamlesh Sawant",
+      "Saurabh Shukla",
+      "Samvedna Suwalka",
+      "Neha Joshi"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "drishyam-the-conclusion-jYbEYF1t-hk",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=jYbEYF1t-hk",
+        "type": "teaser",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Hindi"
+      },
+      {
+        "id": "drishyam-the-conclusion-fneuVQ7uO_w",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=fneuVQ7uO_w",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Hindi"
+      }
+    ],
+    "youtubeId": "jYbEYF1t-hk",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/drishyam-the-conclusion-movie-tickets-MV207254",
+    "metadata": {
+      "overview": "Vijay Salgaonkar faces another threat to the secret his family has kept for years. With investigators returning to the case, he must find a way to protect them from the consequences of the past.",
+      "cast": [
+        {
+          "name": "Ajay Devgn",
+          "character": "Vijay Salgaonkar",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/ajay-ea8fa7d0-8ea3-11ed-bd95-b7350954b20c.jpg"
+        },
+        {
+          "name": "Shriya Saran",
+          "character": "Nandini Salgaonkar",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Crew/shriya-saran.jpg"
+        },
+        {
+          "name": "Tabu",
+          "character": "Meera Deshmukh",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Stills/Golmaal-Again/Tabu.jpg"
+        },
+        {
+          "name": "Rajat Kapoor",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Stills/Pari/cast/Rajat-Kapoor.jpg"
+        },
+        {
+          "name": "Prakash Raj",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Stills/Golmaal-Again/prakash-raj.jpg"
+        },
+        {
+          "name": "Jaideep Ahlawat",
+          "character": "Rajeev Singh Tomar",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Jaideep-Ahlawat.jpg"
+        },
+        {
+          "name": "Ishita Dutta",
+          "character": "Anju Salgaonkar",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Stills/Firangi/Firangi/Cast/Ishita-Dutta.jpg"
+        },
+        {
+          "name": "Mrunal Jadhav",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/mrunal-jadhav-7bce99d0-4dff-11ed-b776-c7c778622260.jpg"
+        },
+        {
+          "name": "Kamlesh Sawant",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Kamlesh-Sawant-fc38264b-50db-4a60-86f7-d548c27da952.jpg"
+        },
+        {
+          "name": "Saurabh Shukla",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Stills/Raid/Cast/saurabh-shukla.jpg"
+        },
+        {
+          "name": "Samvedna Suwalka",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-10-10T173424.926-de1c2ad0-c4a2-11f1-ac8b-b32686050d7d.png"
+        },
+        {
+          "name": "Neha Joshi",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Neha-Joshi.jpg"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Abhishek Pathak",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-10-02",
+          "status": "released",
+          "source": "https://www.district.in/movies/drishyam-the-conclusion-movie-tickets-MV207254"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/drishyam-the-conclusion-movie-tickets-MV207254",
+        "https://www.rottentomatoes.com/m/drishyam_the_conclusion"
+      ],
+      "checked": "2026-11-02"
+    }
+  },
+  {
+    "id": "prahaar-the-untold-story-of-ujjwal-nikam",
+    "title": "Prahaar: The Untold Story of Ujjwal Nikam",
+    "aliases": [
+      "Prahaar"
+    ],
+    "tagline": "Discover the story",
+    "description": "Rajkummar Rao plays public prosecutor Ujjwal Nikam in a courtroom drama about major criminal trials connected to the Bombay bombings and Mumbai attacks.",
+    "genre": [
+      "Biography",
+      "Drama"
+    ],
+    "languages": [
+      "Hindi"
+    ],
+    "duration": 141,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "UA16+",
+    "poster": "/assets/discovery/prahaar-the-untold-story-of-ujjwal-nikam-poster.webp",
+    "posterSmall": "/assets/discovery/prahaar-the-untold-story-of-ujjwal-nikam-poster-small.webp",
+    "backdrop": "/assets/discovery/prahaar-the-untold-story-of-ujjwal-nikam-backdrop.webp",
+    "backdropSmall": "/assets/discovery/prahaar-the-untold-story-of-ujjwal-nikam-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-10-16",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Rajkummar Rao",
+      "Wamiqa Gabbi",
+      "Jaideep Ahlawat",
+      "Sikander Kher",
+      "Ashish Vidyarthi",
+      "Lalit Prabhakar",
+      "Ritvik Sahore"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "prahaar-the-untold-story-of-ujjwal-nikam-rPZw29Zh6Oo",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=rPZw29Zh6Oo",
+        "type": "teaser",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Hindi"
+      },
+      {
+        "id": "prahaar-the-untold-story-of-ujjwal-nikam-qGbvEhKhaWA",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=qGbvEhKhaWA",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Hindi"
+      }
+    ],
+    "youtubeId": "rPZw29Zh6Oo",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/prahaar-the-untold-story-of-ujjwal-nikam-movie-tickets-MV224801",
+    "metadata": {
+      "overview": "Rajkummar Rao plays public prosecutor Ujjwal Nikam in a courtroom drama about major criminal trials connected to the Bombay bombings and Mumbai attacks.",
+      "cast": [
+        {
+          "name": "Rajkummar Rao",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Rajk-953a0090-9ae8-11ed-8092-a9deecfa7463.jpg"
+        },
+        {
+          "name": "Wamiqa Gabbi",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Wamiqa-23bd0ef0-d65d-11ef-b0b4-a1004a37a2e8.jpg"
+        },
+        {
+          "name": "Jaideep Ahlawat",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Jaideep-Ahlawat.jpg"
+        },
+        {
+          "name": "Sikander Kher",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/sik-55d93ab0-e47d-11f0-b58b-bf06f5d421b0.png"
+        },
+        {
+          "name": "Ashish Vidyarthi",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Ashish-Vidyarthi-4748f7f6-45bf-4f0d-ba3c-a01c1b374cf2.jpg"
+        },
+        {
+          "name": "Lalit Prabhakar",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/lalit-prabhakar-8088d870-7c07-11ec-9f5e-d7fadac4b559.jpg"
+        },
+        {
+          "name": "Ritvik Sahore",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Ritik-Sahore-21c4cbf0-fcbc-11ed-a58c-1b525140019f.jpg"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Avinash Arun",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-10-16",
+          "status": "released",
+          "source": "https://www.district.in/movies/prahaar-the-untold-story-of-ujjwal-nikam-movie-tickets-MV224801"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/prahaar-the-untold-story-of-ujjwal-nikam-movie-tickets-MV224801"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "pehla-pyaar-doosri-baar",
+    "title": "Pehla Pyaar Doosri Baar",
+    "aliases": [],
+    "tagline": "Discover the story",
+    "description": "A holiday throws six friends into romantic confusion. Their misunderstandings test both new relationships and the friendships they thought they could depend on.",
+    "genre": [
+      "Romance",
+      "Comedy"
+    ],
+    "languages": [
+      "Hindi"
+    ],
+    "duration": 142,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "A",
+    "poster": "/assets/discovery/pehla-pyaar-doosri-baar-poster.webp",
+    "posterSmall": "/assets/discovery/pehla-pyaar-doosri-baar-poster-small.webp",
+    "backdrop": "/assets/discovery/pehla-pyaar-doosri-baar-backdrop.webp",
+    "backdropSmall": "/assets/discovery/pehla-pyaar-doosri-baar-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-10-23",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Kunal Vaid",
+      "Sakshi Vaidya",
+      "Alisha Chopra",
+      "Sparsh Walia",
+      "Sargun Kaur Luthra",
+      "Tushar Chhibber"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "pehla-pyaar-doosri-baar-fNIgVJooVUw",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=fNIgVJooVUw",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Hindi"
+      }
+    ],
+    "youtubeId": "fNIgVJooVUw",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/pehla-pyaar-doosri-baar-movie-tickets-MV233960",
+    "metadata": {
+      "overview": "A holiday throws six friends into romantic confusion. Their misunderstandings test both new relationships and the friendships they thought they could depend on.",
+      "cast": [
+        {
+          "name": "Kunal Vaid",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Kunal%20Vaid-a802e290-b282-11f1-90af-535f4fc16e8a.jpg"
+        },
+        {
+          "name": "Sakshi Vaidya",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Sakshi%20Vaidya-bae70170-b282-11f1-a600-31045a338499.jpg"
+        },
+        {
+          "name": "Alisha Chopra",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Alisha%20Chopra-c8414790-b282-11f1-89a2-f9c3f6bcc95f.jpg"
+        },
+        {
+          "name": "Sparsh Walia",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Sparsh%20Walia-d7764120-b282-11f1-8d69-1f0bfa8598da.jpg"
+        },
+        {
+          "name": "Sargun Kaur Luthra",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Sargun%20Kaur%20Luthra-e4d4a5f0-b282-11f1-9c49-b5507e8e48e4.jpg"
+        },
+        {
+          "name": "Tushar Chhibber",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Tushar%20Chhibber-f7c85530-b282-11f1-9bea-d77337b1a912.jpg"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Anuj Saini",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-10-23",
+          "status": "released",
+          "source": "https://www.district.in/movies/pehla-pyaar-doosri-baar-movie-tickets-MV233960"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/pehla-pyaar-doosri-baar-movie-tickets-MV233960"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "nayyi-navelli",
+    "title": "Nayyi Navelli",
+    "aliases": [],
+    "tagline": "Discover the story",
+    "description": "A new bride seems to be the answer to a troubled family's problems. Her brother-in-law grows suspicious, wondering whether her extraordinary effect on the household has a supernatural explanation.",
+    "genre": [
+      "Supernatural",
+      "Family"
+    ],
+    "languages": [
+      "Hindi"
+    ],
+    "duration": 138,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "UA16+",
+    "poster": "/assets/discovery/nayyi-navelli-poster.webp",
+    "posterSmall": "/assets/discovery/nayyi-navelli-poster-small.webp",
+    "backdrop": "/assets/discovery/nayyi-navelli-backdrop.webp",
+    "backdropSmall": "/assets/discovery/nayyi-navelli-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-10-16",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Yami Gautam",
+      "Addinath M Kothare",
+      "Sunita Rajwar",
+      "Mita Vashisht",
+      "Sushmita Mukherjee",
+      "Suneel Sinha",
+      "Sonal Jha",
+      "Anurag Thakur"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "nayyi-navelli-2OHEEy_qhyE",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=2OHEEy_qhyE",
+        "type": "teaser",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Hindi"
+      },
+      {
+        "id": "nayyi-navelli-NPkMecGOxDc",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=NPkMecGOxDc",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Hindi"
+      }
+    ],
+    "youtubeId": "2OHEEy_qhyE",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/nayyi-navelli-movie-tickets-MV219759",
+    "metadata": {
+      "overview": "A new bride seems to be the answer to a troubled family's problems. Her brother-in-law grows suspicious, wondering whether her extraordinary effect on the household has a supernatural explanation.",
+      "cast": [
+        {
+          "name": "Yami Gautam",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/yami-eb6c3450-fa9a-11f0-bbaf-736e1369d6d2.jpg"
+        },
+        {
+          "name": "Addinath M Kothare",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(58)-ce0f6ba0-acf8-11f1-af37-31e9032d365a.png"
+        },
+        {
+          "name": "Sunita Rajwar",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/sunita-rajwar-68316daf-8138-4ce4-8976-bb6d4f1521bd.jpg"
+        },
+        {
+          "name": "Mita Vashisht",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Mita%20Vashisht-f5e0b520-fe5e-11ef-87c2-534491fa90be.jpg"
+        },
+        {
+          "name": "Sushmita Mukherjee",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Crew/sushmita-mukherjee.jpg"
+        },
+        {
+          "name": "Suneel Sinha",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(56)-587cf6c0-acec-11f1-9a3e-9939bf4f5eed.png"
+        },
+        {
+          "name": "Sonal Jha",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(57)-710cce40-acec-11f1-9cc6-df4990fd5ec1.png"
+        },
+        {
+          "name": "Anurag Thakur",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(60)-b856f710-acf8-11f1-b44f-412819aa05fb.png"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Balaji Mohan",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-10-16",
+          "status": "released",
+          "source": "https://www.district.in/movies/nayyi-navelli-movie-tickets-MV219759"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/nayyi-navelli-movie-tickets-MV219759"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "hanuman-ansh",
+    "title": "Hanuman Ansh",
+    "aliases": [],
+    "tagline": "Discover the story",
+    "description": "A bereaved boy discovers a different way forward through the teachings associated with Neem Karoli Baba. His spiritual journey explores care for others, faith and service.",
+    "genre": [
+      "Biography",
+      "Devotional",
+      "Drama"
+    ],
+    "languages": [
+      "Hindi"
+    ],
+    "duration": 150,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "U",
+    "poster": "/assets/discovery/hanuman-ansh-poster.webp",
+    "posterSmall": "/assets/discovery/hanuman-ansh-poster-small.webp",
+    "backdrop": "/assets/discovery/hanuman-ansh-backdrop.webp",
+    "backdropSmall": "/assets/discovery/hanuman-ansh-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-08-07",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Shobhinaw Satyaa",
+      "Gulshan Pandey",
+      "Anil Rastogi",
+      "Chandan K Anand"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "hanuman-ansh-YZ2FbpJDVf0",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=YZ2FbpJDVf0",
+        "type": "teaser",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Hindi"
+      },
+      {
+        "id": "hanuman-ansh-YpGhCA2X3gU",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=YpGhCA2X3gU",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Hindi"
+      },
+      {
+        "id": "hanuman-ansh-DDyZq1QEybI",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=DDyZq1QEybI",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Telugu"
+      }
+    ],
+    "youtubeId": "YZ2FbpJDVf0",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/hanuman-ansh-movie-tickets-MV225612",
+    "metadata": {
+      "overview": "A bereaved boy discovers a different way forward through the teachings associated with Neem Karoli Baba. His spiritual journey explores care for others, faith and service.",
+      "cast": [
+        {
+          "name": "Shobhinaw Satyaa",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Gemini_Generated_Image_gwimzgwimzgwimzg%20(1)-eb0babf0-7dfb-11f1-af9a-c9557149987c.png"
+        },
+        {
+          "name": "Gulshan Pandey",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/gulshan-bf49f720-273d-11f1-bd98-eb3057714769.jpg"
+        },
+        {
+          "name": "Anil Rastogi",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Anil-Rastogi-447b3290-a64a-11ef-83c7-45b404db6ec5.jpg"
+        },
+        {
+          "name": "Chandan K Anand",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/chandna1-eab54400-7dfa-11f1-b730-71ff91eb578a.jpeg"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Vishal Chaturvedi",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-08-07",
+          "status": "released",
+          "source": "https://www.district.in/movies/hanuman-ansh-movie-tickets-MV225612"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/hanuman-ansh-movie-tickets-MV225612"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "clayface",
+    "title": "Clayface",
+    "aliases": [],
+    "tagline": "Discover the story",
+    "description": "After a violent attack disfigures actor Matt Hagen, an experimental treatment offers him a way back to his former life. Its effects on his body and mind instead set him on a terrifying course.",
+    "genre": [
+      "Horror",
+      "Thriller"
+    ],
+    "languages": [
+      "English",
+      "Hindi"
+    ],
+    "duration": 108,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "A",
+    "poster": "/assets/discovery/clayface-poster.webp",
+    "posterSmall": "/assets/discovery/clayface-poster-small.webp",
+    "backdrop": "/assets/discovery/clayface-backdrop.webp",
+    "backdropSmall": "/assets/discovery/clayface-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-10-23",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Tom Rhys Harries",
+      "Naomi Ackie",
+      "David Dencik",
+      "Eddie Marsan"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "clayface-aNPc43RrOOA",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=aNPc43RrOOA",
+        "type": "teaser",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "English"
+      },
+      {
+        "id": "clayface-Vk5DR57kl48",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=Vk5DR57kl48",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "English"
+      },
+      {
+        "id": "clayface-TRqJ47WoX5U",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=TRqJ47WoX5U",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Hindi"
+      }
+    ],
+    "youtubeId": "aNPc43RrOOA",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/clayface-movie-tickets-MV220119",
+    "metadata": {
+      "overview": "After a violent attack disfigures actor Matt Hagen, an experimental treatment offers him a way back to his former life. Its effects on his body and mind instead set him on a terrifying course.",
+      "cast": [
+        {
+          "name": "Tom Rhys Harries",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/rhys_rhu0sj_c_fill%2Cw_200%2Ch_200-1c058b30-a289-11f0-bc10-53b4fd296cbf.jpg"
+        },
+        {
+          "name": "Naomi Ackie",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Naomi-Ackie-0c1d23a0-8062-11ed-bf27-a3e7fc56533c.jpg"
+        },
+        {
+          "name": "David Dencik",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/david-64a56510-1dc0-11ec-b103-8123278d6010.jpg"
+        },
+        {
+          "name": "Eddie Marsan",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Crew/7-Days-in-Entebbe/cast/Eddie-Marsan.jpg"
+        }
+      ],
+      "crew": [
+        {
+          "name": "James Watkins",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-10-23",
+          "status": "released",
+          "source": "https://www.district.in/movies/clayface-movie-tickets-MV220119"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/clayface-movie-tickets-MV220119"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "aadarsha-kutumbam-house-no-47",
+    "title": "Aadarsha Kutumbam House No: 47",
+    "aliases": [
+      "Aadarsha Kutumbam",
+      "AK47"
+    ],
+    "tagline": "Discover the story",
+    "description": "An unexpected event unsettles the apparently happy household at No. 47. As concealed problems emerge, the family must confront the distance between its public image and private relationships.",
+    "genre": [
+      "Family",
+      "Comedy",
+      "Drama"
+    ],
+    "languages": [
+      "Telugu"
+    ],
+    "duration": 149,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "UA16+",
+    "poster": "/assets/discovery/aadarsha-kutumbam-house-no-47-poster.webp",
+    "posterSmall": "/assets/discovery/aadarsha-kutumbam-house-no-47-poster-small.webp",
+    "backdrop": "/assets/discovery/aadarsha-kutumbam-house-no-47-backdrop.webp",
+    "backdropSmall": "/assets/discovery/aadarsha-kutumbam-house-no-47-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-10-30",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Daggubati Venkatesh",
+      "Srinidhi Shetty",
+      "Nara Rohith",
+      "Nivetha Pethuraj",
+      "Rao Ramesh",
+      "Brahmaji",
+      "Udaybir Sandhu",
+      "Vennela Kishore",
+      "Raghu Babu",
+      "Satya",
+      "Yuvina Parthavi"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "aadarsha-kutumbam-house-no-47-u0yUYgZ0s30",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=u0yUYgZ0s30",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Telugu"
+      },
+      {
+        "id": "aadarsha-kutumbam-house-no-47--0NfIzrQSpQ",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=-0NfIzrQSpQ",
+        "type": "teaser",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Telugu"
+      }
+    ],
+    "youtubeId": "u0yUYgZ0s30",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/aadarsha-kutumbam-house-no-47-movie-tickets-MV211590",
+    "metadata": {
+      "overview": "An unexpected event unsettles the apparently happy household at No. 47. As concealed problems emerge, the family must confront the distance between its public image and private relationships.",
+      "cast": [
+        {
+          "name": "Daggubati Venkatesh",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Daggubati-d54abae0-7928-11ec-9fce-1f8461b3fe2d.jpg"
+        },
+        {
+          "name": "Srinidhi Shetty",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Srinidhi-Shetty-7af9dea5-2553-4b7b-9a83-1d3a5b5e3c41.jpg"
+        },
+        {
+          "name": "Nara Rohith",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Crew/nara-rohith.jpg"
+        },
+        {
+          "name": "Nivetha Pethuraj",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Nivetha-Pethuraj.jpg"
+        },
+        {
+          "name": "Rao Ramesh",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Crew/rao-ramesh.jpg"
+        },
+        {
+          "name": "Brahmaji",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Brahmaji-88be87b0-812f-11f1-afb1-ed6ca9a3fbdf.jpeg"
+        },
+        {
+          "name": "Udaybir Sandhu",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Udaybir%20Sandhu-ebcf7100-819b-11f0-973b-7148efd1e9d5.jpg"
+        },
+        {
+          "name": "Vennela Kishore",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Vennela-Kishore--abe62320-6132-11ef-ab88-c71a50c73cdf.jpg"
+        },
+        {
+          "name": "Raghu Babu",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Raghu-Babu-5332df59-8122-4054-8f2c-c9c2c1639796.jpg"
+        },
+        {
+          "name": "Satya",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/satya-akkala-04127280-720a-11ec-9e39-d3702f428ef6.jpg"
+        },
+        {
+          "name": "Yuvina Parthavi",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(65)-16ba6590-aec9-11f1-a5de-65d5ff39e552.png"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Trivikram Srinivas",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-10-30",
+          "status": "released",
+          "source": "https://www.district.in/movies/aadarsha-kutumbam-house-no-47-movie-tickets-MV211590"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/aadarsha-kutumbam-house-no-47-movie-tickets-MV211590"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "premada-oorali",
+    "title": "Premada Oorali",
+    "aliases": [],
+    "tagline": "Discover the story",
+    "description": "A woman joins a traditional village household through marriage. The family's expectations and her independent outlook collide in a romantic musical about changing attitudes across generations.",
+    "genre": [
+      "Romance",
+      "Musical"
+    ],
+    "languages": [
+      "Kannada"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "UA16+",
+    "poster": "/assets/discovery/premada-oorali-poster.webp",
+    "posterSmall": "/assets/discovery/premada-oorali-poster-small.webp",
+    "backdrop": "/assets/discovery/premada-oorali-backdrop.webp",
+    "backdropSmall": "/assets/discovery/premada-oorali-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-09-25",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Rangayana Raghu",
+      "Shree Raam",
+      "Tapaswini Poonaccha",
+      "Ramika Shivu",
+      "Govinde Gowda",
+      "Abhishek Kalmani",
+      "Abhi Mahesh"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "premada-oorali-o07DNCo6N1g",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=o07DNCo6N1g",
+        "type": "teaser",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Kannada"
+      }
+    ],
+    "youtubeId": "o07DNCo6N1g",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/premada-oorali-movie-tickets-MV234253",
+    "metadata": {
+      "overview": "A woman joins a traditional village household through marriage. The family's expectations and her independent outlook collide in a romantic musical about changing attitudes across generations.",
+      "cast": [
+        {
+          "name": "Rangayana Raghu",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/rangayana-raghu-f6c294d0-8f22-11ec-b243-558b2ce8ce0b.jpg"
+        },
+        {
+          "name": "Shree Raam",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-22T114143.654-823b9a70-b64c-11f1-83f6-612dccfa9f40.png"
+        },
+        {
+          "name": "Tapaswini Poonaccha",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Tapaswini-Poonaccha-d7e9b900-e86e-11ef-b0cb-6f1a8f777f1f.jpg"
+        },
+        {
+          "name": "Ramika Shivu",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-22T114658.104-465a8330-b64d-11f1-bbde-2db1c643bcb7.png"
+        },
+        {
+          "name": "Govinde Gowda",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/govinde-gowda-6de1dcb0-54c2-11ec-96f6-13f75a27c765.jpg"
+        },
+        {
+          "name": "Abhishek Kalmani",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-22T114851.603-862ae090-b64d-11f1-8a4d-577c29a5d6b9.png"
+        },
+        {
+          "name": "Abhi Mahesh",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-22T115546.143-7831f400-b64e-11f1-b069-3f58f44c02fd.png"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Manoj Kumar",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-09-25",
+          "status": "released",
+          "source": "https://www.district.in/movies/premada-oorali-movie-tickets-MV234253"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/premada-oorali-movie-tickets-MV234253"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "418",
+    "title": "418",
+    "aliases": [],
+    "tagline": "Discover the story",
+    "description": "Strange events around a village medical college draw its students into a disturbing mystery. Scientific explanations compete with local beliefs as they investigate what is happening.",
+    "genre": [
+      "Horror",
+      "Thriller"
+    ],
+    "languages": [
+      "Hindi"
+    ],
+    "duration": 148,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "A",
+    "poster": "/assets/discovery/418-poster.webp",
+    "posterSmall": "/assets/discovery/418-poster-small.webp",
+    "backdrop": "/assets/discovery/418-backdrop.webp",
+    "backdropSmall": "/assets/discovery/418-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-10-23",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Chaithra Achar",
+      "Charan Lakkaraju",
+      "Surya Raj Veerabathini",
+      "Ramesh Indira",
+      "Preethi Pagadala",
+      "Shashank Patil"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "418-teyF15t-8lQ",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=teyF15t-8lQ",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Telugu"
+      },
+      {
+        "id": "418-LcidPwVThNw",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=LcidPwVThNw",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Tamil"
+      },
+      {
+        "id": "418-IFgK5ynoe6s",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=IFgK5ynoe6s",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Kannada"
+      },
+      {
+        "id": "418-SoTw56f1-OA",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=SoTw56f1-OA",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": false,
+        "language": "Hindi"
+      }
+    ],
+    "youtubeId": "teyF15t-8lQ",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/418-movie-tickets-MV229134",
+    "metadata": {
+      "overview": "Strange events around a village medical college draw its students into a disturbing mystery. Scientific explanations compete with local beliefs as they investigate what is happening.",
+      "cast": [
+        {
+          "name": "Chaithra Achar",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/chaithra-achar-e17af0f0-8fc6-11ec-9b94-392ea496e36d.jpg"
+        },
+        {
+          "name": "Charan Lakkaraju",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Charan-Lakkaraju-204-72d3e020-8680-11f1-8433-2d5b900711c6.jpg"
+        },
+        {
+          "name": "Surya Raj Veerabathini",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Surya-Raj-Veerabathini-204-9ba984f0-8680-11f1-a478-4f30dbbb6255.jpg"
+        },
+        {
+          "name": "Ramesh Indira",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Ramesh%20Indira-377dbe10-13b2-11f1-9d76-bb53aa2862f1.jpg"
+        },
+        {
+          "name": "Preethi Pagadala",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Preethi%20Pagadala-e60f2dc0-c04b-11f0-a1f2-f5e58be981a3.jpg"
+        },
+        {
+          "name": "Shashank Patil",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Shashank-Patil-204-f804b530-8680-11f1-b284-8fb8f652efe7.jpg"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Kirtan Nadagouda",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-10-23",
+          "status": "released",
+          "source": "https://www.district.in/movies/418-movie-tickets-MV229134"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/418-movie-tickets-MV229134"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "rajarshi",
+    "title": "Rajarshi",
+    "aliases": [],
+    "tagline": "Discover the story",
+    "description": "Students studying social work clash over questions of opportunity and equality. The film connects their campus disputes with the social ideals associated with Rajarshi Shahu Maharaj.",
+    "genre": [
+      "Social",
+      "Drama"
+    ],
+    "languages": [
+      "Marathi"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "UA13+",
+    "poster": "/assets/discovery/rajarshi-poster.webp",
+    "posterSmall": "/assets/discovery/rajarshi-poster-small.webp",
+    "backdrop": "/assets/discovery/rajarshi-backdrop.webp",
+    "backdropSmall": "/assets/discovery/rajarshi-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-10-30",
+    "status": "showing",
+    "formats": [],
+    "cast": [
+      "Arun Nalawade",
+      "Nitesh Kamble",
+      "Jayadip Kandale",
+      "Pranali Suryawanshi"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "rajarshi-aTkem_EuDtc",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=aTkem_EuDtc",
+        "type": "official-trailer",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Marathi"
+      }
+    ],
+    "youtubeId": "aTkem_EuDtc",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/rajarshi-movie-tickets-MV237623",
+    "metadata": {
+      "overview": "Students studying social work clash over questions of opportunity and equality. The film connects their campus disputes with the social ideals associated with Rajarshi Shahu Maharaj.",
+      "cast": [
+        {
+          "name": "Arun Nalawade",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Arun-Nalawade.jpg"
+        },
+        {
+          "name": "Nitesh Kamble",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/nitesh%20Kamble-407db3b0-50c3-11f0-a578-5d827ee44c2f.jpg"
+        },
+        {
+          "name": "Jayadip Kandale",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Screenshot%202026-10-27%20at%203.55.25%E2%80%AFPM-200x200-c5112f30-d1f0-11f1-a01d-69d86b5ec6b6.jpg"
+        },
+        {
+          "name": "Pranali Suryawanshi",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Pranali%20Suryawanshi-200x200-e5372a30-d1f0-11f1-99b6-415b32979d9b.jpg"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Sanju Shinde",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-10-30",
+          "status": "released",
+          "source": "https://www.district.in/movies/rajarshi-movie-tickets-MV237623"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/rajarshi-movie-tickets-MV237623"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "arasan",
+    "title": "Arasan",
+    "aliases": [],
+    "tagline": "Coming to the big screen",
+    "description": "A North Chennai crime story follows one man through years of rivalries and shifting allegiances. His pursuit of power brings him into conflict with the people and streets that shaped him.",
+    "genre": [
+      "Action",
+      "Crime",
+      "Thriller"
+    ],
+    "languages": [
+      "Tamil"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "/assets/discovery/arasan-poster.webp",
+    "posterSmall": "/assets/discovery/arasan-poster-small.webp",
+    "backdrop": "/assets/discovery/arasan-backdrop.webp",
+    "backdropSmall": "/assets/discovery/arasan-backdrop-small.webp",
+    "backdropWidth": 1700,
+    "backdropHeight": 1120,
+    "release": "2026-11-06",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Silambarasan T. R.",
+      "Kishore Kumar G.",
+      "Andrea Jeremiah",
+      "Samuthirakani"
+    ],
+    "trailer": null,
+    "trailers": [
+      {
+        "id": "arasan-BlcaF4EvKTo",
+        "provider": "youtube",
+        "url": "https://www.youtube.com/watch?v=BlcaF4EvKTo",
+        "type": "teaser",
+        "playbackAllowed": false,
+        "isPrimary": true,
+        "language": "Tamil"
+      }
+    ],
+    "youtubeId": "BlcaF4EvKTo",
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/arasan-movie-tickets-in-greater-mumbai-MV207726",
+    "metadata": {
+      "overview": "A North Chennai crime story follows one man through years of rivalries and shifting allegiances. His pursuit of power brings him into conflict with the people and streets that shaped him.",
+      "cast": [
+        {
+          "name": "Silambarasan T. R.",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/silambarasan-7f072e60-330a-11ed-993a-9f9c7f44fc0f.jpg"
+        },
+        {
+          "name": "Kishore Kumar G.",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/kishore-32b90900-a64b-11ef-b945-57c02e367648.jpg"
+        },
+        {
+          "name": "Andrea Jeremiah",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Stills/The-house-next-door/Cast/Andrea-Jeremiah.jpg"
+        },
+        {
+          "name": "Samuthirakani",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Samuthirakani-94bdba00-d595-11ef-bbff-d11e97b41bab.jpg"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Vetrimaaran",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-11-06",
+          "status": "announced",
+          "source": "https://www.district.in/movies/arasan-movie-tickets-in-greater-mumbai-MV207726"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/arasan-movie-tickets-in-greater-mumbai-MV207726"
+      ],
+      "checked": "2026-11-01"
+    }
+  },
+  {
+    "id": "bachelor-party-deux",
+    "title": "Bachelor Party D'eux",
+    "aliases": [],
+    "tagline": "Coming to the big screen",
+    "description": "Amal Neerad returns to the spirit of Bachelor Party with a new ensemble and a different story. Friendship, disorder and action come together in this Malayalam successor to the 2012 film.",
+    "genre": [
+      "Action",
+      "Drama"
+    ],
+    "languages": [
+      "Malayalam"
+    ],
+    "duration": 0,
+    "rating": 0,
+    "votes": "Not rated",
+    "certificate": "TBC",
+    "poster": "/assets/discovery/bachelor-party-deux-poster.webp",
+    "posterSmall": "/assets/discovery/bachelor-party-deux-poster-small.webp",
+    "backdrop": "/assets/discovery/bachelor-party-deux-backdrop.webp",
+    "backdropSmall": "/assets/discovery/bachelor-party-deux-backdrop-small.webp",
+    "backdropWidth": 900,
+    "backdropHeight": 1115,
+    "release": "2026-11-19",
+    "status": "upcoming",
+    "formats": [],
+    "cast": [
+      "Naslen",
+      "Tovino Thomas",
+      "Kunchacko Boban",
+      "Soubin Shahir",
+      "Sharaf U Dheen",
+      "Sreenath Bhasi",
+      "Shine Tom Chacko",
+      "Rajisha Vijayan",
+      "Nadhiya",
+      "Chandu Salimkumar",
+      "Paris Laxmi",
+      "Jyothirmayi"
+    ],
+    "trailer": null,
+    "trailers": [],
+    "youtubeId": null,
+    "accent": "#ffc13b",
+    "mediaCredit": "Promotional artwork via District",
+    "mediaSource": "https://www.district.in/movies/bachelor-party-d-eux-movie-tickets-in-new-delhi-MV233661",
+    "metadata": {
+      "overview": "Amal Neerad returns to the spirit of Bachelor Party with a new ensemble and a different story. Friendship, disorder and action come together in this Malayalam successor to the 2012 film.",
+      "cast": [
+        {
+          "name": "Naslen",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Naslen-7d9e4580-9b78-11ef-9be2-eb12f4c0f7ad.jpg"
+        },
+        {
+          "name": "Tovino Thomas",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/tovino-thomas-1024f530-c11b-11ef-8894-edd289cbd28d.png"
+        },
+        {
+          "name": "Kunchacko Boban",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Kunchacko-Boban-ed0ea550-9185-11eb-b324-e3ae738e1ebb.jpg"
+        },
+        {
+          "name": "Soubin Shahir",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/soubin-shahir-63133110-6284-11ec-8882-372594f976ce.jpg"
+        },
+        {
+          "name": "Sharaf U Dheen",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/shariff-ce4237d0-2f87-11ed-a9ee-2b81858502ba.jpg"
+        },
+        {
+          "name": "Sreenath Bhasi",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/sreenath-bhasi-be747ae0-5916-11ec-860a-bb006e02c7ca.jpg"
+        },
+        {
+          "name": "Shine Tom Chacko",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Shine-Tom-Chacko-4c4accc6-0875-4664-a5b1-deed1022fbe0.jpg"
+        },
+        {
+          "name": "Rajisha Vijayan",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Rajisha-Vijayan-aaaf0e80-8d88-11eb-aae1-6f255b2a0c4f.jpg"
+        },
+        {
+          "name": "Nadhiya",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/Stills/Cast/Nadhiya.jpg"
+        },
+        {
+          "name": "Chandu Salimkumar"
+        },
+        {
+          "name": "Paris Laxmi",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-10-07T114725.855-cc513860-c216-11f1-a053-93d982fb8d74.png"
+        },
+        {
+          "name": "Jyothirmayi",
+          "profilePath": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-10-27T225535.710-743ae700-d22b-11f1-a312-a57fddb63cb7.png"
+        }
+      ],
+      "crew": [
+        {
+          "name": "Amal Neerad",
+          "job": "Director"
+        }
+      ],
+      "production": [],
+      "releaseDates": [
+        {
+          "region": "IN",
+          "date": "2026-11-19",
+          "status": "announced",
+          "source": "https://www.district.in/movies/bachelor-party-d-eux-movie-tickets-in-new-delhi-MV233661"
+        }
+      ],
+      "sources": [
+        "https://www.district.in/movies/bachelor-party-d-eux-movie-tickets-in-new-delhi-MV233661"
+      ],
+      "checked": "2026-11-01"
+    }
+  }
+]

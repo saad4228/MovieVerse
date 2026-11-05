@@ -1,0 +1,1531 @@
+[
+  {
+    "id": "udta-teer",
+    "title": "Udta Teer",
+    "providerId": 219550,
+    "source": "https://www.district.in/movies/udta-teer-movie-tickets-MV219550",
+    "release": "2026-10-23",
+    "duration": 138,
+    "certificate": "UA13+",
+    "languages": [
+      "Hindi"
+    ],
+    "genres": [
+      "Spy",
+      "Comedy"
+    ],
+    "poster": "https://b.zmtcdn.com/data/edition_assets/17912214483538623.jpg",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/_Horizontal_Poster2%20(22)-4a310680-b7d5-11f1-a3a9-0d7db47abe92.jpg",
+    "cast": [
+      {
+        "cast_name": "Ayushmann Khurrana",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Crew/ayushman-khurana.jpg",
+        "cast_role": null,
+        "cast_id": 220330,
+        "cast_bio": "Ayushmann Khurrana is a singer and actor who made his Bollywood debut with the Shoojit Sircar directorial Vicky Donor. He is best known for appearing in romantic comedies such as Dum Laga Ke Haisha, Bareilly Ki Barfi and Shubh Mangal Savdhan. He has won several awards for his acting including Filmfare and Stardust."
+      },
+      {
+        "cast_name": "Sara Ali Khan",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/sara-38ef9720-f3a6-11ed-b212-7bbea27a4ce9.jpg",
+        "cast_role": null,
+        "cast_id": 220331,
+        "cast_bio": "Daughter of popular Bollywood actors Saif Ali Khan and Amrita Singh, Sara Ali Khan is a Hindi film actor. A graduate from the University of Columbia, Sara’s debut Bollywood movie is Rohit Shetty’s Simmba opposite Ranveer Singh."
+      },
+      {
+        "cast_name": "Gulshan Grover",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Guksh-647f2350-79c4-11f0-b721-799d63111324.jpg",
+        "cast_role": null,
+        "cast_id": 234550,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Ram Kapoor",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/77887103-42e6fa50-ed9f-11ed-82e8-cf24b6293ec4.jpg",
+        "cast_role": null,
+        "cast_id": 234551,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Mukul Dev",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Stills/Nirdosh/cast/Mukul-Dev.jpg",
+        "cast_role": null,
+        "cast_id": 234779,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Suhail Nayyar",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Suhail-Nayyar--99a42970-b265-423a-a1a1-434da33e7580.jpg",
+        "cast_role": null,
+        "cast_id": 234780,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Rahul Bose",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Rahu-30b92ed0-6405-11ed-9857-a75c44fafe71.jpg",
+        "cast_role": null,
+        "cast_id": 234781,
+        "cast_bio": "Rahul Bose is an Indian actor, director, screenwriter, and social activist. Bose has appeared in Bengali films such as Mr. and Mrs. Iyer, Kalpurush, Anuranan, Antaheen, Laptop and The Japanese Wife. "
+      },
+      {
+        "cast_name": "Brijendra Kala",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Crew/brijendra-kala.jpg",
+        "cast_role": null,
+        "cast_id": 234782,
+        "cast_bio": "Brijendra Kala is a Bollywood actor. He made his debut with Brij Kau Birju (1996). He has appeared in movies like Jab We Met (2007), Karthik Calling Karthik (2010), Mere Brother Ki Dulhan (2011), Paan Singh Tomar (2012) and M.S. Dhoni: The Untold Story (2016)."
+      },
+      {
+        "cast_name": "Naseem Mughal",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Naseem%20Mughal%20(1)-aa703b20-b8fb-11f1-a7e7-c9f5d0d7aa07.jpg",
+        "cast_role": null,
+        "cast_id": 234784,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Sandeep Anand",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-25T214134.199-cc382650-b8fb-11f1-bdb8-5f374ca479aa.png",
+        "cast_role": null,
+        "cast_id": 234786,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Akash A Kaushik",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Akash-A-Kaushik-fca6fa30-4eb3-11f1-a819-ad9fe44da38d.jpg",
+        "cast_role": "Director",
+        "cast_id": 220760,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 236392,
+        "videoType": "Trailer",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/c9BTK0tKeLM",
+        "videoDuration": "2:17",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover%20(72)-51217420-b7d5-11f1-8191-015235b4e4f5-15076890-c6ea-11f1-bad4-25d619365be6.webp",
+        "videoRanking": 1,
+        "description": "Udta Teer - Official Trailer 2 | Ayushmann Khurrana & Sara Ali Khan | Akash Kaushik | 23 October",
+        "videoYtId": "c9BTK0tKeLM",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 234582,
+        "videoType": "Spotlight",
+        "language": "Hindi",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Udta%20Teer%20(1)-3ba0e6c0-c6ef-11f1-8739-fd516f4a4982.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 2,
+        "description": "Snippet - Hindi",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": "https://youtu.be/c9BTK0tKeLM",
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 96180
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 205619
+    }
+  },
+  {
+    "id": "drishyam-the-conclusion",
+    "title": "Drishyam: The Conclusion",
+    "providerId": 207254,
+    "source": "https://www.district.in/movies/drishyam-the-conclusion-movie-tickets-MV207254",
+    "release": "2026-10-02",
+    "duration": 150,
+    "certificate": "UA16+",
+    "languages": [
+      "Hindi"
+    ],
+    "genres": [
+      "Drama",
+      "Mystery",
+      "Thriller"
+    ],
+    "poster": "https://b.zmtcdn.com/data/edition_assets/17903062492900967.jpg",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/_Horizontal_Poster2%20(25)-c3cb6ee0-ab87-11f1-b4d5-1f38fbd6e264.jpg",
+    "cast": [
+      {
+        "cast_name": "Ajay Devgn",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/ajay-ea8fa7d0-8ea3-11ed-bd95-b7350954b20c.jpg",
+        "cast_role": null,
+        "cast_id": 207255,
+        "cast_bio": "Ajay Devgan (born Vishal Veeru Devgan on 2 April 1969),[2] also credited as Ajay Devgn,[3] is an Indian film actor, director and producer. He is widely considered as one of the most popular actors of Hindi cinema, who has appeared in over a hundred Hindi films.[4][5][6] Devgan has won numerous accolades, including two National Film Awards and four Filmfare Awards.[7][8] In 2016, he was honoured by the Government of India with the Padma Shri, the fourth highest civilian honour of the country.[9]"
+      },
+      {
+        "cast_name": "Shriya Saran",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Crew/shriya-saran.jpg",
+        "cast_role": null,
+        "cast_id": 207256,
+        "cast_bio": "Shriya Saran is a popular name in Hindi, Tamil and Telugu film industry. She made her debut in the Telugu movie Ishtam (2001). Her first English language movie was The Other End of the Line (2008). She is best known for her performance in movies like Tagore (2003), Enakku 20 Unakku 18 (2003), Chatrapathi (2005), Manam (2014), Sivaji: The Boss (2007), Kanthaswamy (2009), Drishyam (2015) and Midnight’s Children (2012). She has won multiple awards including Best Supporting Actress SIIMA Award, Best Actress Santosham Film Award, and Best Actress TV9 TSR National Award."
+      },
+      {
+        "cast_name": "Tabu",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Stills/Golmaal-Again/Tabu.jpg",
+        "cast_role": null,
+        "cast_id": 212117,
+        "cast_bio": "One of the most prominent faces in the Indian film industry, Tabu was born on 4th November 1971. Recipient of the prestigious Padma Shri Award for her contribution to Indian cinema, Tabu’s film career spreads over two decades. She made her acting debut in 1991 with the Telugu film Coolie No. 1. Tabu is best known for movies like Maachis (1996), Kaalapaani (1996), Virasat (1997), Chandni Bar (2001), Maqbool (2003), Border (1997), Biwi No. 1 (1999), Chandni Bar (2001), Maqbool (2003), Cheeni Kum (2007), Haider (2014), Drishyam (2015) and Golmaal Again (2017). She has won the National Film Award for Best Actor twice. Interestingly, Tabu is the niece of the veteran actress Shabana Azmi."
+      },
+      {
+        "cast_name": "Rajat Kapoor",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Stills/Pari/cast/Rajat-Kapoor.jpg",
+        "cast_role": null,
+        "cast_id": 212118,
+        "cast_bio": "Hailing from Delhi, Rajat Kapoor is an actor, writer and director. He started his acting career with the movie Mandi in 1983. He rose to fame with his performance in the 2001 hit Dil Chahta Hai. In 1994, Rajat turned director with the short film Tarana. The three time National Award winner, Rajat is best known for movies like Monsoon Wedding, Mixed Doubles, Corporate, Bheja Fry, Agent Vinod and Kapoor & Sons."
+      },
+      {
+        "cast_name": "Prakash Raj",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Stills/Golmaal-Again/prakash-raj.jpg",
+        "cast_role": null,
+        "cast_id": 231838,
+        "cast_bio": "Prakash Raj is a celebrated thespian, TV presenter, film actor and filmmaker who has made his mark in Hindi as well as South Indian films. He is mostly known for playing antagonists and character roles in moves like Singham (Hindi), Dabangg 2 (Hindi), Thoonga Vanam (Tamil-Telugu) and Bharat Ane Nenu (Telugu)  to name a few. He has been honoured with several accolades and awards like the IIFA, Filmfare, Nandi and also, the National Film Awards multiple times. He owns his own production company called Duet Movies."
+      },
+      {
+        "cast_name": "Jaideep Ahlawat",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Jaideep-Ahlawat.jpg",
+        "cast_role": null,
+        "cast_id": 231839,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Ishita Dutta",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Stills/Firangi/Firangi/Cast/Ishita-Dutta.jpg",
+        "cast_role": null,
+        "cast_id": 235023,
+        "cast_bio": "Ishita Dutta is an actress best known for her work in Hindi soap operas. She rose to fame with her role in the suspense thriller film Drishyam and went on to appear in several popular TV shows. She has won several accolades for her work."
+      },
+      {
+        "cast_name": "Mrunal Jadhav",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/mrunal-jadhav-7bce99d0-4dff-11ed-b776-c7c778622260.jpg",
+        "cast_role": null,
+        "cast_id": 235024,
+        "cast_bio": "Mrunal Jadhav is an Indian child actress and model, who works mainly in the Marathi and Hindi film industries. She is famous for playing the role of Anu Salgaonkar in the 2015 Bollywood film 'Drishyam."
+      },
+      {
+        "cast_name": "Kamlesh Sawant",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Kamlesh-Sawant-fc38264b-50db-4a60-86f7-d548c27da952.jpg",
+        "cast_role": null,
+        "cast_id": 235066,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Saurabh Shukla",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Stills/Raid/Cast/saurabh-shukla.jpg",
+        "cast_role": null,
+        "cast_id": 235067,
+        "cast_bio": "An Indian actor, he made his debut in the film industry with the 1994 release Bandit Queen. In his long illustrious career, he has wowed audience with his impeccable dialogue delivery and acting chops. He is known for his numerable performances both in films as well as theatre. Satya (1998), Arjun Pandit (1999), Barfi! (2012), Jolly LLB (2013), Kick (2014), PK (2014) and Raid (2018) are some of his best known works. Notably, he has been awarded National Award for Best Supporting Actor in Jolly LLB."
+      },
+      {
+        "cast_name": "Samvedna Suwalka",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-10-10T173424.926-de1c2ad0-c4a2-11f1-ac8b-b32686050d7d.png",
+        "cast_role": null,
+        "cast_id": 236179,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Neha Joshi",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Neha-Joshi.jpg",
+        "cast_role": null,
+        "cast_id": 236180,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Abhishek Pathak",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Abhishek-Pathak-d69aa620-4d14-11f1-ab00-2bad8ba2a996.jpg",
+        "cast_role": "Director",
+        "cast_id": 221699,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 212120,
+        "videoType": "Teaser",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/jYbEYF1t-hk",
+        "videoDuration": "1:13",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover%20(28)-d26fc130-ab87-11f1-8d36-519037e98333.jpg",
+        "videoRanking": 0,
+        "description": "Drishyam 3 Announcement | In cinemas 2 Oct 2026 | Ajay Devgn | Tabu | Shriya Saran | Abhishek Pathak",
+        "videoYtId": "jYbEYF1t-hk",
+        "videoStart": "",
+        "videoEnd": "",
+        "createdAt": null
+      },
+      {
+        "videoId": 218148,
+        "videoType": "Spotlight",
+        "language": "Hindi",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Drishyam-747c4b30-ac2b-11f1-9d6d-f5050b40827d.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 1,
+        "description": "Snippet - Hindi",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 233116,
+        "videoType": "Trailer",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/fneuVQ7uO_w",
+        "videoDuration": "2:49",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover%20(28)-d26fc130-ab87-11f1-8d36-519037e98333-27e06c70-ac26-11f1-8de7-4b6f463ea0c4.jpg",
+        "videoRanking": 2,
+        "description": "Drishyam: The Conclusion | Official Trailer | Ajay Devgn, Tabu, Jaideep | Abhishek Pathak | 2 Oct",
+        "videoYtId": "fneuVQ7uO_w",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": "https://youtu.be/fneuVQ7uO_w",
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 79592
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 209169
+    }
+  },
+  {
+    "id": "prahaar-the-untold-story-of-ujjwal-nikam",
+    "title": "Prahaar: The Untold Story of Ujjwal Nikam",
+    "providerId": 224801,
+    "source": "https://www.district.in/movies/prahaar-the-untold-story-of-ujjwal-nikam-movie-tickets-MV224801",
+    "release": "2026-10-16",
+    "duration": 141,
+    "certificate": "UA16+",
+    "languages": [
+      "Hindi"
+    ],
+    "genres": [
+      "Biography",
+      "Drama"
+    ],
+    "poster": "https://b.zmtcdn.com/data/edition_assets/17925602283020378.jpg",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/parnharr-hoir-2da08700-cd0d-11f1-acda-73da096518b1.jpg",
+    "cast": [
+      {
+        "cast_name": "Rajkummar Rao",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Rajk-953a0090-9ae8-11ed-8092-a9deecfa7463.jpg",
+        "cast_role": null,
+        "cast_id": 225003,
+        "cast_bio": "Rajkummar Rao is a critically acclaimed, award-winning actor who primarily works in Hindi cinema. A graduate of the prestigious Film and Television Institute of India in Pune, Rao has won several awards for his performances including the Filmfare and the National Award. His first break came with the 2010 film Love, Sex aur Dhokha. From then on, he has continuously explored all possible shades in characters and genres. He has worked in horror films (Ragini MMS), crime dramas (Gangs of Wasseypur 2), buddy dramas (Kai Po Che), biopics (Shahid, Bose: Dead or Alive and Omerta), comedies (Queen and Newton) and realistic dramas (Citylights)."
+      },
+      {
+        "cast_name": "Wamiqa Gabbi",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Wamiqa-23bd0ef0-d65d-11ef-b0b4-a1004a37a2e8.jpg",
+        "cast_role": null,
+        "cast_id": 225004,
+        "cast_bio": "Wamiqa Gabbi is an actress who primarily works in South Indian Cinema. He made his screen debut with the Hindi film Bittoo Boss in 2012. She has also appeared in Punjabi language movies like Tu Mera 22 Mai Tera 22 and Ishq Brandy. Some of her best known films also include Maalai Nerathu Mayakkam, Bhale Manchi Roju, Parahuna and Godha. Gabbi is also a professional Kathak dancer."
+      },
+      {
+        "cast_name": "Jaideep Ahlawat",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Jaideep-Ahlawat.jpg",
+        "cast_role": null,
+        "cast_id": 225005,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Sikander Kher",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/sik-55d93ab0-e47d-11f0-b58b-bf06f5d421b0.png",
+        "cast_role": null,
+        "cast_id": 226661,
+        "cast_bio": "Known for Woodstock Villa (2008), Sikander Kher is an actor working in the Bollywood film industry. His body of work includes films like Khelein Hum Jee Jaan Sey (2010), Players (2012), Aurangzeb (2013), Tere Bin Laden: Dead or Alive (2016), and Romeo Akbar Walter (2019). Sikander Kher`s 2020 release includes Sooryavanshi which is directed by Rohit Shetty."
+      },
+      {
+        "cast_name": "Ashish Vidyarthi",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Ashish-Vidyarthi-4748f7f6-45bf-4f0d-ba3c-a01c1b374cf2.jpg",
+        "cast_role": null,
+        "cast_id": 226662,
+        "cast_bio": "Ashish Vidyarthi is a National Film Award winning actor who has worked in films and on TV alike. Some of his best known films include Athanokkade, Drohkaal, Is Raat Ki Subah Nahin and Minugurulu."
+      },
+      {
+        "cast_name": "Lalit Prabhakar",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/lalit-prabhakar-8088d870-7c07-11ec-9f5e-d7fadac4b559.jpg",
+        "cast_role": null,
+        "cast_id": 226663,
+        "cast_bio": "Lalit Prabhakar is an Indian film, television and theatre actor predominantly working in the Marathi film industry. He is best known for his role as Aditya Desai on the popular daily soap Julun Yeti Reshimgathi and his debut film as main actor Chi Va Chi Sau Ka."
+      },
+      {
+        "cast_name": "Ritvik Sahore",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Ritik-Sahore-21c4cbf0-fcbc-11ed-a58c-1b525140019f.jpg",
+        "cast_role": null,
+        "cast_id": 226664,
+        "cast_bio": "Ritvik Sahore is an Indian actor who primarily works in Hindi films and web shows. He made his acting debut with Ferrari Ki Sawaari, for which he received Screen Award for Best Child Artist nomination."
+      },
+      {
+        "cast_name": "Avinash Arun",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Avinash%20Arun-2572bcf0-707f-11f1-b5f9-b19012f04cfe.png",
+        "cast_role": "Director",
+        "cast_id": 226666,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 226658,
+        "videoType": "Spotlight",
+        "language": "Hindi",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Prahaar.mp4-1c140570-bc91-11f1-b9e6-196e3f17ad2f.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 1,
+        "description": "Snippet - Hindi",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 226660,
+        "videoType": "Teaser",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/rPZw29Zh6Oo",
+        "videoDuration": "1:53",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/parharrr-a594fa90-c3bf-11f1-85b5-93487e94a1b4.jpg",
+        "videoRanking": 2,
+        "description": "Prahaar Teaser | Rajkummar R | Wamiqa G | Jaideep A | Sikandar K | Dinesh V | Avinash A|7th Aug 2026",
+        "videoYtId": "rPZw29Zh6Oo",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 235159,
+        "videoType": "Trailer",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/qGbvEhKhaWA",
+        "videoDuration": "3:04",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/parharrr-9a0fe9a0-c3bf-11f1-b040-cb6a505c9bc5.jpg",
+        "videoRanking": 3,
+        "description": "Prahaar: The Untold Story of Ujjwal Nikam | Official Trailer | Rajkummar R | Wamiqa Gabbi | 16th Oct",
+        "videoYtId": "qGbvEhKhaWA",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": "https://youtu.be/qGbvEhKhaWA",
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 88343
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 108395
+    }
+  },
+  {
+    "id": "pehla-pyaar-doosri-baar",
+    "title": "Pehla Pyaar Doosri Baar",
+    "providerId": 233960,
+    "source": "https://www.district.in/movies/pehla-pyaar-doosri-baar-movie-tickets-MV233960",
+    "release": "2026-10-23",
+    "duration": 142,
+    "certificate": "A",
+    "languages": [
+      "Hindi"
+    ],
+    "genres": [
+      "Romance",
+      "Comedy"
+    ],
+    "poster": "https://b.zmtcdn.com/data/edition_assets/17899696475748918.jpg",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/phla-pyar-hori-837fa180-b5af-11f1-9b3a-a9806e376dd6.jpg",
+    "cast": [
+      {
+        "cast_name": "Kunal Vaid",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Kunal%20Vaid-a802e290-b282-11f1-90af-535f4fc16e8a.jpg",
+        "cast_role": null,
+        "cast_id": 233985,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Sakshi Vaidya",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Sakshi%20Vaidya-bae70170-b282-11f1-a600-31045a338499.jpg",
+        "cast_role": null,
+        "cast_id": 233986,
+        "cast_bio": "Sakshi Vaidya was born in Maharashtra, India. She is known for Agent (2022)."
+      },
+      {
+        "cast_name": "Alisha Chopra",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Alisha%20Chopra-c8414790-b282-11f1-89a2-f9c3f6bcc95f.jpg",
+        "cast_role": null,
+        "cast_id": 233988,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Sparsh Walia",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Sparsh%20Walia-d7764120-b282-11f1-8d69-1f0bfa8598da.jpg",
+        "cast_role": null,
+        "cast_id": 233990,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Sargun Kaur Luthra",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Sargun%20Kaur%20Luthra-e4d4a5f0-b282-11f1-9c49-b5507e8e48e4.jpg",
+        "cast_role": null,
+        "cast_id": 233992,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Tushar Chhibber",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Tushar%20Chhibber-f7c85530-b282-11f1-9bea-d77337b1a912.jpg",
+        "cast_role": null,
+        "cast_id": 233995,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Anuj Saini",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-18T175753.731-662c79f0-b35c-11f1-81eb-2fa5e17ac9f1.png",
+        "cast_role": "Director",
+        "cast_id": 233997,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 234307,
+        "videoType": "Trailer",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/fNIgVJooVUw",
+        "videoDuration": "3:05",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/phla-pyar-dusri-barr-8d4a0a20-b5af-11f1-924a-73e2cf7543b6.jpg",
+        "videoRanking": 1,
+        "description": "Pehla Pyaar Doosri Baar (Official Trailer) | Anuj Saini | Luv Ranjan | Ankur Garg | OCT 23",
+        "videoYtId": "fNIgVJooVUw",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 234310,
+        "videoType": "Spotlight",
+        "language": "Hindi",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Pehla%20Pyaar%20Doosri%20Baar-ad32a760-b646-11f1-b79a-3d7c6c43fa13.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 2,
+        "description": "Snippet - Hindi",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": "https://youtu.be/fNIgVJooVUw",
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 47743
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 109705
+    }
+  },
+  {
+    "id": "nayyi-navelli",
+    "title": "Nayyi Navelli",
+    "providerId": 219759,
+    "source": "https://www.district.in/movies/nayyi-navelli-movie-tickets-MV219759",
+    "release": "2026-10-16",
+    "duration": 138,
+    "certificate": "UA16+",
+    "languages": [
+      "Hindi"
+    ],
+    "genres": [
+      "Supernatural",
+      "Family"
+    ],
+    "poster": "https://b.zmtcdn.com/data/edition_assets/17881622057139741.jpg",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/nayai-a870fe30-ad12-11f1-8eb6-234a30116303.jpg",
+    "cast": [
+      {
+        "cast_name": "Yami Gautam",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/yami-eb6c3450-fa9a-11f0-bbaf-736e1369d6d2.jpg",
+        "cast_role": null,
+        "cast_id": 219760,
+        "cast_bio": "Yami Gautam is an actress and model who primarily appears in Hindi and South Indian cinema. A prominent celebrity endorser of multiple brands, Yami made her Bollywood debut with the 2012 film Vicky Donor. She went on to appear in films like Sanam Re, Badlapur and Kaabil. She has won several awards and nominations for her performances in films as well as on TV including the IIFA."
+      },
+      {
+        "cast_name": "Addinath M Kothare",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(58)-ce0f6ba0-acf8-11f1-af37-31e9032d365a.png",
+        "cast_role": null,
+        "cast_id": 233243,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Sunita Rajwar",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/sunita-rajwar-68316daf-8138-4ce4-8976-bb6d4f1521bd.jpg",
+        "cast_role": null,
+        "cast_id": 233244,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Mita Vashisht",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Mita%20Vashisht-f5e0b520-fe5e-11ef-87c2-534491fa90be.jpg",
+        "cast_role": null,
+        "cast_id": 233245,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Sushmita Mukherjee",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Crew/sushmita-mukherjee.jpg",
+        "cast_role": null,
+        "cast_id": 233247,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Suneel Sinha",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(56)-587cf6c0-acec-11f1-9a3e-9939bf4f5eed.png",
+        "cast_role": null,
+        "cast_id": 233249,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Sonal Jha",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(57)-710cce40-acec-11f1-9cc6-df4990fd5ec1.png",
+        "cast_role": null,
+        "cast_id": 233251,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Anurag Thakur",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(60)-b856f710-acf8-11f1-b44f-412819aa05fb.png",
+        "cast_role": null,
+        "cast_id": 233265,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Balaji Mohan",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Balaji%20Mohan%20(1)-55e56220-9bb8-11f1-a7e7-0703709a021d.jpg",
+        "cast_role": "Director",
+        "cast_id": 231146,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 233242,
+        "videoType": "Teaser",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/2OHEEy_qhyE",
+        "videoDuration": "1:31",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/Nayyi-Navelli.%20(2)-96d87cb0-ad13-11f1-8eb6-234a30116303.jpg",
+        "videoRanking": 1,
+        "description": "Nayyi Navelli: Official Teaser | Yami, Addinath | Balaji Mohan | Aanand L Rai, Himanshu S | 16th Oct",
+        "videoYtId": "2OHEEy_qhyE",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 233267,
+        "videoType": "Spotlight",
+        "language": "Hindi",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Nayyi%20Navelli.mp4-7be2cd00-bd5f-11f1-a687-c76a3683eeda.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 2,
+        "description": "Snippet - Hindi",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 235235,
+        "videoType": "Trailer",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/NPkMecGOxDc",
+        "videoDuration": "3:02",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/Nayyi-Navelli%20(3)-1d2127b0-bce9-11f1-922b-1ffef26e5622.jpg",
+        "videoRanking": 3,
+        "description": "Nayyi Navelli:Official Trailer | Yami,Addinath,Balaji Mohan,Aanand L Rai,G.V.Prakash Kumar| 16th Oct",
+        "videoYtId": "NPkMecGOxDc",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": "https://youtu.be/NPkMecGOxDc",
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 68385
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 176701
+    }
+  },
+  {
+    "id": "hanuman-ansh",
+    "title": "Hanuman Ansh",
+    "providerId": 225612,
+    "source": "https://www.district.in/movies/hanuman-ansh-movie-tickets-MV225612",
+    "release": "2026-08-07",
+    "duration": 150,
+    "certificate": "U",
+    "languages": [
+      "Hindi"
+    ],
+    "genres": [
+      "Biography",
+      "Devotional",
+      "Drama"
+    ],
+    "poster": "https://b.zmtcdn.com/data/edition_assets/17845327886519115.jpg",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/_Horizontal_Poster2-a502db50-7e74-11f1-8cd3-93ec36446945.jpg",
+    "cast": [
+      {
+        "cast_name": "Shobhinaw Satyaa",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Gemini_Generated_Image_gwimzgwimzgwimzg%20(1)-eb0babf0-7dfb-11f1-af9a-c9557149987c.png",
+        "cast_role": null,
+        "cast_id": 228161,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Gulshan Pandey",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/gulshan-bf49f720-273d-11f1-bd98-eb3057714769.jpg",
+        "cast_role": null,
+        "cast_id": 228155,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Anil Rastogi",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Anil-Rastogi-447b3290-a64a-11ef-83c7-45b404db6ec5.jpg",
+        "cast_role": null,
+        "cast_id": 228154,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Chandan K Anand",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/chandna1-eab54400-7dfa-11f1-b730-71ff91eb578a.jpeg",
+        "cast_role": null,
+        "cast_id": 228159,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Vishal Chaturvedi",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/visha%3B-881c5450-7dfa-11f1-be85-cb24c73349b1.jpeg",
+        "cast_role": "Director",
+        "cast_id": 228157,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 228153,
+        "videoType": "Teaser",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/YZ2FbpJDVf0",
+        "videoDuration": "2:29",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover-7f7b9e30-7e74-11f1-a143-87c6c2108424.jpg",
+        "videoRanking": 1,
+        "description": "Hanuman Ansh| Official Teaser| Shobhinaw Satyaa| Vishal Chaturvedi| In Cinemas 31st July 2026",
+        "videoYtId": "YZ2FbpJDVf0",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 228340,
+        "videoType": "Spotlight",
+        "language": "Hindi",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Hanuman%20Ansh.mp4-02bd3610-840a-11f1-8461-1924798a3a20.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 2,
+        "description": "Snippet - Hindi",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 228700,
+        "videoType": "Trailer",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/YpGhCA2X3gU",
+        "videoDuration": "2:29",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover-7f7b9e30-7e74-11f1-a143-87c6c2108424-6f8083a0-8294-11f1-bc8e-c16d626334a4.jpg",
+        "videoRanking": 3,
+        "description": "Hanuman Ansh | Official Trailer | Shobhinaw Satyaa | Vishal Chaturvedi | In Cinemas 31st July 2026",
+        "videoYtId": "YpGhCA2X3gU",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 228831,
+        "videoType": "Spotlight",
+        "language": "Telugu",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Hanuman%20Ansh%20Telugu-463ccf80-c0b5-11f1-a267-03723dc24c24.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 4,
+        "description": "Snippet-Telugu",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 235560,
+        "videoType": "Trailer",
+        "language": "Telugu",
+        "videoUrl": "https://youtu.be/DDyZq1QEybI",
+        "videoDuration": "2:34",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover-7f7b9e30-7e74-11f1-a143-87c6c2108424-6f8083a0-8294-11f1-bc8e-c16d626334a4-79ceb3d0-c0b1-11f1-9c9e-d13082006244.jpg",
+        "videoRanking": 5,
+        "description": "Hanuman Ansh Telugu Trailer | Vishal Chaturvedi | Shobhinaw Satyaa | Hombale Films | Oct 9 Release",
+        "videoYtId": "DDyZq1QEybI",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": "https://youtu.be/YpGhCA2X3gU",
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 42789
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 248595
+    }
+  },
+  {
+    "id": "clayface",
+    "title": "Clayface",
+    "providerId": 220119,
+    "source": "https://www.district.in/movies/clayface-movie-tickets-MV220119",
+    "release": "2026-10-23",
+    "duration": 108,
+    "certificate": "A",
+    "languages": [
+      "English",
+      "Hindi"
+    ],
+    "genres": [
+      "Horror",
+      "Thriller"
+    ],
+    "poster": "https://b.zmtcdn.com/data/edition_assets/17924145369372496.webp",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/_Horizontal_Poster2%20(30)-17c60240-b0c3-11f1-89fe-8dcb97005896.jpg",
+    "cast": [
+      {
+        "cast_name": "Tom Rhys Harries",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/rhys_rhu0sj_c_fill%2Cw_200%2Ch_200-1c058b30-a289-11f0-bc10-53b4fd296cbf.jpg",
+        "cast_role": null,
+        "cast_id": 220122,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Naomi Ackie",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Naomi-Ackie-0c1d23a0-8062-11ed-bf27-a3e7fc56533c.jpg",
+        "cast_role": null,
+        "cast_id": 220123,
+        "cast_bio": "Naomi Ackie is an English actress. She made her television debut as Jen in the Doctor Who episode \"Face the Raven\". For her role as Bonnie on the television dark comedy-drama series The End of the F***ing World, she received the British Academy Television Award for Best Supporting Actress in 2020."
+      },
+      {
+        "cast_name": "David Dencik",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/david-64a56510-1dc0-11ec-b103-8123278d6010.jpg",
+        "cast_role": null,
+        "cast_id": 220124,
+        "cast_bio": "Karl David Sebastian Dencik is a Swedish-Danish actor. He has acted in both Swedish and Danish films, and has also had major roles in English-language films and series including Tinker, Tailor, Soldier, Spy, McMafia, Top of the Lake, Chernobyl, and the upcoming James Bond film No Time to Die"
+      },
+      {
+        "cast_name": "Eddie Marsan",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Crew/7-Days-in-Entebbe/cast/Eddie-Marsan.jpg",
+        "cast_role": null,
+        "cast_id": 220125,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "James Watkins",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/JamesWatkins-48f08e30-3eea-11f1-840e-63804c65ce25.jpeg",
+        "cast_role": "Director",
+        "cast_id": 220164,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 220121,
+        "videoType": "Teaser",
+        "language": "English",
+        "videoUrl": "https://youtu.be/aNPc43RrOOA",
+        "videoDuration": "1:09",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover%20(34)-2090d530-b0c3-11f1-8f10-a7354e360e80.jpg",
+        "videoRanking": 1,
+        "description": "Clayface | Official Teaser",
+        "videoYtId": "aNPc43RrOOA",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 220275,
+        "videoType": "Spotlight",
+        "language": "English",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Clayface.mp4-87095fd0-b965-11f1-94dd-8175706dfb79.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 2,
+        "description": "Snippet - English",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 229098,
+        "videoType": "Trailer",
+        "language": "English",
+        "videoUrl": "https://youtu.be/Vk5DR57kl48",
+        "videoDuration": "1:39",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover%20(34)-27c92140-b0c3-11f1-898c-253fd856388e.jpg",
+        "videoRanking": 3,
+        "description": "Clayface | Final Trailer",
+        "videoYtId": "Vk5DR57kl48",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 229100,
+        "videoType": "Trailer",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/TRqJ47WoX5U",
+        "videoDuration": "1:39",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover%20(34)-2dee4fa0-b0c3-11f1-968a-6b62fdd76b3e.jpg",
+        "videoRanking": 4,
+        "description": "क्लेफेस (Clayface) | Official Hindi Trailer",
+        "videoYtId": "TRqJ47WoX5U",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 229280,
+        "videoType": "Spotlight",
+        "language": "Hindi",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Clayface%20hindi.mp4-a28d8500-bbbe-11f1-90d2-272ab2ca2d65.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 5,
+        "description": "Snippet - Hindi",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": "https://youtu.be/Vk5DR57kl48",
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 171122
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 297549
+    }
+  },
+  {
+    "id": "aadarsha-kutumbam-house-no-47",
+    "title": "Aadarsha Kutumbam House No: 47",
+    "providerId": 211590,
+    "source": "https://www.district.in/movies/aadarsha-kutumbam-house-no-47-movie-tickets-MV211590",
+    "release": "2026-10-30",
+    "duration": 149,
+    "certificate": "UA16+",
+    "languages": [
+      "Telugu"
+    ],
+    "genres": [
+      "Family",
+      "Comedy",
+      "Drama"
+    ],
+    "poster": "https://b.zmtcdn.com/data/edition_assets/17930482971572025.jpg",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/aadrsha-868f1b40-d115-11f1-b360-8bec5e5df96b.jpg",
+    "cast": [
+      {
+        "cast_name": "Daggubati Venkatesh",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Daggubati-d54abae0-7928-11ec-9fce-1f8461b3fe2d.jpg",
+        "cast_role": null,
+        "cast_id": 211761,
+        "cast_bio": "Daggubati Venkatesh, known mononymously as Venkatesh, is an Indian film actor known for his works predominantly in Telugu cinema. Venkatesh debuted with the 1986 film Kaliyuga Pandavulu for which he won his first Nandi Award."
+      },
+      {
+        "cast_name": "Srinidhi Shetty",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Srinidhi-Shetty-7af9dea5-2553-4b7b-9a83-1d3a5b5e3c41.jpg",
+        "cast_role": null,
+        "cast_id": 211762,
+        "cast_bio": "A model as well as a beauty pageant titleholder, Srinidhi Shetty is an actress known for her work in Kannada cinema. She won Miss Diva - Miss Supranational India in 2016 and made her screen debut with 2018’s period drama KGF."
+      },
+      {
+        "cast_name": "Nara Rohith",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Crew/nara-rohith.jpg",
+        "cast_role": null,
+        "cast_id": 229358,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Nivetha Pethuraj",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Nivetha-Pethuraj.jpg",
+        "cast_role": null,
+        "cast_id": 229359,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Rao Ramesh",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Crew/rao-ramesh.jpg",
+        "cast_role": null,
+        "cast_id": 229360,
+        "cast_bio": "Rao Ramesh is an actor who predominantly works in South Indian cinema. Best known for films like Gamyam, Kotha Bangaru Lokam, Avakai Biryani, The Great Warrior,  Duvvada Jagannadham and Magadheera among others, Ramesh has won several accolades for his performances."
+      },
+      {
+        "cast_name": "Brahmaji",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Brahmaji-88be87b0-812f-11f1-afb1-ed6ca9a3fbdf.jpeg",
+        "cast_role": null,
+        "cast_id": 229361,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Udaybir Sandhu",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Udaybir%20Sandhu-ebcf7100-819b-11f0-973b-7148efd1e9d5.jpg",
+        "cast_role": null,
+        "cast_id": 229362,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Vennela Kishore",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Vennela-Kishore--abe62320-6132-11ef-ab88-c71a50c73cdf.jpg",
+        "cast_role": null,
+        "cast_id": 229363,
+        "cast_bio": "The recipient of Nandi Award for Best Male Comedian, Vennela Kishore is a popular name in Tollywood. He made his debut with the superhit movie Vennela in 2005. Some of his popular movies include Inkosaari (2010), Dookudu (2011), Pilla Zamindar (2011), Yevadu (2014), Gopala Gopala (2015), Janatha Garage (2016), Agnyaathavaasi (2018) and Saaho (2018)."
+      },
+      {
+        "cast_name": "Raghu Babu",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Raghu-Babu-5332df59-8122-4054-8f2c-c9c2c1639796.jpg",
+        "cast_role": null,
+        "cast_id": 229364,
+        "cast_bio": "Yerra Raghu, known professionally as Raghu Babu, is a Telugu comedian well known for his comic expressions and timing. He has worked in many successful films in Telugu industry. He is the eldest son of famous comedian and character actor Giri Babu. His native place is Ravinuthala. He got married in 1988. "
+      },
+      {
+        "cast_name": "Satya",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/satya-akkala-04127280-720a-11ec-9e39-d3702f428ef6.jpg",
+        "cast_role": null,
+        "cast_id": 233407,
+        "cast_bio": "Satya Akkala is an Indian actor and comedian who works in Telugu films."
+      },
+      {
+        "cast_name": "Yuvina Parthavi",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20(65)-16ba6590-aec9-11f1-a5de-65d5ff39e552.png",
+        "cast_role": null,
+        "cast_id": 233409,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Trivikram Srinivas",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Trivikram%20Srinivas%20%20-3ec08cb0-8127-11f1-afb1-ed6ca9a3fbdf.jpg",
+        "cast_role": "Director",
+        "cast_id": 226784,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 229357,
+        "videoType": "Trailer",
+        "language": "Telugu",
+        "videoUrl": "https://youtu.be/u0yUYgZ0s30",
+        "videoDuration": "2:32",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/aadrsha-kutumbam-98c32400-d115-11f1-ab1f-adf1dd9099ec.jpg",
+        "videoRanking": 1,
+        "description": "Aadarsha Kutumbam - Official Trailer | Venkatesh, Srinidhi Shetty | Trivikram | Thaman S",
+        "videoYtId": "u0yUYgZ0s30",
+        "videoStart": "",
+        "videoEnd": "",
+        "createdAt": null
+      },
+      {
+        "videoId": 229380,
+        "videoType": "Spotlight",
+        "language": "Telugu",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Aadarsha%20Kutumbam%20telugu-0864cc70-d1dc-11f1-9664-0589136a3cca.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 2,
+        "description": "Snippet - Telugu",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 233406,
+        "videoType": "Teaser",
+        "language": "Telugu",
+        "videoUrl": "https://youtu.be/-0NfIzrQSpQ",
+        "videoDuration": "2:04",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/aadrsha-kutumbam-9e8c28a0-d115-11f1-bfc7-8d8f22105046.jpg",
+        "videoRanking": 3,
+        "description": "Aadarsha Kutumbam - #AK47 - OFFICIAL TEASER | Venkatesh, Srinidhi Shetty | Trivikram | Thaman S",
+        "videoYtId": "-0NfIzrQSpQ",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": "https://youtu.be/u0yUYgZ0s30",
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 64468
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 152104
+    }
+  },
+  {
+    "id": "premada-oorali",
+    "title": "Premada Oorali",
+    "providerId": 234253,
+    "source": "https://www.district.in/movies/premada-oorali-movie-tickets-MV234253",
+    "release": "2026-09-25",
+    "duration": null,
+    "certificate": "UA16+",
+    "languages": [
+      "Kannada - ಕನ್ನಡ"
+    ],
+    "genres": [
+      "Romance",
+      "Musical"
+    ],
+    "poster": "https://cdn.district.in/movies-assets/images/cinema/_Poster%20(34)-b084d340-b680-11f1-b5c6-a555d1105f35.jpg",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/_Horizontal_Poster2%20(34)-b4553c30-b680-11f1-a1ff-b5be297eb9da.jpg",
+    "cast": [
+      {
+        "cast_name": "Rangayana Raghu",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/rangayana-raghu-f6c294d0-8f22-11ec-b243-558b2ce8ce0b.jpg",
+        "cast_role": null,
+        "cast_id": 234426,
+        "cast_bio": "Kotturu Chikkarangappa Raghunath, known by his screen name Rangayana Raghu, is an Indian film and stage actor, known for his work in Kannada cinema. Portraying mostly comic and negative-shaded characters, he has appeared in over 250 films."
+      },
+      {
+        "cast_name": "Shree Raam",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-22T114143.654-823b9a70-b64c-11f1-83f6-612dccfa9f40.png",
+        "cast_role": null,
+        "cast_id": 234433,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Tapaswini Poonaccha",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Tapaswini-Poonaccha-d7e9b900-e86e-11ef-b0cb-6f1a8f777f1f.jpg",
+        "cast_role": null,
+        "cast_id": 234434,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Ramika Shivu",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-22T114658.104-465a8330-b64d-11f1-bbde-2db1c643bcb7.png",
+        "cast_role": null,
+        "cast_id": 234435,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Govinde Gowda",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/govinde-gowda-6de1dcb0-54c2-11ec-96f6-13f75a27c765.jpg",
+        "cast_role": null,
+        "cast_id": 234436,
+        "cast_bio": "Actor Govinde Gowda first came to public attention during his stint in the popular Kannada tv show Comedy Khiladigalu. He has since appeared in comedic and supporting roles in a number of movies in Sandalwood. Notable among Govinde's most recent acting credits is the suspense thriller Shathaya Gathaya (2018) and Parasanga (2018)."
+      },
+      {
+        "cast_name": "Abhishek Kalmani",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-22T114851.603-862ae090-b64d-11f1-8a4d-577c29a5d6b9.png",
+        "cast_role": null,
+        "cast_id": 234437,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Abhi Mahesh",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-22T115546.143-7831f400-b64e-11f1-b069-3f58f44c02fd.png",
+        "cast_role": null,
+        "cast_id": 234438,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Manoj Kumar",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/cast-image-200x200%20-%202026-09-22T115735.008-b80a8ec0-b64e-11f1-b797-a358d0eb0769.png",
+        "cast_role": "Director",
+        "cast_id": 234439,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 234255,
+        "videoType": "Teaser",
+        "language": "Kannada",
+        "videoUrl": "https://youtu.be/o07DNCo6N1g",
+        "videoDuration": "2:24",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/_Cover%20(42)-c6f218e0-b680-11f1-98b0-937dd542a59a.jpg",
+        "videoRanking": 1,
+        "description": " Premada Oorali Movie Teaser - ShreeRaam, RangayanaRaghu, Sunaad Gowtham, Manoj",
+        "videoYtId": "o07DNCo6N1g",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 234421,
+        "videoType": "Spotlight",
+        "language": "Kannada",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/Premada%20Oorali-384d40f0-b672-11f1-a516-37ebbe0911eb.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 2,
+        "description": "Snippet-Kannada",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": null,
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 192659
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 213076
+    }
+  },
+  {
+    "id": "418",
+    "title": "418",
+    "providerId": 229134,
+    "source": "https://www.district.in/movies/418-movie-tickets-MV229134",
+    "release": "2026-10-23",
+    "duration": 148,
+    "certificate": "A",
+    "languages": [
+      "Hindi"
+    ],
+    "genres": [
+      "Horror",
+      "Thriller"
+    ],
+    "poster": "https://b.zmtcdn.com/data/edition_assets/17917136262726206.webp",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/418-hori-1d51c850-b02a-11f1-8ba7-933cdf89c1a9.jpg",
+    "cast": [
+      {
+        "cast_name": "Chaithra Achar",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/chaithra-achar-e17af0f0-8fc6-11ec-9b94-392ea496e36d.jpg",
+        "cast_role": null,
+        "cast_id": 229151,
+        "cast_bio": "Chaitra Achar is an Indian film Actress, who has worked predominantly in Kannada movie industry. Chaitra has worked in popular movies like Taledanda, Aa Drushya. Chaitra's previous film to hit the theatres was Taledanda in the year 2022."
+      },
+      {
+        "cast_name": "Charan Lakkaraju",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Charan-Lakkaraju-204-72d3e020-8680-11f1-8433-2d5b900711c6.jpg",
+        "cast_role": null,
+        "cast_id": 229153,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Surya Raj Veerabathini",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Surya-Raj-Veerabathini-204-9ba984f0-8680-11f1-a478-4f30dbbb6255.jpg",
+        "cast_role": null,
+        "cast_id": 229155,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Ramesh Indira",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Ramesh%20Indira-377dbe10-13b2-11f1-9d76-bb53aa2862f1.jpg",
+        "cast_role": null,
+        "cast_id": 233410,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Preethi Pagadala",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Preethi%20Pagadala-e60f2dc0-c04b-11f0-a1f2-f5e58be981a3.jpg",
+        "cast_role": null,
+        "cast_id": 229156,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Shashank Patil",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Shashank-Patil-204-f804b530-8680-11f1-b284-8fb8f652efe7.jpg",
+        "cast_role": null,
+        "cast_id": 229163,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Kirtan Nadagouda",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Kirtan-Nadagouda-Dir-340-e0055de0-8680-11f1-a478-4f30dbbb6255.jpg",
+        "cast_role": "Director",
+        "cast_id": 229160,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 233370,
+        "videoType": "Trailer",
+        "language": "Telugu",
+        "videoUrl": "https://youtu.be/teyF15t-8lQ",
+        "videoDuration": "3:30",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/418_-411fbcb0-b02a-11f1-8ba7-933cdf89c1a9.jpg",
+        "videoRanking": 1,
+        "description": "#418 Official Trailer - The Last Warning | Prashanth Neel Presents | Kirtan N | In Cinemas Sep 18th",
+        "videoYtId": "teyF15t-8lQ",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 233384,
+        "videoType": "Spotlight",
+        "language": "Telugu",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/418%20telugu.mp4-fa8f2c90-ae80-11f1-b6f8-352e371e3a73.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 2,
+        "description": "Snippet - Telugu",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 235460,
+        "videoType": "Trailer",
+        "language": "Tamil",
+        "videoUrl": "https://youtu.be/LcidPwVThNw",
+        "videoDuration": "3:30",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/418_-411fbcb0-b02a-11f1-8ba7-933cdf89c1a9-af73eac0-c08c-11f1-b3b6-654335c10658.jpg",
+        "videoRanking": 3,
+        "description": "#418 Tamil Official Trailer - The Last Warning | Prashanth Neel | Kirtan | Mythri Movie Makers",
+        "videoYtId": "LcidPwVThNw",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 235462,
+        "videoType": "Trailer",
+        "language": "Kannada",
+        "videoUrl": "https://youtu.be/IFgK5ynoe6s",
+        "videoDuration": "3:30",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/418_-411fbcb0-b02a-11f1-8ba7-933cdf89c1a9-30148950-c08d-11f1-a0b0-5381dc967692.jpg",
+        "videoRanking": 4,
+        "description": "#418 Kannada Official Trailer - The Last Warning | Prashanth Neel | Kirtan | Mythri Movie Makers",
+        "videoYtId": "IFgK5ynoe6s",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 235464,
+        "videoType": "Trailer",
+        "language": "Hindi",
+        "videoUrl": "https://youtu.be/SoTw56f1-OA",
+        "videoDuration": "3:30",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/418_-411fbcb0-b02a-11f1-8ba7-933cdf89c1a9-567b9f20-c08d-11f1-9353-152019d3e362.jpg",
+        "videoRanking": 5,
+        "description": "#418 Oﬃcial Trailer - The Last Warning (Hindi) | Prashanth Neel | Kirtan N | In Cinemas Oct23rd",
+        "videoYtId": "SoTw56f1-OA",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 235480,
+        "videoType": "Spotlight",
+        "language": "Tamil",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/418%20tamil-8cc58870-c092-11f1-b9bb-b33d6dd8bd9f.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 6,
+        "description": "Snippet - Tamil",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 235482,
+        "videoType": "Spotlight",
+        "language": "Kannada",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/418%20Kannada.mp4-9d509c20-c092-11f1-a53d-15a6b3c990df.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 7,
+        "description": "Snippet - Kannada",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 235484,
+        "videoType": "Spotlight",
+        "language": "Hindi",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/418%20hindi-a685c9a0-c092-11f1-864e-0b5e9c6a29fb.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 8,
+        "description": "Snippet - Hindi",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": "https://youtu.be/teyF15t-8lQ",
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 166222
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 84131
+    }
+  },
+  {
+    "id": "rajarshi",
+    "title": "Rajarshi",
+    "providerId": 237623,
+    "source": "https://www.district.in/movies/rajarshi-movie-tickets-MV237623",
+    "release": "2026-10-30",
+    "duration": null,
+    "certificate": "UA13+",
+    "languages": [
+      "Marathi - मराठी"
+    ],
+    "genres": [
+      "Social",
+      "Drama"
+    ],
+    "poster": "https://cdn.district.in/movies-assets/images/cinema/rajshree-e9a85c70-d1ef-11f1-bb65-3dda8279d632.jpg",
+    "backdrop": "https://cdn.district.in/movies-assets/images/cinema/rajshree-post-f54477d0-d1ef-11f1-bb65-3dda8279d632.jpg",
+    "cast": [
+      {
+        "cast_name": "Arun Nalawade",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/MovieIcons/Cast/Arun-Nalawade.jpg",
+        "cast_role": null,
+        "cast_id": 237740,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Nitesh Kamble",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/nitesh%20Kamble-407db3b0-50c3-11f0-a578-5d827ee44c2f.jpg",
+        "cast_role": null,
+        "cast_id": 237741,
+        "cast_bio": ""
+      },
+      {
+        "cast_name": "Jayadip Kandale",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Screenshot%202026-10-27%20at%203.55.25%E2%80%AFPM-200x200-c5112f30-d1f0-11f1-a01d-69d86b5ec6b6.jpg",
+        "cast_role": null,
+        "cast_id": 237743,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Pranali Suryawanshi",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Pranali%20Suryawanshi-200x200-e5372a30-d1f0-11f1-99b6-415b32979d9b.jpg",
+        "cast_role": null,
+        "cast_id": 237745,
+        "cast_bio": null
+      },
+      {
+        "cast_name": "Sanju Shinde",
+        "cast_image": "https://cdn.district.in/movies-assets/images/cinema/Sanju%20Shinde%20-HD-499ceaa0-d1f1-11f1-a75f-99dc99f0eb94.png",
+        "cast_role": "Director",
+        "cast_id": 237749,
+        "cast_bio": null
+      }
+    ],
+    "trailers": [
+      {
+        "videoId": 237625,
+        "videoType": "Trailer",
+        "language": "Marathi",
+        "videoUrl": "https://youtu.be/aTkem_EuDtc",
+        "videoDuration": "2:46",
+        "imageUrl": "https://cdn.district.in/movies-assets/images/cinema/rajshree-hori-267564e0-d1f0-11f1-9551-7f915f1b4608.jpg",
+        "videoRanking": 1,
+        "description": "RAJARSHI | Official Trailer | Marathi Movie | Sunil Karpe | Sanju Shinde | Arun Nalawade | 30 Oct 26",
+        "videoYtId": "aTkem_EuDtc",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      },
+      {
+        "videoId": 237908,
+        "videoType": "Spotlight",
+        "language": "Marathi",
+        "videoUrl": "https://cdn.district.in/movies-assets/videos/RAJARSHI%20marathi.mp4-26e1f200-d2a3-11f1-a411-ffd724f3d67f.mp4",
+        "videoDuration": null,
+        "imageUrl": "https://b.zmtcdn.com/data/edition_assets/17445670285212.png",
+        "videoRanking": 2,
+        "description": "Snippet - Marathi",
+        "videoYtId": "dummy",
+        "videoStart": null,
+        "videoEnd": null,
+        "createdAt": null
+      }
+    ],
+    "trailer": null,
+    "posterDimensions": {
+      "width": 600,
+      "height": 800,
+      "bytes": 151343
+    },
+    "backdropDimensions": {
+      "width": 1700,
+      "height": 1120,
+      "bytes": 244825
+    }
+  }
+]

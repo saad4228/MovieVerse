@@ -3,7 +3,7 @@ import sharp from 'sharp';
 const details=JSON.parse(await readFile('data/movie-details.json','utf8'));
 const films=JSON.parse(await readFile('data/coming-soon-movies.json','utf8'));
 const entries=new Map();
-for(const [film,record] of Object.entries(details)) for(const person of record.cast) if(person.id && person.profilePath) {
+for(const record of Object.values(details)) for(const person of record.cast) if(person.id && person.profilePath) {
   const url=`https://image.tmdb.org/t/p/w342${person.profilePath}`;
   entries.set(url,{name:`person-${person.id}-${person.profilePath.split('/').pop().split('.')[0]}`,source:`https://image.tmdb.org/t/p/w500${person.profilePath}`,max:500,kind:'profile'});
 }

@@ -1,3 +1,9 @@
+import { checkoutOffer } from "@/lib/checkout-offers";
+import { catalogueApi } from "@/lib/catalogue-api";
+import {bookableFeatured} from "@/lib/bookable-featured";
+import {readWatchlist,changeWatchlist,watchlistInput,WatchlistMovieError} from "@/lib/watchlist";
+import { readPhotoRequest, validateProfilePhoto } from "@/lib/profile-photo";
+import { blueprintSchema } from "@/lib/blueprint-config";
 import { env } from "cloudflare:workers";
 import { z } from "zod";
 import {
@@ -21,6 +27,7 @@ import { cinemaListings } from "@/lib/cinema-listings";
 import { metadataProvider } from "@/lib/metadata-provider";
 import { enrichMovieInformation } from "@/lib/movie-information";
 import { upgradeCatalog } from "@/lib/catalog-upgrade";
+import { tmdbConfigured } from "@/lib/tmdb";
 
 export const dynamic = "force-dynamic";
 const db = () => {
@@ -103,7 +110,7 @@ async function configuredCatalog(): Promise<Catalog> {
   const stored = row
     ? JSON.parse(row.document)
     : { cities, movies, venues, snacks };
-  const catalog = upgradeCatalog(stored, movies);
+  const catalog = upgradeCatalog(stored, movies, venues);
   return {
     ...catalog,
     movies: catalog.movies.map((m: typeof movies[number]) => enrichMovieInformation(enrichMovieMedia(m))),
@@ -209,15 +216,25 @@ async function handler(req: Request) {
         return json({ error: "JSON required." }, 415);
       if (
         Number(req.headers.get("content-length") || 0) >
-        (action === "catalog" ? 250000 : 40000)
+        (action === "catalog" ? 250000 : action === "profile-photo" ? 200000 : 40000)
       )
         return json({ error: "Request too large." }, 413);
     }
+    const discoveryResponse=await catalogueApi(req,action||"",env);
+    if(discoveryResponse)return discoveryResponse;
     const catalog = await configuredCatalog();
+    if(req.method==="GET"&&action==="bookable-featured"){
+      const city=url.searchParams.get("city")??"";
+      if(!catalog.cities.some(c=>c.id===city))return json({error:"Choose a valid city."},400);
+      return json(await bookableFeatured(db(),catalog,city));
+    }
     if (req.method === "GET" && action === "movie-information") {
       const movie = catalog.movies.find(m=>m.id===url.searchParams.get("id"));
       if (!movie) return json({error:"Unknown movie."},404);
-      return Response.json({movieId:movie.id,metadata:await metadataProvider((env as unknown as Record<string,string>).TMDB_READ_TOKEN).get(movie)}, {headers:{"Cache-Control":"public, max-age=3600"}});
+      const settings = env as unknown as Record<string, string | undefined>;
+      try {
+        return Response.json({movieId:movie.id,source:tmdbConfigured(settings) && movie.metadata?.tmdbId ? "tmdb-enriched-catalogue" : "bundled-catalogue",metadata:await metadataProvider(settings).get(movie)}, {headers:{"Cache-Control":"public, max-age=300, stale-while-revalidate=600"}});
+      } catch { return json({error:"Movie metadata provider is temporarily unavailable.",source:"tmdb",status:"unavailable"},503); }
     }
     if (req.method === "GET" && action === "show-availability") {
       const ids = [...new Set((url.searchParams.get("shows") || "").split(",").filter(Boolean))];
@@ -254,7 +271,7 @@ async function handler(req: Request) {
         .all<{ config: string }>();
       return json({
         ...catalog,
-        blueprints: blueprints.map((b) => {
+        blueprints: [...blueprints, ...overrides.results.map(x => JSON.parse(x.config) as Blueprint).filter(b => !blueprints.some(seed => seed.id === b.id))].map((b) => {
           const override = overrides.results
             .map((x) => JSON.parse(x.config))
             .find((x) => x.id === b.id);
@@ -265,6 +282,38 @@ async function handler(req: Request) {
     s = await session(req);
     const reply = (data: unknown, status = 200) =>
       json(data, status, s!.cookie);
+    if(action==="watchlist"){
+      if(!s.user_id)return reply({error:"Sign in to use your watchlist."},401);
+      if(req.method!=="POST"&&req.method!=="GET")return reply({error:"Method not allowed."},405);
+      const input=req.method==="POST"?watchlistInput.parse(await req.json()):null;
+      try{
+        if(input)return reply({userId:s.user_id,...await changeWatchlist(db(),s.user_id,catalog,input)});
+        return reply({userId:s.user_id,entries:await readWatchlist(db(),s.user_id,catalog)});
+      }catch(error){
+        if(error instanceof WatchlistMovieError)return reply({error:error.message},400);
+        return reply({error:"Your watchlist is temporarily unavailable. Please try again."},503);
+      }
+    }
+    if (action === "profile" || action === "profile-photo") {
+      if (!s.user_id) return reply({error:"Sign in to manage your profile photo."},401);
+      if (req.method === "GET") {
+        if (action === "profile") {
+          const photo = await db().prepare("SELECT updated FROM profile_photos WHERE user_id=?").bind(s.user_id).first<{updated:number}>();
+          return reply({avatar:photo ? `/api/profile-photo?v=${photo.updated}` : null});
+        }
+        const photo = await db().prepare("SELECT image FROM profile_photos WHERE user_id=?").bind(s.user_id).first<{image:string}>();
+        if (!photo) return reply({error:"No profile photo."},404);
+        const bytes=Uint8Array.from(atob(photo.image.split(",")[1]),c=>c.charCodeAt(0));
+        return new Response(bytes,{headers:{"Content-Type":"image/jpeg","Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff","Content-Security-Policy":"default-src 'none'",...(s.cookie?{"Set-Cookie":s.cookie}:{})}});
+      }
+      if (action !== "profile-photo") return reply({error:"Not found."},404);
+      const body = await readPhotoRequest(req);
+      const image = validateProfilePhoto(body.image);
+      const updated = Date.now();
+      if (image === null) await db().prepare("DELETE FROM profile_photos WHERE user_id=?").bind(s.user_id).run();
+      else await db().prepare("INSERT INTO profile_photos (user_id,image,updated) VALUES (?,?,?) ON CONFLICT(user_id) DO UPDATE SET image=excluded.image,updated=excluded.updated").bind(s.user_id,image,updated).run();
+      return reply({avatar:image ? `/api/profile-photo?v=${updated}` : null});
+    }
     if (req.method === "GET") {
       if (action === "session") {
         const user = s.user_id
@@ -490,6 +539,7 @@ async function handler(req: Request) {
         .bind(s.id, input.requestId)
         .first();
       if (previous) return reply(previous);
+      if (input.promo.trim() && !checkoutOffer(input.promo)) return reply({error:"This coupon is not valid. Remove it or choose an available demo offer."},400);
       if (input.outcome === "failure")
         return reply(
           {
@@ -529,6 +579,7 @@ async function handler(req: Request) {
         input.promo,
         catalog.snacks,
       );
+      if (input.promo.trim() && !pricing.discount) return reply({error:"This order no longer meets the coupon terms. Remove the coupon and try again."},400);
       const id = crypto.randomUUID();
       const token = crypto.randomUUID() + crypto.randomUUID();
       const now = Date.now();
@@ -689,6 +740,9 @@ async function handler(req: Request) {
           403,
         );
       const input = catalogSchema.parse(body);
+      for (const venue of input.venues) for (const id of venue.blueprints) {
+        if (!(await blueprint(id))) return reply({error:"Publish the referenced auditorium blueprint before assigning it to a venue."},400);
+      }
       assertCatalog(input);
       const holds = await db()
         .prepare(
@@ -725,43 +779,7 @@ async function handler(req: Request) {
           },
           403,
         );
-      const data = z
-        .object({
-          id: z.enum(["grand", "classic", "luxury"]),
-          name: z.string().min(1).max(100),
-          width: z.number().min(18).max(60),
-          depth: z.number().min(20).max(60),
-          height: z.number().min(8).max(30),
-          rows: z.number().int().min(4).max(20),
-          columns: z.number().int().min(8).max(30),
-          rowLengths: z
-            .array(z.number().int().min(1).max(30))
-            .max(20)
-            .optional(),
-          aisles: z.array(z.number().int().min(1).max(29)).max(3),
-          spacing: z.number().min(0.9).max(1.8),
-          rowSpacing: z.number().min(1.3).max(2.5),
-          slope: z.number().min(0.1).max(0.4),
-          screenWidth: z.number().min(10).max(45),
-          screen: z
-            .object({
-              width: z.number().min(6).max(45),
-              height: z.number().min(3).max(24),
-              position: z.tuple([
-                z.number().finite(),
-                z.number().finite(),
-                z.number().finite(),
-              ]),
-              rotationY: z.number().min(-0.3).max(0.3).optional(),
-            })
-            .optional(),
-          balcony: z.boolean(),
-          style: z.enum(["classic", "grand", "luxury"]),
-          verified: z.literal(false),
-          modelUrl: z.string().url().startsWith("https://").optional(),
-          seatMap: z.record(z.string()).optional(),
-        })
-        .parse(body);
+      const data = blueprintSchema.parse(body);
       if (
         data.aisles.some((a) => a >= data.columns) ||
         data.screenWidth > data.width - 1
@@ -771,6 +789,8 @@ async function handler(req: Request) {
           400,
         );
       const physicalSeats = makeSeats(data);
+      if (new Set(physicalSeats.map(s=>s.id)).size !== physicalSeats.length || data.rowLengths?.some(n=>n>data.columns) || data.rowConfig?.some((r,i)=>i>=data.rows || (r.omitted||[]).some(n=>n>(data.rowLengths?.[i]??data.columns))))
+        return reply({error:"Row labels must be unique and row configuration must match the seat grid."},400);
       if (data.screen) {
         const {
           width,

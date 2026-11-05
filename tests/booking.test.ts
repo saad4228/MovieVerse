@@ -7,7 +7,6 @@ import {
   dates,
   showsFor,
   getShow,
-  type Seat,
 } from "../lib/catalog";
 import {
   calculatePrice,
@@ -37,7 +36,7 @@ describe("city and show relationships", () => {
   });
   it("produces structurally different auditoriums with stable unique seat IDs", () => {
     const sizes = blueprints.map((b) => makeSeats(b).length);
-    expect(new Set(sizes).size).toBe(3);
+    expect(new Set(sizes).size).toBe(5);
     for (const b of blueprints) {
       const seats = makeSeats(b);
       expect(new Set(seats.map((s) => s.id)).size).toBe(seats.length);

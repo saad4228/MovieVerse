@@ -1,5 +1,5 @@
 import {spawn} from 'node:child_process';
-import {randomBytes,randomUUID} from 'node:crypto';
+import {randomBytes} from 'node:crypto';
 import {once} from 'node:events';
 const token=randomBytes(32).toString('hex');
 const child=spawn(process.execPath,['scripts/run-framework.mjs','dev','--port','5173','--hostname','127.0.0.1'],{env:{...process.env,ADMIN_TOKEN:token},stdio:['ignore','pipe','pipe'],windowsHide:true});

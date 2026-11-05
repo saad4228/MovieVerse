@@ -72,6 +72,7 @@ export default function CityCinemaListings({
           Check current listings <ArrowUpRight size={15} />
         </a>
       </div>
+      {result.status === "provider-unavailable" && <p role="status" className="directory-note">{result.error || "Cinema inventory is temporarily unavailable."} Demo bookings use a separate simulation.</p>}
       {result.venues.length > 0 && (
         <>
           <input

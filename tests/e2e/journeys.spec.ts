@@ -3,8 +3,6 @@ import {
   dates,
   venues,
   showsFor,
-  blueprints,
-  makeSeats,
 } from "../../lib/catalog";
 import { recommendSeats } from "../../lib/booking";
 
@@ -20,10 +18,13 @@ test("Nagpur movie-first journey, failure recovery, booking, QR and history", as
   await page.getByRole("button", { name: "Nagpur", exact: true }).click();
   await page.goto("/movies");
   await expect(
-    page.getByRole("heading", { name: "Now showing in Nagpur." }),
+    page.getByRole("heading", { name: "Movies. A world of stories." }),
   ).toBeVisible();
+  await page.getByLabel("Movie collection",{exact:true}).selectOption("demo");
   await page.getByRole("link", { name: /Jailer 2 movie poster/ }).click();
   await page.locator("#showtimes").scrollIntoViewIfNeeded();
+  // Keep this flow valid when the suite runs after today's evening shows start.
+  await page.getByRole("button", { name: /TOMORROW/ }).click();
   await page
     .getByRole("button", { name: /18:30 Jailer 2 at Orange City Screens/ })
     .click();
@@ -60,7 +61,7 @@ test("Nagpur movie-first journey, failure recovery, booking, QR and history", as
   await page.getByLabel("Simulated result").selectOption("success");
   await page.getByRole("button", { name: /Test payment$/ }).click();
   await expect(
-    page.getByRole("heading", { name: "You’re going to the movies." }),
+    page.getByRole("heading", { name: "YOUR MOVIE NIGHT IS CONFIRMED" }),
   ).toBeVisible();
   await expect(page.locator(".qr-code")).toBeVisible();
   const download = page.waitForEvent("download");
@@ -160,7 +161,12 @@ test("server holds are atomic across sessions and checkout is idempotent", async
     (await (await loser.get("/api/tickets")).json()).bookings,
   ).toHaveLength(0);
   const book = (await (await winner.get("/api/tickets")).json()).bookings[0];
+  const verified = await loser.get(`/api/ticket?token=${encodeURIComponent(book.token)}`);
+  expect(verified.ok()).toBe(true);
+  expect(await verified.json()).toMatchObject({id:book.id,status:"confirmed",seats:group,demo:true});
+  expect((await loser.get('/api/ticket?token=invalid-verification-token')).status()).toBe(404);
   await winner.post("/api/cancel-booking", { data: { id: book.id } });
+  expect(await (await loser.get(`/api/ticket?token=${encodeURIComponent(book.token)}`)).json()).toMatchObject({status:"cancelled"});
   const after = await (
     await loser.get(`/api/inventory?show=${encodeURIComponent(show.id)}`)
   ).json();
@@ -235,9 +241,9 @@ test("3D sample film playback, camera presets, seat perspective and 2D alternati
   await page.getByRole("button", { name: "Play film" }).click();
   await expect(page.locator(".scene-hints")).toContainText("video playing");
   await page.getByRole("button", { name: "Best 2 seats" }).click();
-  await page.getByRole("button", { name: "My view", exact: true }).click();
+  await page.getByRole("button", { name: "View from this seat", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "My view", exact: true }),
+    page.getByRole("button", { name: "View from this seat", exact: true }),
   ).toHaveClass("selected");
   await page.getByRole("button", { name: "2D map", exact: true }).click();
   await expect(page.locator(".map-seat.picked")).toHaveCount(2);

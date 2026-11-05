@@ -185,6 +185,10 @@ export function sites({ mockAuth = true } = {}): Plugin {
         await cp(drizzleSource, resolve(outputDirectory, "drizzle"), {
           recursive: true,
         });
+        // The generated Wrangler config resolves migrations_dir beside itself.
+        await cp(drizzleSource, resolve(root, "dist", "server", "drizzle"), {
+          recursive: true,
+        });
       }
     },
   };

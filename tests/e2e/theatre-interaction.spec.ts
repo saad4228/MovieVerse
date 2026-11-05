@@ -1,0 +1,28 @@
+import {test,expect} from '@playwright/test';
+import {dates,venues,showsFor} from '../../lib/catalog';
+test('screen is decorative, seats synchronize, occupied seats stay unavailable',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>localStorage.setItem('movieverse-v1',JSON.stringify({state:{city:'pune',recentCities:[],seats:[],cart:{}},version:0})));
+ const show=showsFor(venues.find(v=>v.cityId==='pune')!,'sintel',dates()[3])[0];
+ await page.goto(`/booking/${encodeURIComponent(show.id)}`);await expect(page.locator('canvas')).toBeVisible();
+ const pause=page.getByRole('button',{name:'Pause film',exact:true});if(await pause.count())await pause.click();
+ await page.waitForTimeout(6000);
+ const screen=await page.locator('canvas').evaluate((el:any)=>el.movieverseDiagnostics().screen);
+ const selected=page.locator('.selected-seats-list');const before=await selected.count()?await selected.innerText():'';
+ await page.mouse.move(screen.x,screen.y);await page.mouse.click(screen.x,screen.y);
+ expect(await selected.count()?await selected.innerText():'').toBe(before);
+ expect(await page.evaluate(()=>document.body.style.cursor)).not.toBe('pointer');
+ await page.getByRole('button',{name:'2D map',exact:true}).click();
+ const available=page.getByRole('button',{name:/^G1[0-5], [^,]+, available$/}).first();
+ const id=(await available.getAttribute('aria-label'))!.split(',')[0];await available.click();
+ await expect(page.getByRole('button',{name:new RegExp(`^${id}, .*selected`)})).toBeVisible();
+ const occupied=page.getByRole('button',{name:/, unavailable/}).first();await expect(occupied).toBeDisabled();
+ await page.getByRole('button',{name:'3D view',exact:true}).click();
+ await page.getByRole('button',{name:/Bird/}).click();await page.waitForTimeout(5000);
+ const point=await page.locator('canvas').evaluate((el:any,id)=>el.movieverseDiagnostics().seats.find((s:any)=>s.id===id),id);
+ console.log({id,point});await page.screenshot({path:"outputs/theatre-seat-interaction.png"});
+ await page.mouse.click(point.x,point.y);
+ await page.getByRole('button',{name:'2D map',exact:true}).click();
+ await expect(page.getByRole('button',{name:new RegExp(`^${id}, [^,]+, available$`)})).toBeVisible();
+ expect(errors).toEqual([]);
+});

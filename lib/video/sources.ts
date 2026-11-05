@@ -12,6 +12,7 @@ export type TrailerSource = {
   posterImage?: string;
   attribution?: string;
   licenseUrl?: string;
+  fit?: "contain" | "cover";
 };
 
 export function safeMediaUrl(url: string) {
@@ -75,6 +76,43 @@ export function officialTrailerLink(movie: Movie): string | undefined {
       ? `https://www.youtube.com/watch?v=${movie.youtubeId}`
       : undefined)
   );
+}
+
+/** Only explicitly enabled YouTube sources can become embedded playback. */
+export function embeddedTrailer(movie: Movie) {
+  const source = trailerSources(movie)
+    .filter(s => s.provider === "youtube" && s.playbackAllowed)
+    .sort((a, b) => Number(!!b.isPrimary) - Number(!!a.isPrimary))
+    .find(s => youtubeVideoId(s.url));
+  return source ? { ...source, videoId: youtubeVideoId(source.url)! } : undefined;
+}
+
+/** Build a clean, inline YouTube player URL for the auditorium screen. */
+export function youtubeEmbedUrl(videoId: string, origin: string) {
+  const params = new URLSearchParams({
+    enablejsapi: "1",
+    autoplay: "1",
+    mute: "1",
+    controls: "0",
+    fs: "0",
+    cc_load_policy: "0",
+    disablekb: "1",
+    playsinline: "1",
+    rel: "0",
+    origin,
+  });
+  return `https://www.youtube.com/embed/${videoId}?${params}`;
+}
+
+export function youtubeVideoId(url: string): string | undefined {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+    const id = host === "youtu.be" ? parsed.pathname.slice(1) :
+      ["youtube.com", "youtube-nocookie.com"].includes(host) ?
+        parsed.searchParams.get("v") || parsed.pathname.match(/^\/(?:embed|shorts)\/([^/]+)/)?.[1] : undefined;
+    return id && /^[\w-]{11}$/.test(id) ? id : undefined;
+  } catch { return undefined; }
 }
 
 // Per-tab cooldown. No persistent restriction detection or access-control workarounds.

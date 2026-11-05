@@ -2,6 +2,7 @@ import {
   sqliteTable,
   text,
   integer,
+  real,
   primaryKey,
   index,
   uniqueIndex,
@@ -17,6 +18,15 @@ export const sessions = sqliteTable("sessions", {
   id: text("id").primaryKey(),
   userId: text("user_id").references(() => users.id),
   expires: integer("expires").notNull(),
+});
+export const userWatchlist=sqliteTable("user_watchlist",{
+ userId:text("user_id").notNull().references(()=>users.id,{onDelete:"cascade"}),
+ movieKey:text("movie_key").notNull(),added:integer("added").notNull(),
+},t=>[primaryKey({columns:[t.userId,t.movieKey]}),index("watchlist_user_added").on(t.userId,t.added)]);
+export const profilePhotos = sqliteTable("profile_photos", {
+  userId: text("user_id").primaryKey().references(() => users.id, { onDelete: "cascade" }),
+  image: text("image").notNull(),
+  updated: integer("updated").notNull(),
 });
 export const inventory = sqliteTable(
   "inventory",
@@ -93,3 +103,15 @@ export const rateLimits = sqliteTable("rate_limits", {
   count: integer("count").notNull(),
   expires: integer("expires").notNull(),
 });
+
+// Persistent discovery is separate from illustrative booking inventory.
+export const discoveryMovies = sqliteTable("discovery_movies", {
+ id:integer("id").primaryKey(),document:text("document").notNull(),title:text("title").notNull(),releaseDate:text("release_date").notNull(),
+ language:text("language").notNull(),origins:text("origins").notNull(),genres:text("genres").notNull(),popularity:real("popularity").notNull(),
+ rating:real("rating").notNull(),votes:integer("votes").notNull(),runtime:integer("runtime").notNull(),indiaRelease:text("india_release"),usRelease:text("us_release"),firstImported:integer("first_imported").notNull(),updated:integer("updated").notNull(),
+},t=>[index("discovery_movie_title").on(t.title),index("discovery_movie_release").on(t.releaseDate)]);
+export const discoveryCollections=sqliteTable("discovery_collections",{id:text("id").primaryKey(),generation:text("generation"),lastSuccess:integer("last_success"),lastAttempt:integer("last_attempt"),error:text("error")});
+export const discoveryMemberships=sqliteTable("discovery_memberships",{collection:text("collection").notNull(),generation:text("generation").notNull(),movieId:integer("movie_id").notNull().references(()=>discoveryMovies.id),rank:integer("rank").notNull(),lastSeen:integer("last_seen").notNull()},t=>[primaryKey({columns:[t.collection,t.generation,t.movieId]}),index("discovery_membership_read").on(t.collection,t.generation,t.rank)]);
+export const discoverySyncRuns=sqliteTable("discovery_sync_runs",{id:text("id").primaryKey(),kind:text("kind").notNull(),started:integer("started").notNull(),finished:integer("finished"),status:text("status").notNull(),report:text("report").notNull().default('{}')});
+export const discoverySyncLock=sqliteTable("discovery_sync_lock",{id:integer("id").primaryKey(),owner:text("owner").notNull(),expires:integer("expires").notNull()});
+export const discoverySettings=sqliteTable("discovery_settings",{id:text("id").primaryKey(),document:text("document").notNull()});

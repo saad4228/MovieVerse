@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { ArrowUpRight, Ticket } from "lucide-react";
-import { movies } from "@/lib/catalog";
+import type {Movie} from "@/lib/catalog";
+import {useDiscoveryHome} from "@/lib/discovery-client";
 
-export default function PosterWall() {
+export default function PosterWall({movies:supplied}:{movies?:Movie[]}={}) {
+  const {data}=useDiscoveryHome();
+  const movies=supplied??data?.collections.popular??[];
   return (
     <section className="universe-wall" aria-labelledby="universe-wall-title">
       <div className="poster-wall-art" aria-hidden="true">
-        {[0, 1, 2].map((row) => (
+        {(movies.length?[0, 1, 2]:[]).map((row) => (
           <div className="poster-wall-row" key={row}>
             {Array.from({ length: 12 }, (_, column) => {
               const movie = movies[(column + row * 3) % movies.length];

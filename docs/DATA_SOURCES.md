@@ -10,7 +10,7 @@ Reviewed 1 November 2026.
 
 `data/catalog-asset-cache.json` maps 129 source URLs to optimised local WebP files, preserving original and delivered dimensions. It includes actor portraits and additional catalogue artwork. `scripts/cache-catalog-assets.mjs` refreshes this cache without enlargement. `scripts/sync-hd-media.mjs` supports targeted curated backdrop updates. Public image availability does not grant a commercial redistribution licence; attribution and rights-holder terms remain applicable.
 
-Optional server-only `TMDB_READ_TOKEN` enables the cached metadata adapter. Without a credential, sourced bundled metadata remains functional. API credentials never enter client responses. Server cache is bounded and lasts 24 hours; browser detail cache lasts one hour. Official API documentation: https://developer.themoviedb.org/reference/movie-credits and https://developer.themoviedb.org/reference/movie-images .
+Optional server-only `TMDB_READ_TOKEN` enables the cached metadata adapter. Without a credential, sourced bundled metadata remains functional. API credentials never enter client responses. Successful server responses are cached for 24 hours; provider failures retry after one minute. Movie detail responses use a five-minute browser cache with stale-while-revalidate. Official API documentation: https://developer.themoviedb.org/reference/movie-credits and https://developer.themoviedb.org/reference/movie-images .
 
 ## Releases and trailers
 

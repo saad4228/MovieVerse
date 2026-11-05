@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import Link from "./MovieLink";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Search,
   MapPin,
@@ -11,13 +11,15 @@ import {
   ArrowUpRight,
   Building2,
   Landmark,
-  Film,
   LocateFixed,
   Menu,
   X,
 } from "lucide-react";
-import { cities, cityMovies, venues } from "@/lib/catalog";
+import { cities, venues } from "@/lib/catalog";
+import {useMovieSearch,useDiscoveryHome} from "@/lib/discovery-client";
+import { movieMatches } from "@/lib/movie-discovery";
 import { useApp } from "@/lib/store";
+import {movieHref,rememberMovieNavigation} from "@/lib/movie-navigation";
 import { api } from "@/lib/client";
 import { Logo, Modal, Empty } from "./ui";
 export default function Navigation({
@@ -30,13 +32,23 @@ export default function Navigation({
   const [mobile, setMobile] = useState(false);
   const [user, setUser] = useState<{ name: string } | null>(null);
   const [focus, setFocus] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
   const cityId = useApp((s) => s.city),
     setCity = useApp((s) => s.setCity),
     recent = useApp((s) => s.recentCities);
   const city = cities.find((c) => c.id === cityId)!;
   const path = usePathname();
+  const searchParams=useSearchParams();
+  const savedSearch=searchParams.get("movieSearch");
   const router = useRouter();
+  const isHomePage = path === "/";
+  const isTheatrePage = /^\/booking\/(?!confirmation(?:\/|$))[^/]+\/(?:seats|snacks|checkout)\/?$/.test(path);
+  const isAmberPage = /^\/(account|admin)\/?$/.test(path);
+  const isAuthPage = /^\/(login|register)\/?$/.test(path);
+  const isMovieListingPage = ["/explore", "/watchlist", "/movies", "/movies/", "/coming-soon", "/coming-soon/"].includes(path);
+  const isCinemaPage = path === "/cinemas" || path.startsWith("/cinemas/");
   useEffect(() => {
+    setHydrated(true);
     const update = () => {
       api("session")
         .then((x) => setUser(x.user))
@@ -53,7 +65,11 @@ export default function Navigation({
       setMobile(false);
       previousPath.current = path;
     }
-  }, [path]);
+    if (savedSearch !== null) {
+      setQuery(savedSearch);
+      setModal("search");
+    }
+  }, [path, savedSearch]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -79,14 +95,13 @@ export default function Navigation({
     }
     setModal(null);
   }
+  const {data:searchData}=useMovieSearch(query,modal==="search");
+  const {data:discovery}=useDiscoveryHome(modal==="search"&&!query.trim());
+  const searchMovies=query.trim()?(searchData?.movies??[]):(discovery?.featured??[]);
   const q = query.toLowerCase();
   const results = [
-    ...cityMovies(cityId)
-      .filter((m) =>
-        `${m.title} ${m.languages.join(" ")} ${m.genre.join(" ")}`
-          .toLowerCase()
-          .includes(q),
-      )
+    ...searchMovies
+      .filter((m) => movieMatches(m,query))
       .map((m) => ({
         type: "Movie",
         title: m.title,
@@ -119,23 +134,35 @@ export default function Navigation({
   ].slice(0, 10);
   const navigate = (r: (typeof results)[number]) => {
     if (r.type === "City") choose(r.href);
-    else router.push(r.href);
+    else if(r.type==="Movie"){
+      const source=new URL(location.href);
+      source.searchParams.set("movieSearch",query);
+      const returnTo=source.pathname+source.search+source.hash;
+      history.replaceState(history.state,"",returnTo);
+      const destination=movieHref(r.href,returnTo);
+      rememberMovieNavigation(destination,returnTo);
+      router.push(destination);
+    } else router.push(r.href);
     setModal(null);
   };
   return (
     <>
       <header
-        className={`header ${path === "/" || path.startsWith("/movies/") ? "overlay" : ""}`}
+        className={`header ${isTheatrePage ? "theatre-navbar" : isAmberPage ? "interior-navbar" : isAuthPage ? "auth-navbar" : isHomePage ? "home-navbar" : isCinemaPage ? "cinema-navbar" : isMovieListingPage ? "movies-navbar" : "glass-navbar"} ${isAuthPage || isHomePage || path.startsWith("/movies/") ? "overlay" : ""}`}
+        data-interactive={hydrated ? "true" : undefined}
       >
         <div className="nav-wrap">
           <Logo />
           <nav
             className={mobile ? "nav-links mobile-open" : "nav-links"}
             aria-label="Main navigation"
+            onClick={() => setMobile(false)}
           >
             <Link className={path === "/movies" ? "active" : ""} href="/movies">
               Movies
             </Link>
+            <Link className={path === "/explore" ? "active" : ""} href="/explore">Explore</Link>
+            <Link className={path === "/watchlist" ? "active" : ""} href="/watchlist">Watchlist</Link>
             <Link
               className={path.startsWith("/cinemas") ? "active" : ""}
               href="/cinemas"

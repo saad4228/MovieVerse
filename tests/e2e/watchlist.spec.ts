@@ -1,0 +1,73 @@
+import {test,expect,type Page} from "@playwright/test";
+const password="Cinema-Test-2026!";
+function account(){return {name:"Watchlist Tester",email:`watchlist-${crypto.randomUUID()}@example.test`,password};}
+async function register(page:Page){const user=account();const response=await page.request.post("/api/register",{data:user});expect(response.ok()).toBe(true);return user;}
+async function list(page:Page){const response=await page.request.get("/api/watchlist");expect(response.ok()).toBe(true);return await response.json();}
+test("guest sign-in return, account saves, cross-tab synchronization, removal and empty persistence",async({page,context})=>{
+ test.setTimeout(180000);await page.setViewportSize({width:1440,height:1000});
+ await page.goto("/movies/coolie",{waitUntil:"domcontentloaded"});
+ const add=page.getByRole("button",{name:"Add to Watchlist",exact:true});await expect(add).toBeEnabled();await add.click();
+ await expect(page).toHaveURL(/\/login\?next=/);
+ await page.getByRole("link",{name:"Create an account",exact:true}).click();await expect(page.getByRole("heading",{name:"Join the universe."})).toBeVisible();
+ const user=account();await page.getByLabel("Your name",{exact:true}).fill(user.name);await page.getByLabel("Email address",{exact:true}).fill(user.email);await page.getByLabel("Password",{exact:true}).fill(user.password);
+ await page.getByRole("button",{name:/Create your account/}).click();await expect(page).toHaveURL(/\/movies\/coolie$/);
+ await expect(add).toBeEnabled();await add.click();await expect(page.getByRole("button",{name:"In Watchlist",exact:true})).toHaveAttribute("aria-pressed","true");
+ await expect(page.locator(".toast")).toContainText("Added to your watchlist");
+ const first=await list(page);expect(first.entries).toHaveLength(1);const key=first.entries[0].key,added=first.entries[0].added;
+ const duplicates=await Promise.all(Array.from({length:3},()=>page.request.post("/api/watchlist",{data:{id:"coolie",saved:true}})));for(const response of duplicates)expect(response.ok()).toBe(true);
+ const after=await list(page);expect(after.entries).toHaveLength(1);expect(after.entries[0].added).toBe(added);
+ const second=await context.newPage();await second.goto("/movies/coolie",{waitUntil:"domcontentloaded"});await expect(second.getByRole("button",{name:"In Watchlist",exact:true})).toBeVisible();
+ await page.goto("/movies?collection=demo",{waitUntil:"domcontentloaded"});
+ const toggle=page.getByRole("button",{name:"Remove Coolie from watchlist",exact:true}).first();await expect(toggle).toBeEnabled();await toggle.click();
+ await expect(second.getByRole("button",{name:"Add to Watchlist",exact:true})).toBeVisible();
+ await page.getByRole("button",{name:"Add Coolie to watchlist",exact:true}).first().click();await expect(second.getByRole("button",{name:"In Watchlist",exact:true})).toBeVisible();
+ await page.goto("/watchlist",{waitUntil:"domcontentloaded"});await expect(page.getByRole("heading",{name:"Your Movie Collection",exact:true})).toBeVisible();await expect(page.locator(".watchlist-card")).toHaveCount(1);
+ await page.reload({waitUntil:"domcontentloaded"});await expect(page.locator(`[data-watchlist-key="${key}"]`)).toBeVisible();
+ await page.goto("/account",{waitUntil:"domcontentloaded"});await expect(page.getByRole("link",{name:/Watchlist Your movie collection/})).toBeVisible();await page.getByRole("button",{name:"Sign out",exact:true}).click();
+ await expect(second.getByRole("button",{name:"Add to Watchlist",exact:true})).toBeVisible();
+ await page.goto("/watchlist",{waitUntil:"domcontentloaded"});await expect(page.getByRole("link",{name:/Sign in to your watchlist/})).toBeVisible();expect((await page.request.get("/api/watchlist")).status()).toBe(401);
+ const login=await page.request.post("/api/login",{data:{email:user.email,password}});expect(login.ok()).toBe(true);
+ await page.reload({waitUntil:"domcontentloaded"});await expect(page.locator(".watchlist-card")).toHaveCount(1);
+ await page.getByRole("button",{name:/Remove .* from watchlist/}).click();await expect(page.getByRole("heading",{name:"Your next favourite belongs here."})).toBeVisible();
+ expect((await list(page)).entries).toHaveLength(0);await page.reload({waitUntil:"domcontentloaded"});await expect(page.getByRole("link",{name:/Explore movies/}).first()).toBeVisible();await second.close();
+});
+test("watchlists are isolated, duplicate aliases are canonical, and unauthorized requests cannot change them",async({browser,page})=>{
+ test.setTimeout(90000);const user=await register(page);await page.request.post("/api/watchlist",{data:{id:"coolie",saved:true}});const own=await list(page);
+ const other=await browser.newContext({baseURL:test.info().project.use.baseURL});const otherPage=await other.newPage();await register(otherPage);
+ expect((await list(otherPage)).entries).toHaveLength(0);
+ const forgedGet=await otherPage.request.get(`/api/watchlist?user_id=${own.userId}`);expect((await forgedGet.json()).entries).toHaveLength(0);
+ const forgedPost=await otherPage.request.post("/api/watchlist",{data:{id:"coolie",saved:false,userId:own.userId}});expect(forgedPost.status()).toBe(400);
+ await otherPage.request.post("/api/watchlist",{data:{id:"coolie",saved:false}});expect((await list(page)).entries).toHaveLength(1);
+ await page.request.post("/api/watchlist",{data:{id:own.entries[0].key,saved:true}});expect((await list(page)).entries).toHaveLength(1);
+ const invalid=await page.request.post("/api/watchlist",{data:{id:"unknown-nonexistent-film",saved:true}});expect(invalid.status()).toBe(400);
+ await page.request.post("/api/logout",{data:{}});expect((await page.request.get("/api/watchlist")).status()).toBe(401);expect((await page.request.post("/api/watchlist",{data:{id:"coolie",saved:true}})).status()).toBe(401);
+ await page.request.post("/api/login",{data:{email:user.email,password}});expect((await list(page)).entries).toHaveLength(1);await other.close();
+});
+test("saved collection supports real movie metadata, search, sorting, filters, mobile and error rollback",async({page})=>{
+ test.setTimeout(150000);await register(page);
+ const upcoming=await (await page.request.get("/api/catalogue?collection=upcoming&region=IN")).json();const all=await (await page.request.get("/api/catalogue?collection=hollywood")).json();
+ const now=await (await page.request.get("/api/catalogue?collection=now-playing-IN")).json();const nowIds=new Set(now.movies.map((m:any)=>m.id));
+ const released=all.movies.find((m:any)=>m.release&&m.release<new Date().toISOString().slice(0,10)&&!nowIds.has(m.id))!;
+ for(const id of ["coolie",upcoming.movies[0].id,released.id])expect((await page.request.post("/api/watchlist",{data:{id,saved:true}})).ok()).toBe(true);
+ await page.setViewportSize({width:1440,height:1000});await page.goto("/watchlist",{waitUntil:"domcontentloaded"});await expect(page.locator(".watchlist-card")).toHaveCount(3);await expect(page.locator(".watchlist-count")).toContainText("3 saved movies");
+ await page.getByLabel("Search watchlist").fill("coolie");await expect(page.locator(".watchlist-card")).toHaveCount(1);await page.getByLabel("Search watchlist").fill("");
+ await page.getByRole("button",{name:"Coming Soon",exact:true}).click();await expect(page.locator(".watchlist-card h2")).toHaveText(upcoming.movies[0].title);
+ await page.getByRole("button",{name:"Released",exact:true}).click();await expect(page.locator(".watchlist-card").filter({hasText:released.title})).toBeVisible();
+ await page.getByRole("button",{name:"All movies",exact:true}).click();await page.getByLabel("Sort watchlist").selectOption("title");
+ const titles=await page.locator(".watchlist-card h2").allTextContents();expect(titles).toEqual([...titles].sort((a,b)=>a.localeCompare(b)));
+ await page.screenshot({path:"outputs/watchlist-desktop.png",fullPage:true});await page.setViewportSize({width:390,height:844});
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:"outputs/watchlist-mobile.png",fullPage:true});
+ await page.getByLabel("Search watchlist").fill("no-matching-film-xyz");await expect(page.getByRole("heading",{name:"No matching stories."})).toBeVisible();await page.getByRole("button",{name:"Clear filters"}).click();
+ await page.goto("/movies/leo",{waitUntil:"domcontentloaded"});const add=page.getByRole("button",{name:"Add to Watchlist",exact:true});await expect(add).toBeEnabled();
+ await page.route("**/api/watchlist",async route=>{if(route.request().method()==="POST")await route.fulfill({status:503,json:{error:"Watchlist temporarily unavailable. Try again."}});else await route.continue();});
+ await add.click();await expect(page.locator(".toast")).toContainText("temporarily unavailable");await expect(add).toHaveAttribute("aria-pressed","false");expect((await list(page)).entries).toHaveLength(3);
+ await page.unroute("**/api/watchlist");await page.goto("/",{waitUntil:"domcontentloaded"});
+ const heroToggle=page.locator(".featured-actions .watchlist-toggle");await expect(heroToggle).toBeEnabled();
+ const wasSaved=await heroToggle.getAttribute("aria-pressed")==="true",before=(await list(page)).entries.length;
+ await heroToggle.click();await expect(page.locator(".toast")).toContainText(wasSaved?"Removed from your watchlist":"Added to your watchlist");
+ expect((await list(page)).entries).toHaveLength(before+(wasSaved?-1:1));
+ let readFailure=true;
+ await page.route("**/api/watchlist",async route=>{if(readFailure&&route.request().method()==="GET")await route.fulfill({status:503,json:{error:"Your collection is temporarily unavailable."}});else await route.continue();});
+ await page.goto("/watchlist",{waitUntil:"domcontentloaded"});await expect(page.getByRole("alert")).toContainText("temporarily unavailable");
+ readFailure=false;await page.getByRole("button",{name:"Try again",exact:true}).click();await expect(page.locator(".watchlist-card")).toHaveCount(before+(wasSaved?-1:1));
+});

@@ -21,6 +21,7 @@ export const citySchema = z.object({
 export const movieSchema = z.object({
   id,
   title: z.string().min(1).max(100),
+  aliases: z.array(z.string().max(120)).max(20).optional(),
   tagline: z.string().max(200),
   description: z.string().max(3000),
   genre: z.array(z.string().max(30)).min(1).max(8),
@@ -51,6 +52,7 @@ export const movieSchema = z.object({
         posterImage: url.optional(),
         attribution: z.string().max(300).optional(),
         licenseUrl: url.optional(),
+        fit: z.enum(["contain", "cover"]).optional(),
       }),
     )
     .max(20)
@@ -91,7 +93,7 @@ export const venueSchema = z.object({
     .max(8),
   formats: z.array(z.string().max(30)).min(1).max(8),
   blueprints: z
-    .array(z.enum(["grand", "classic", "luxury"]))
+    .array(id)
     .min(1)
     .max(3),
   movieIds: z.array(id).max(100),
@@ -102,7 +104,7 @@ export const venueSchema = z.object({
     .min(1)
     .max(8)
     .optional(),
-  screenings: z.array(z.object({key:id,movieId:id,auditoriumId:id,blueprintId:z.enum(["grand","classic","luxury"]),time:z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),language:z.string().max(30),format:z.string().max(30),price:z.number().int().min(160).max(2000),date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()})).max(100).optional(),
+  screenings: z.array(z.object({key:id,movieId:id,auditoriumId:id,blueprintId:id,time:z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),language:z.string().max(30),format:z.string().max(30),price:z.number().int().min(160).max(2000),date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()})).max(100).optional(),
 });
 export const snackSchema = z.object({
   id,
@@ -121,7 +123,7 @@ export type Catalog = {
   blueprints: typeof blueprints;
 };
 export const catalogSchema = z.object({
-  catalogRevision: z.number().int().min(1).default(2),
+  catalogRevision: z.number().int().min(1).default(4),
   cities: z.array(citySchema).min(1).max(100),
   movies: z.array(movieSchema).min(1).max(100),
   venues: z.array(venueSchema).min(1).max(150),

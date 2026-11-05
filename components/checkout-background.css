@@ -1,0 +1,7 @@
+/* Shared, stationary artwork for Snacks and Payment only. */
+.checkout-route-shell{position:relative;isolation:isolate;min-height:100dvh}
+.checkout-route-shell::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(5,7,13,.60),rgba(5,7,13,.60)),url("/assets/cinema-snacks-screening.webp");
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+}

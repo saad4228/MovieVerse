@@ -1,4 +1,8 @@
 "use client";
+import CheckoutExperience from "./CheckoutExperience";
+import { checkoutOffer } from "@/lib/checkout-offers";
+import type { TrailerController, TrailerState } from "@/lib/video/controller";
+import "./seat-workspace.css";
 import {
   Component,
   lazy,
@@ -7,19 +11,23 @@ import {
   useEffect,
   useRef,
   useState,
+  type ErrorInfo,
   type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import Link from "./MovieLink";
 import {
+  SlidersHorizontal,
+  RotateCcw,
+  LocateFixed,
+  Undo2,
   ArrowLeft,
   ArrowRight,
   Check,
-  ChevronRight,
   Minus,
   Plus,
   Sparkles,
-  Eye,
+  Camera,
   Armchair,
   Maximize2,
   Volume2,
@@ -33,14 +41,11 @@ import {
   Clock,
   ShieldCheck,
   Info,
-  Popcorn,
-  Utensils,
-  Ticket,
   AlertCircle,
 } from "lucide-react";
 import {
   blueprints,
-  categories,
+  categories, seatClassesFor,
   getShow,
   makeSeats,
   movies,
@@ -62,8 +67,9 @@ import { useApp } from "@/lib/store";
 import { api } from "@/lib/client";
 import { bookingProvider, seatInventoryProvider } from "@/lib/providers";
 import type { Preset } from "./SeatScene";
-import { viewpoints } from "@/lib/auditorium";
-import { directSources, officialTrailerLink } from "@/lib/video/sources";
+import { seatFinishes } from "@/lib/seat-presentation";
+import { viewpoints, tourViews, screenViewMetrics } from "@/lib/auditorium";
+import { directSources, embeddedTrailer, officialTrailerLink } from "@/lib/video/sources";
 const Scene = lazy(() => import("./SeatScene"));
 class SceneBoundary extends Component<
   { children: ReactNode; onError: () => void },
@@ -73,7 +79,8 @@ class SceneBoundary extends Component<
   static getDerivedStateFromError() {
     return { error: true };
   }
-  componentDidCatch() {
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("MovieVerse auditorium failed", error, info.componentStack);
     this.props.onError();
   }
   render() {
@@ -109,18 +116,40 @@ export default function BookingFlow({
   const setShow = useApp((s) => s.setShow);
   const ids = useApp((s) => s.seats),
     setSeats = useApp((s) => s.setSeats);
-  const cart = useApp((s) => s.cart);
   const expiry = useApp((s) => s.holdExpires);
   const setExpiry = useApp((s) => s.setExpiry);
   const [data, setData] = useState<InventoryResponse | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [now, setNow] = useState(Date.now());
+  const [summaryOpen, setSummaryOpen] = useState(false);
+  const [preferredCategory, setPreferredCategory] = useState("all");
+  const [selectionHistory, setSelectionHistory] = useState<string[][]>([]);
+  const changeSeats = useCallback((next: string[]) => {
+    if (busy) return;
+    const previous = [...useApp.getState().seats];
+    setSelectionHistory(history => [...history.slice(-19), previous]);
+    setSeats(next);
+  }, [busy,setSeats]);
+  function undoSelection() {
+    const previous = selectionHistory.at(-1);
+    if (!previous || !data || busy) return;
+    const allowed = previous.filter(id => {
+      const seat = data.seats.find(s => s.id === id), state = data.inventory[id];
+      return seat && !seat.blocked && (state?.status === "available" || state?.status === "held" && state.mine);
+    });
+    setSeats(allowed.filter(id => {
+      const seat = data.seats.find(s => s.id === id)!;
+      return !seat.pair || data.seats.filter(s => s.pair === seat.pair).every(s => allowed.includes(s.id));
+    }));
+    setSelectionHistory(history => history.slice(0,-1));
+  }
   useEffect(() => {
     setShow(showId);
   }, [showId, setShow]);
   useEffect(() => {
     let active = true;
+    setData(null); setError(""); setSelectionHistory([]); setPreferredCategory("all");
     const refresh = () =>
       seatInventoryProvider.get(showId)
         .then((x) => {
@@ -140,9 +169,10 @@ export default function BookingFlow({
     };
   }, [showId]);
   useEffect(() => {
+    if (!expiry || expiry <= Date.now()) return;
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [expiry]);
   if (!show || !movie || !venue)
     return (
       <main className="empty">
@@ -245,27 +275,29 @@ export default function BookingFlow({
               </div>
             ) : (
               <SeatExperience
+                key={data.show.id}
                 data={data}
                 movie={movie}
                 selected={ids}
-                onSelect={(newIds) => setSeats(newIds)}
+                onSelect={changeSeats}
                 notify={notify}
               />
             )}
           </section>
-          <aside className="booking-sidebar">
-            <div className="sidebar-content">
+          <aside className={`booking-sidebar ${summaryOpen ? "summary-open" : ""}`} aria-label="Seat selection and checkout">
+            <button className="booking-summary-toggle" aria-expanded={summaryOpen} aria-controls="seat-summary-panel" onClick={() => setSummaryOpen(open => !open)}>{summaryOpen ? "Return to theatre" : `Seat options & summary (${selected.length})`}</button>
+            <div className="sidebar-content" id="seat-summary-panel">
               <span className="small-label">SEAT CLASSES</span>
               <div className="seat-categories">
-                {[...categories]
+                {[...seatClassesFor(b)]
                   .reverse()
                   .filter((c) => allSeats.some((s) => s.category === c.id))
                   .map((c) => (
-                    <div className="seat-class" key={c.id}>
-                      <i style={{ background: c.color }} />
+                    <button type="button" className="seat-class" key={c.id} title={c.description} aria-pressed={preferredCategory === c.id} onClick={() => setPreferredCategory(value => value === c.id ? "all" : c.id)}>
+                      <i style={{ background: b.seatClasses?.find(custom=>custom.id===c.id)?.color || seatFinishes[c.id]?.label || c.color }} />
                       <span>
                         <strong>{c.name}</strong>
-                        <small>{c.description}</small>
+                        <small className="seat-class-description">{c.description}</small>
                       </span>
                       <span>
                         <strong>{rupees(c.price + show.price - 160)}</strong>
@@ -280,7 +312,7 @@ export default function BookingFlow({
                           left
                         </small>
                       </span>
-                    </div>
+                    </button>
                   ))}
               </div>
               <div className="seat-legend">
@@ -293,65 +325,36 @@ export default function BookingFlow({
                   Your pick
                 </span>
                 <span>
-                  <i className="accessible" />
-                  Accessible
+                  <i className="available" />
+                  Available
                 </span>
+                <span><i className="accessible" />Accessible</span>
               </div>
               <BestSeats
                 data={data}
                 selected={ids}
-                onPick={setSeats}
+                onPick={changeSeats}
                 notify={notify}
+                category={preferredCategory}
+                setCategory={setPreferredCategory}
               />
               <div className="your-seats">
+                {selectionHistory.length > 0 && <button className="selection-undo" disabled={busy} onClick={undoSelection}><Undo2 size={13} />Undo selection</button>}
                 <span className="small-label">
                   YOUR SEATS{" "}
                   <span>{selected.length ? `(${selected.length})` : ""}</span>
                 </span>
-                {selected.length ? (
-                  <div className="selected-seats-list">
-                    {selected.map((s) => (
-                      <div key={s.id}>
-                        <span className="selected-seat-icon">
-                          <Armchair size={17} />
-                        </span>
-                        <span>
-                          <strong>{s.id}</strong>
-                          <small>
-                            {categories.find((c) => c.id === s.category)!.name}
-                          </small>
-                        </span>
-                        <strong>{rupees(seatPrice(s, show))}</strong>
-                        <button
-                          className="icon-btn"
-                          aria-label={`Remove ${s.id}`}
-                          onClick={() => {
-                            const next = selected.filter(
-                              (x) =>
-                                x.id !== s.id && (!s.pair || x.pair !== s.pair),
-                            );
-                            setSeats(next.map((s) => s.id));
-                          }}
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="no-seats">
-                    Click any seat in the hall, or let us pick the best ones.
-                  </p>
-                )}
+                <SelectionRows seats={selected} show={show} onRemove={seat => {
+                  changeSeats(selected.filter(x => x.id !== seat.id && (!seat.pair || x.pair !== seat.pair)).map(s => s.id));
+                }} />
               </div>
-              <div className="layout-note">
+              <div className="layout-note" title="Illustrative demo layout. Not a measured real-world auditorium. Accessible seats are marked in the 2D map.">
                 <Info size={14} />
                 <p>
                   {b.name}
                   <br />
                   {allSeats.length} seats · Illustrative demo layout.
-                  <br />
-                  Not a measured real-world auditorium.
+
                 </p>
               </div>
             </div>
@@ -367,12 +370,13 @@ export default function BookingFlow({
                     )}
                   </small>
                 </span>
-                <strong>
+                <strong className="price-update" key={calculatePrice(selected, show, {}).total} aria-live="polite">
                   {rupees(calculatePrice(selected, show, {}).total)}
                 </strong>
               </div>
               <button
                 className="btn btn-gold"
+                aria-busy={busy}
                 disabled={!selected.length || busy || !data}
                 onClick={reserve}
               >
@@ -385,7 +389,7 @@ export default function BookingFlow({
         </div>
       ) : (
         <div className="booking-steps-page section-container">
-          <div className="booking-progress">
+          <div className="booking-progress" aria-label="Booking progress" data-step={step}>
             <Link href={`/booking/${encodeURIComponent(showId)}/seats`}>
               <Check size={14} />
               Your seats
@@ -435,19 +439,43 @@ export default function BookingFlow({
     </main>
   );
 }
+function SelectionRows({ seats, show, onRemove }: { seats: Seat[]; show: Show; onRemove: (s: Seat) => void }) {
+  const [rows,setRows] = useState<Seat[]>(seats);
+  const signature = seats.map(s => s.id).join(",");
+  useEffect(() => {
+    setRows(previous => [...seats, ...previous.filter(s => !seats.some(next => next.id === s.id))]);
+    const timer = setTimeout(() => setRows(seats), matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 180);
+    return () => clearTimeout(timer);
+  }, [signature]);
+  if (!rows.length) return <p className="no-seats">Click any seat in the hall, or let us pick the best ones.</p>;
+  return <div className="selected-seats-list" aria-label="Selected seats">
+    {rows.map(s => {
+      const leaving = !seats.some(current => current.id === s.id);
+      return <div key={s.id} className={leaving ? "seat-row-leaving" : ""} aria-hidden={leaving || undefined}>
+        <span className="selected-seat-icon"><Armchair size={17}/></span>
+        <span><strong>{s.id}</strong><small>{s.classDefinition?.name ?? categories.find(c=>c.id===s.category)?.name ?? s.category}</small></span>
+        <strong>{rupees(seatPrice(s,show))}</strong>
+        <button className="icon-btn" aria-label={`Remove ${s.id}`} disabled={leaving} onClick={()=>onRemove(s)}><Trash2 size={14}/></button>
+      </div>;
+    })}
+  </div>;
+}
 function BestSeats({
   data,
   selected,
   onPick,
   notify,
+  category,
+  setCategory,
 }: {
   data: InventoryResponse | null;
   selected: string[];
   onPick: (ids: string[]) => void;
   notify: (s: string) => void;
+  category: string;
+  setCategory: (category: string) => void;
 }) {
   const [count, setCount] = useState(2);
-  const [category, setCategory] = useState("all");
   return (
     <div className="quick-pick">
       <span className="small-label">QUICK PICK</span>
@@ -457,7 +485,7 @@ function BestSeats({
         onChange={(e) => setCategory(e.target.value)}
       >
         <option value="all">Any seat class</option>
-        {categories
+        {(data ? seatClassesFor(data.blueprint) : categories)
           .filter((c) => data?.seats.some((s) => s.category === c.id))
           .map((c) => (
             <option key={c.id} value={c.id}>
@@ -531,26 +559,53 @@ function SeatExperience({
   notify: (s: string) => void;
 }) {
   const [mode, setMode] = useState<"3d" | "2d">("3d");
+  const [mapLevel, setMapLevel] = useState(0);
   const [preset, setPreset] = useState<Preset>("Overview");
   const [viewIndex, setViewIndex] = useState(0);
   const [cameraCommand, setCameraCommand] = useState(0);
   const [lights, setLights] = useState(true);
+  const [settingsOpen,setSettingsOpen] = useState(false);
   const [hd, setHd] = useState(true);
   const [muted, setMuted] = useState(true);
   const [paused, setPaused] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [hover, setHover] = useState<Seat | null>(null);
   const [media, setMedia] = useState("Loading screen…");
-  const playMedia = useRef<(() => void) | null>(null);
-  const playbackReady = useCallback((play: (() => void) | null) => {
-    playMedia.current = play;
+  const playMedia = useRef<TrailerController | null>(null);
+  const [playbackState, setPlaybackState] = useState<TrailerState>("idle");
+  const playbackReady = useCallback((controller: TrailerController | null) => {
+    playMedia.current = controller;
   }, []);
-  const playbackBlocked = media.includes("Press play");
+  const playbackBlocked = playbackState === "blocked";
   const viewport = useRef<HTMLDivElement>(null);
   const { blueprint: b, seats, inventory } = data;
   const views = viewpoints(b);
+  const tourStops = tourViews(b);
+  const previewSeat = seats.find(s => s.id === preview);
+  const viewMetrics = previewSeat && !b.modelUrl ? screenViewMetrics(b,previewSeat) : null;
+  const previewSeats = selected.filter(id => {
+    const seat = seats.find(s => s.id === id), status = inventory[id];
+    return seat && !seat.blocked && status?.status !== "booked" && status?.status !== "blocked" && !(status?.status === "held" && !status.mine);
+  });
+  const previewOriginMode = useRef<"2d" | "3d">("3d");
+  function exitPreview() {
+    setPreset("Free view");
+    setCameraCommand(c => c + 1);
+    setMode(previewOriginMode.current);
+  }
+  function nextPreview(direction: number) {
+    const index = previewSeats.indexOf(preview || "");
+    setPreview(previewSeats[(index + direction + previewSeats.length) % previewSeats.length]);
+    setCameraCommand(c => c + 1);
+  }
+  useEffect(() => {
+    if (preset !== "My seat" || previewSeats.includes(preview || "")) return;
+    if (previewSeats.length) setPreview(previewSeats[0]);
+    else exitPreview();
+  }, [preset, preview, previewSeats.join(",")]);
   const officialLink = officialTrailerLink(movie);
-  const canPlay = directSources(movie).length > 0;
+  const trailerUnavailable = media.includes("could not") || media.includes("did not") || media.includes("unavailable");
+  const canPlay = !trailerUnavailable && (directSources(movie).length > 0 || !!embeddedTrailer(movie));
   const freeView = useCallback(() => setPreset("Free view"), []);
   const navigateView = (direction: number) => {
     setViewIndex((i) => (i + direction + views.length) % views.length);
@@ -570,11 +625,12 @@ function SeatExperience({
     };
   }, []);
   const mediaStatus = useCallback((s: string) => setMedia(s), []);
-  function select(id: string) {
+  const select = useCallback((id: string) => {
     const seat = seats.find((s) => s.id === id)!;
     const status = inventory[id];
     if (
       seat.blocked ||
+      status?.status === "blocked" ||
       status?.status === "booked" ||
       (status?.status === "held" && !status.mine)
     ) {
@@ -601,7 +657,8 @@ function SeatExperience({
     }
     onSelect(next);
     setPreview(id);
-  }
+  }, [seats,inventory,selected,onSelect,notify]);
+  const ignoreSelection = useCallback(() => {}, []);
   const presets: Preset[] = [
     "Overview",
     "From stage",
@@ -612,11 +669,12 @@ function SeatExperience({
   return (
     <div
       ref={viewport}
-      className="seat-experience"
+      className={`seat-experience${preset === "Tour" ? " is-touring" : ""}`}
       tabIndex={0}
       role="region"
       aria-label="Interactive auditorium"
       onKeyDown={(e) => {
+        if (e.key === "Escape") setSettingsOpen(false);
         if (
           e.target !== e.currentTarget &&
           !(e.target instanceof HTMLCanvasElement)
@@ -637,6 +695,7 @@ function SeatExperience({
               onClick={() => {
                 setMode("3d");
                 setPreset(p);
+                if (p === "Tour") setViewIndex(0);
                 setCameraCommand((c) => c + 1);
               }}
             >
@@ -653,6 +712,15 @@ function SeatExperience({
           {mode === "3d" ? "2D map" : "3D view"}
         </button>
       </div>
+      {mode === "3d" && preset === "Tour" && <nav className="auditorium-tour-stops" aria-label="Auditorium tour stops">
+        <span>EXPLORE THE HALL</span>
+        {tourStops.map((stop,index)=><button key={stop.label} title={stop.description} onClick={()=>{setViewIndex(index);setCameraCommand(c=>c+1);}}>
+          <svg viewBox="0 0 56 34" aria-hidden="true"><path d="M8 5H48M8 29H48M8 5V29M48 5V29"/><path d="M14 9H42" className="tour-screen"/>
+            {[16,21,26].map(y=><path key={y} d={`M14 ${y}Q28 ${y+3} 42 ${y}`}/>)}
+            <circle cx={28+stop.position[0]/b.width*36} cy={10+(stop.position[2]+b.depth/2)/b.depth*18} r="2.5"/>
+          </svg><span>{stop.label}<small>{stop.description}</small></span>
+        </button>)}
+      </nav>}
       {mode === "3d" ? (
         <SceneBoundary
           onError={() => {
@@ -669,11 +737,12 @@ function SeatExperience({
             }
           >
             <Scene
+              refined
               blueprint={b}
               seats={seats}
               inventory={inventory}
               selected={selected}
-              onSelect={select}
+              onSelect={preset === "My seat" ? ignoreSelection : select}
               movie={movie}
               preset={preset}
               viewIndex={viewIndex}
@@ -686,6 +755,7 @@ function SeatExperience({
               preview={preview}
               onMediaStatus={mediaStatus}
               onPlaybackReady={playbackReady}
+              onPlaybackState={setPlaybackState}
               onHover={setHover}
             />
           </Suspense>
@@ -695,29 +765,28 @@ function SeatExperience({
           <div className="map-screen">
             <span>THE SCREEN IS HERE</span>
           </div>
+          {b.balcony && <div className="map-levels" aria-label="Seating level">{[0,1].map(level=><button key={level} aria-pressed={mapLevel===level} onClick={()=>setMapLevel(level)}>{level===0?"Stalls":"Balcony"}</button>)}</div>}
           <div className="seat-map-scroll">
-            {Array.from(new Set(seats.map((s) => s.row))).map((row) => (
-              <div className="map-row" key={row}>
+            {Array.from(new Set(seats.filter(s=>(s.level??(b.balcony && s.y>= (b.rows-(b.balconyRows??3))*b.slope+(b.balconyElevation??2.3) ? 1:0))===mapLevel).map((s) => s.row))).map((row) => (
+              <div className="map-row" key={row} style={{width:b.width*30+70}}>
                 <span className="map-row-label">{row}</span>
                 {seats
                   .filter((s) => s.row === row)
-                  .map((s, i, arr) => {
+                  .map((s) => {
                     const unavailable =
                       inventory[s.id]?.status === "booked" ||
+                      inventory[s.id]?.status === "blocked" ||
                       s.blocked ||
                       (inventory[s.id]?.status === "held" &&
                         !inventory[s.id]?.mine);
-                    const aisle = i > 0 && s.x - arr[i - 1].x > b.spacing * 1.2;
                     return (
                       <button
                         key={s.id}
                         className={`map-seat ${selected.includes(s.id) ? "picked" : ""} ${unavailable ? "unavailable" : ""} ${s.accessible ? "accessible" : ""}`}
                         style={
                           {
-                            "--seat-color": categories.find(
-                              (c) => c.id === s.category,
-                            )!.color,
-                            marginLeft: aisle ? "15px" : undefined,
+                            "--seat-color": s.classDefinition?.color || seatFinishes[s.category]?.label || "#899bb8",
+                            position: "absolute", left: 35+(s.x+b.width/2)*30-14,
                           } as React.CSSProperties
                         }
                         disabled={unavailable}
@@ -742,6 +811,7 @@ function SeatExperience({
       )}
       {mode === "3d" && (
         <>
+          {playbackBlocked && <button className="auditorium-start btn btn-gold" onClick={() => { playMedia.current?.play(); setPaused(false); }}><Play size={18} />Tap to start movie</button>}
           <button
             className="view-arrow view-arrow-left"
             aria-label="Previous auditorium viewpoint"
@@ -763,18 +833,18 @@ function SeatExperience({
                 ? `Your view · ${preview}`
                 : preset}
           </div>
+          {preset === "My seat" && viewMetrics && <div className="seat-view-metrics" title="Approximate angles in this illustrative auditorium, not a measured venue.">Screen spans {viewMetrics.horizontalSpan}° / {Math.abs(viewMetrics.verticalAngle)}° {viewMetrics.verticalAngle >= 0 ? "upward" : "downward"}</div>}
           {preset === "My seat" && (
             <div className="seat-view-return">
               <button
-                onClick={() => {
-                  setPreset("Overview");
-                  setCameraCommand((c) => c + 1);
-                }}
+                onClick={exitPreview}
               >
                 <ArrowLeft size={14} />
-                Return to auditorium
+                Exit Preview
               </button>
-              {selected.length > 1 && (
+              {previewSeats.length > 1 && (
+                <>
+                <button aria-label="Previous Seat" onClick={() => nextPreview(-1)}><ArrowLeft size={14} /></button>
                 <select
                   aria-label="Preview selected seat"
                   value={preview || selected[0]}
@@ -783,29 +853,34 @@ function SeatExperience({
                     setCameraCommand((c) => c + 1);
                   }}
                 >
-                  {selected.map((id) => (
+                  {previewSeats.map((id) => (
                     <option key={id} value={id}>
                       {id}
                     </option>
                   ))}
                 </select>
+                <button aria-label="Next Seat" onClick={() => nextPreview(1)}><ArrowRight size={14} /></button>
+                </>
               )}
             </div>
           )}
         </>
       )}
-      {hover && mode === "3d" && (
+      {hover && mode === "3d" && preset !== "My seat" && (
         <div className="seat-hover">
           <Armchair size={17} />
           <strong>{hover.id}</strong>
           <span>
-            {categories.find((c) => c.id === hover.category)!.name} ·{" "}
+            {hover.classDefinition?.name ?? categories.find((c) => c.id === hover.category)?.name ?? hover.category} ·{" "}
             {rupees(seatPrice(hover, data.show))}
+            <small>{hover.blocked || ["booked","blocked"].includes(inventory[hover.id]?.status) || (inventory[hover.id]?.status === "held" && !inventory[hover.id]?.mine) ? "Unavailable" : selected.includes(hover.id) ? "Selected" : "Available"}</small>
           </span>
         </div>
       )}
       <div className="view-bottom-controls">
         <div className="scene-hints">
+          {["loading", "ready", "buffering"].includes(playbackState) && <span className="trailer-loading-status" role="status"><i />{playbackState === "buffering" ? "Buffering trailer" : "Preparing trailer"}</span>}
+          {playbackState === "ended" && <span role="status">Trailer ended ? Replay using the controls</span>}
           <span>
             {mode === "3d"
               ? "Drag to orbit · Scroll to zoom · Right-drag to pan"
@@ -828,34 +903,41 @@ function SeatExperience({
           )}
         </div>
         <div className="scene-control-buttons">
-          {selected.length > 0 && (
+          {playbackState === "error" && <button onClick={() => { setPaused(false); playMedia.current?.retry(); }} title="Retry trailer"><RotateCcw size={14} />Retry trailer</button>}
+          {mode === "3d" && <button aria-label="Reset view" title="Reset view" onClick={() => { setPreset("Overview"); setCameraCommand(c => c+1); }}><RotateCcw size={14} /></button>}
+          {previewSeats.length > 0 && preset !== "My seat" && <button aria-label="Find my seats" title="Find my seats" onClick={() => { setMode("3d"); setPreset("Find seats"); setCameraCommand(c => c+1); }}><LocateFixed size={14} /></button>}
+          {previewSeats.length > 0 && (
             <button
+              aria-label="View from this seat"
+              title="View from this seat"
               className={preset === "My seat" ? "selected" : ""}
               onClick={() => {
-                setPreview(selected[selected.length - 1]);
+                if (preset !== "My seat") previewOriginMode.current = mode;
+                setPreview(previewSeats[previewSeats.length - 1]);
                 setPreset("My seat");
                 setCameraCommand((c) => c + 1);
                 setMode("3d");
               }}
             >
-              <Eye size={14} />
-              My view
+              <Camera size={14} />
+              <span className="seat-preview-button-label">View from this seat</span>
             </button>
           )}
           {canPlay && mode === "3d" && (
             <>
               <button
+                title={playbackState === "ended" ? "Replay trailer" : paused || playbackBlocked ? "Play film" : "Pause film"}
                 aria-label={
-                  paused || playbackBlocked ? "Play film" : "Pause film"
+                  playbackState === "ended" ? "Replay trailer" : paused || playbackBlocked ? "Play film" : "Pause film"
                 }
                 onClick={() => {
-                  if (paused || playbackBlocked) {
-                    playMedia.current?.();
+                  if (paused || playbackBlocked || playbackState === "ended") {
+                    playMedia.current?.play();
                     setPaused(false);
-                  } else setPaused(true);
+                  } else { playMedia.current?.pause(); setPaused(true); }
                 }}
               >
-                {paused || playbackBlocked ? (
+                {paused || playbackBlocked || playbackState === "ended" ? (
                   <Play size={14} />
                 ) : (
                   <Pause size={14} />
@@ -863,21 +945,26 @@ function SeatExperience({
               </button>
               <button
                 aria-label={muted ? "Unmute film" : "Mute film"}
-                onClick={() => setMuted(!muted)}
+                title={muted ? "Unmute film" : "Mute film"}
+                onClick={() => { playMedia.current?.setMuted(!muted); setMuted(!muted); }}
               >
                 {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               </button>
             </>
           )}
+          <div className="scene-settings">
+          <button className="scene-settings-toggle" title="More theatre controls" aria-label="More theatre controls" aria-expanded={settingsOpen} onClick={() => setSettingsOpen(open=>!open)}><SlidersHorizontal size={16}/></button>
+          <div className={`scene-settings-panel ${settingsOpen ? "open" : ""}`}>
           <button onClick={() => setLights(!lights)} aria-pressed={lights}>
             <Lightbulb size={13} />
             Lights {lights ? "on" : "off"}
           </button>
-          <button aria-pressed={hd} onClick={() => setHd(!hd)}>
+          <button title="3D rendering quality. Trailer quality adapts automatically." aria-pressed={hd} onClick={() => setHd(!hd)}>
             {hd ? "HD" : "SD"}
           </button>
           <button
             aria-label="Fullscreen cinema"
+            title="Fullscreen cinema"
             onClick={() => {
               if (document.fullscreenElement) document.exitFullscreen?.();
               else
@@ -890,6 +977,8 @@ function SeatExperience({
           >
             <Maximize2 size={13} />
           </button>
+          </div>
+          </div>
         </div>
       </div>
     </div>
@@ -899,7 +988,7 @@ export function OrderSummary({
   show,
   movie,
   selected,
-  promo = "",
+  promo,
   children,
 }: {
   show: Show;
@@ -909,13 +998,15 @@ export function OrderSummary({
   children?: ReactNode;
 }) {
   const cart = useApp((s) => s.cart);
-  const pricing = calculatePrice(selected, show, cart, promo);
+  const savedPromo = useApp(s=>s.showId===show.id ? s.promoCode : "");
+  const appliedPromo = checkoutOffer(promo ?? savedPromo ?? "")?.code ?? "";
+  const pricing = calculatePrice(selected, show, cart, appliedPromo);
   const venue = venues.find((v) => v.id === show.venueId)!;
   return (
     <aside className="order-summary">
       <span className="small-label">YOUR MOVIE MOMENT</span>
       <div className="summary-movie">
-        <img src={movie.poster} alt="" />
+        <img src={movie.poster} alt={`${movie.title} poster`} />
         <div>
           <h3>{movie.title}</h3>
           <p>
@@ -965,14 +1056,14 @@ export function OrderSummary({
         </div>
         {pricing.discount > 0 && (
           <div className="discount-line">
-            <span>FIRSTSHOW discount</span>
+            <span>{appliedPromo} discount</span>
             <span>−{rupees(pricing.discount)}</span>
           </div>
         )}
       </div>
       <div className="summary-total">
         <span>Total amount</span>
-        <strong>{rupees(pricing.total)}</strong>
+        <strong className="price-update" key={pricing.total} aria-live="polite">{rupees(pricing.total)}</strong>
       </div>
       {children}
       <p className="summary-demo">
@@ -1109,213 +1200,6 @@ function SnacksStep({
     </div>
   );
 }
-function CheckoutStep({
-  show,
-  movie,
-  selected,
-  active,
-  notify,
-}: {
-  show: Show;
-  movie: Movie;
-  selected: Seat[];
-  active: boolean;
-  notify: (s: string) => void;
-}) {
-  const router = useRouter();
-  const cart = useApp((s) => s.cart);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [promoInput, setPromoInput] = useState("");
-  const [promo, setPromo] = useState("");
-  const [method, setMethod] = useState("UPI");
-  const [outcome, setOutcome] = useState<"success" | "failure" | "cancel">(
-    "success",
-  );
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const request = useRef(crypto.randomUUID());
-  const pricing = calculatePrice(selected, show, cart, promo);
-  useEffect(() => {
-    api("session")
-      .then((x) => {
-        if (x.user) {
-          setName(x.user.name);
-          setEmail(x.user.email);
-        }
-      })
-      .catch(() => {});
-  }, []);
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!active || !selected.length || busy) return;
-    setBusy(true);
-    setError("");
-    try {
-      const result = await bookingProvider.checkout({
-        showId: show.id,
-        seats: selected.map((s) => s.id),
-        cart,
-        promo,
-        requestId: request.current,
-        outcome,
-      });
-      router.push(`/booking/confirmation/${result.id}`);
-    } catch (e) {
-      setError((e as Error).message);
-      notify((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-  return (
-    <form className="checkout-columns" onSubmit={submit}>
-      <section>
-        <div className="page-intro compact">
-          <span className="eyebrow">YOU’RE ONE SCENE AWAY</span>
-          <h1>
-            Make it <span>official.</span>
-          </h1>
-          <p>Your story. Your seats. All in one place.</p>
-        </div>
-        <div className="checkout-block">
-          <div className="block-heading">
-            <span>01</span>
-            <div>
-              <h3>A name for your ticket.</h3>
-              <p>Demo details stay in this form. No email is sent.</p>
-            </div>
-          </div>
-          <div className="form-row">
-            <label>
-              Your name
-              <input
-                required
-                autoComplete="name"
-                minLength={2}
-                maxLength={80}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Movie lover"
-              />
-            </label>
-            <label>
-              Email address
-              <input
-                required
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-              />
-            </label>
-          </div>
-        </div>
-        <div className="checkout-block">
-          <div className="block-heading">
-            <span>02</span>
-            <div>
-              <h3>A little treat, on us.</h3>
-              <p>Try FIRSTSHOW for 10% off tickets, up to ₹100.</p>
-            </div>
-          </div>
-          <div className="promo-input">
-            <input
-              aria-label="Promo code"
-              placeholder="Enter promo code"
-              value={promoInput}
-              onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
-            />
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={() => {
-                if (promoInput === "FIRSTSHOW") {
-                  setPromo(promoInput);
-                  notify("FIRSTSHOW applied. Enjoy your movie.");
-                } else {
-                  setPromo("");
-                  notify("That code isn’t valid. Try FIRSTSHOW.");
-                }
-              }}
-            >
-              {promo ? "Applied ✓" : "Apply"}
-            </button>
-          </div>
-        </div>
-        <div className="checkout-block">
-          <div className="block-heading">
-            <span>03</span>
-            <div>
-              <h3>The final step.</h3>
-              <p>A simulated payment. No real money changes hands.</p>
-            </div>
-          </div>
-          <div className="payment-methods">
-            {["UPI", "Card", "Net banking"].map((m) => (
-              <button
-                key={m}
-                type="button"
-                className={m === method ? "selected" : ""}
-                onClick={() => setMethod(m)}
-              >
-                {m === method && <Check size={14} />} {m}
-              </button>
-            ))}
-          </div>
-          <div className="test-payment">
-            <ShieldCheck size={25} />
-            <div>
-              <strong>{method} · Test payment</strong>
-              <p>
-                No bank details required. Choose a result to test the complete
-                payment flow.
-              </p>
-            </div>
-          </div>
-          <label className="test-outcome">
-            Simulated result
-            <select
-              value={outcome}
-              onChange={(e) => setOutcome(e.target.value as typeof outcome)}
-            >
-              <option value="success">Successful payment</option>
-              <option value="failure">Payment failure</option>
-              <option value="cancel">Payment cancelled</option>
-            </select>
-          </label>
-        </div>
-        {error && (
-          <p className="form-error" role="alert">
-            <AlertCircle size={16} />
-            {error}
-          </p>
-        )}
-        <p className="fine-print">
-          This is a demonstration reservation. The QR ticket is valid only
-          within this demo. You can cancel a confirmed demo booking before its
-          screening starts.
-        </p>
-      </section>
-      <OrderSummary show={show} movie={movie} selected={selected} promo={promo}>
-        <button
-          className="btn btn-gold"
-          type="submit"
-          disabled={!active || !selected.length || busy}
-        >
-          {busy
-            ? "Confirming your booking…"
-            : `Pay ${rupees(pricing.total)} · Test payment`}
-          <ArrowRight size={16} />
-        </button>
-        <Link
-          className="summary-back"
-          href={`/booking/${encodeURIComponent(show.id)}/snacks`}
-        >
-          Edit snacks
-        </Link>
-      </OrderSummary>
-    </form>
-  );
+function CheckoutStep(props: {show: Show; movie: Movie; selected: Seat[]; active: boolean; notify:(s:string)=>void}) {
+  return <CheckoutExperience show={props.show} selected={props.selected} active={props.active} notify={props.notify} renderSummary={(promo,children)=><OrderSummary show={props.show} movie={props.movie} selected={props.selected} promo={promo}>{children}</OrderSummary>}/>;
 }

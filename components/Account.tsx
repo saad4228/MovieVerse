@@ -1,30 +1,28 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import QRCode from "qrcode";
+import { useRouter, useSearchParams } from "next/navigation";
+import ProfilePhoto from "./ProfilePhoto";
+import AuthPosterCollage from "./AuthPosterCollage";
+import DigitalTicket from "./DigitalTicket";
+import CinematicTicketExperience from "./CinematicTicketExperience";
+import { consumeTicketArrival } from "@/lib/ticket-experience";
 import {
   ArrowRight,
   ArrowUpRight,
   Check,
-  CheckCircle2,
-  Download,
   Ticket,
+  Heart,
   Armchair,
-  MapPin,
-  Clock,
   User,
   LogOut,
   ShieldCheck,
-  Mail,
   Eye,
   EyeOff,
-  X,
-  AlertCircle,
+  Info,
 } from "lucide-react";
 import { api } from "@/lib/client";
-import { rupees } from "@/lib/booking";
-import { Logo, Empty, Modal } from "./ui";
+import { Empty, Modal } from "./ui";
 export function Auth({
   register = false,
   notify,
@@ -33,9 +31,12 @@ export function Auth({
   notify: (s: string) => void;
 }) {
   const router = useRouter();
+  const authParams=useSearchParams();
+  const authNext=authParams.get("next")?`?next=${encodeURIComponent(authParams.get("next")!)}`:"";
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [visible, setVisible] = useState(false);
+  useEffect(() => { setError(""); setVisible(false); }, [register]);
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setBusy(true);
@@ -45,7 +46,8 @@ export function Auth({
       await api(register ? "register" : "login", values);
       window.dispatchEvent(new Event("mv-auth"));
       notify(register ? "Welcome to your universe." : "Good to have you back.");
-      router.push("/account");
+      const next=new URLSearchParams(window.location.search).get("next");
+      router.push(next&&/^\/(movies|genres|explore|watchlist|coming-soon)(\/|\?|$)/.test(next)&&!next.includes("\\")?next:"/account");
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -54,12 +56,8 @@ export function Auth({
   }
   return (
     <main className="auth-page">
+      <AuthPosterCollage/>
       <section className="auth-story">
-        <div className="auth-art">
-          <img src="/assets/varanasi.webp" alt="" />
-          <img src="/assets/jailer-2.webp" alt="" />
-          <img src="/assets/toxic.webp" alt="" />
-        </div>
         <div>
           <span className="eyebrow">MORE THAN A MOVIE TICKET</span>
           <h1>
@@ -72,9 +70,10 @@ export function Auth({
           <p>Every great story starts with showing up.</p>
         </div>
       </section>
-      <section className="auth-form-wrap">
+      <section className="auth-form-wrap" aria-labelledby="auth-title">
+        <div className="auth-form-content" key={register ? "register" : "login"}>
         <span className="eyebrow">THE BEST STORIES BRING US TOGETHER</span>
-        <h2>{register ? "Join the universe." : "Welcome back."}</h2>
+        <h2 id="auth-title">{register ? "Join the universe." : "Welcome back."}</h2>
         <p>
           {register
             ? "A little about you. A whole world of cinema."
@@ -137,12 +136,16 @@ export function Auth({
               : register
                 ? "Create your account"
                 : "Sign in"}
-            <ArrowRight size={16} />
+            {busy ? <span className="auth-spinner" aria-hidden="true"/> : <ArrowRight size={16} />}
           </button>
         </form>
         <p className="auth-switch">
           {register ? "Already part of the story?" : "New to MovieVerse?"}{" "}
-          <Link className="text-link" href={register ? "/login" : "/register"}>
+          <Link className="text-link" href={`${register ? "/login" : "/register"}${authNext}`} onNavigate={event => {
+            // Both URLs share this form. Update the route without remounting its backdrop.
+            event.preventDefault();
+            window.history.pushState(null, "", `${register ? "/login" : "/register"}${window.location.search}`);
+          }}>
             {register ? "Sign in" : "Create an account"}
           </Link>
         </p>
@@ -154,6 +157,7 @@ export function Auth({
           <ShieldCheck size={13} /> Demo accounts use securely hashed passwords.
           Payments and bookings are demonstrations.
         </p>
+        </div>
       </section>
     </main>
   );
@@ -164,6 +168,7 @@ export function Account({ notify }: { notify: (s: string) => void }) {
     null,
   );
   const [loading, setLoading] = useState(true);
+  const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
     api("session")
@@ -172,7 +177,7 @@ export function Account({ notify }: { notify: (s: string) => void }) {
       .finally(() => setLoading(false));
   }, []);
   return (
-    <main className="account-page section-container">
+    <main className="account-page section-container personal-lounge">
       <span className="eyebrow">YOUR CORNER OF THE UNIVERSE</span>
       <h1>
         {loading
@@ -181,30 +186,38 @@ export function Account({ notify }: { notify: (s: string) => void }) {
             ? `Hello, ${user.name.split(" ")[0]}.`
             : "Make yourself at home."}
       </h1>
-      {error && <p className="form-error">{error}</p>}
+      <p className="profile-welcome-copy">Your movie journey, all in one place.</p>
+      {error && <p className="form-error" role="alert">{error}</p>}
       {user ? (
         <>
           <div className="profile-card">
-            <span className="profile-avatar">{user.name.slice(0, 1)}</span>
-            <div>
+            <ProfilePhoto name={user.name} notify={notify}/>
+            <div className="profile-identity">
               <h2>{user.name}</h2>
               <p>{user.email}</p>
               <span className="demo-badge">MOVIEVERSE DEMO ACCOUNT</span>
             </div>
             <button
               className="btn btn-outline"
+              disabled={signingOut}
+              aria-busy={signingOut}
               onClick={async () => {
-                await api("logout", {});
-                window.dispatchEvent(new Event("mv-auth"));
-                notify("You’re signed out. See you at the movies.");
-                router.push("/");
+                setSigningOut(true);
+                try {
+                  await api("logout", {});
+                  window.dispatchEvent(new Event("mv-auth"));
+                  notify("You’re signed out. See you at the movies.");
+                  router.push("/");
+                } catch (error) { setError(error instanceof Error ? error.message : "Could not sign out. Please try again."); }
+                finally { setSigningOut(false); }
               }}
             >
               <LogOut size={15} />
-              Sign out
+              {signingOut ? "Signing out..." : "Sign out"}
             </button>
           </div>
           <div className="account-links">
+            <Link href="/watchlist"><Heart/><div><h3>Watchlist</h3><p>Your movie collection, saved to your account.</p></div><ArrowUpRight/></Link>
             <Link href="/my-tickets">
               <Ticket />
               <div>
@@ -236,9 +249,9 @@ export function Account({ notify }: { notify: (s: string) => void }) {
           </div>
         )
       )}
-      <p className="demo-note">
-        Guest bookings remain accessible on this browser. Signing in attaches
-        this session’s guest bookings to your account.
+      <p className="demo-note profile-guest-notice">
+        <Info size={17} aria-hidden="true"/><span>Guest bookings remain accessible on this browser. Signing in attaches
+        this session’s guest bookings to your account.</span>
       </p>
     </main>
   );
@@ -259,7 +272,7 @@ export type BookingRecord = {
   };
   cart: Record<string, number>;
   snapshot: {
-    movie: { title: string; poster: string; certificate: string };
+    movie: { title: string; poster: string; backdrop?: string; backdropPosition?: string; certificate: string };
     venue: { name: string; address: string };
     show: { date: string; time: string; language: string; format: string };
     auditorium: string;
@@ -285,9 +298,22 @@ export function MyTickets({
       .then((x) => setBookings(x.bookings))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
+  const [animateArrival, setAnimateArrival] = useState(false);
   useEffect(() => {
-    refresh();
-  }, []);
+    let active = true;
+    setLoading(true);
+    setError("");
+    api<{ bookings: BookingRecord[] }>("tickets")
+      .then(({ bookings: records }) => {
+        if (!active) return;
+        const arrived = confirmation && id ? consumeTicketArrival(id) : false;
+        setAnimateArrival(arrived && records.some(b => b.id === id && b.status === "confirmed"));
+        setBookings(records);
+      })
+      .catch(e => { if (active) setError(e.message); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [id, confirmation]);
   const filtered = bookings.filter((b) =>
     id
       ? b.id === id
@@ -306,7 +332,7 @@ export function MyTickets({
     <main
       className={`tickets-page section-container ${confirmation ? "confirmation-page" : ""}`}
     >
-      {confirmation ? (
+      {confirmation && !loading && !error && filtered.some(b => b.status === "confirmed") ? (
         <div className="confirmation-heading">
           <div>
             <Check size={32} />
@@ -326,8 +352,8 @@ export function MyTickets({
       ) : (
         <div className="page-intro">
           <span className="eyebrow">LITTLE TICKETS. BIG MEMORIES.</span>
-          <h1>{id ? "Your movie ticket." : "Your movie moments."}</h1>
-          <p>Everything you need for your next escape.</p>
+          <h1>{confirmation ? loading ? "Checking your booking…" : "Your booking." : id ? "Your movie ticket." : "Your movie moments."}</h1>
+          <p>{confirmation ? "Your booking status and saved details appear here." : "Everything you need for your next escape."}</p>
         </div>
       )}
       {!id && (
@@ -349,9 +375,7 @@ export function MyTickets({
           <p>Finding your movie moments…</p>
         </div>
       ) : error ? (
-        <Empty title="We couldn’t load your tickets">
-          {error}
-          <button
+        <Empty className="tickets-empty" action={<button
             className="btn btn-outline"
             onClick={() => {
               setLoading(true);
@@ -360,11 +384,21 @@ export function MyTickets({
             }}
           >
             Try again
-          </button>
+          </button>} title="We couldn’t load your tickets">
+          {error}
+
         </Empty>
       ) : filtered.length ? (
         <div className="ticket-list">
-          {filtered.map((b) => (
+          {filtered.map((b) => confirmation && b.status === "confirmed" ? (
+            <CinematicTicketExperience
+              key={b.id}
+              booking={b}
+              animate={animateArrival}
+              onCancel={() => setCancel(b)}
+              notify={notify}
+            />
+          ) : (
             <DigitalTicket
               key={b.id}
               booking={b}
@@ -375,15 +409,16 @@ export function MyTickets({
         </div>
       ) : (
         <Empty
+          className="tickets-empty"
           title={id ? "Ticket not found" : "Your next movie moment is waiting."}
+          action={<Link className="btn btn-gold" href={id ? "/login" : "/movies"}>
+            {id ? "Sign in" : "Find your next movie"}
+            <ArrowRight size={16} />
+          </Link>}
         >
           {id
             ? "This ticket belongs to a different session or account. Sign in to the account used to book."
             : "You haven’t booked a movie in this category yet."}
-          <Link className="btn btn-gold" href={id ? "/login" : "/movies"}>
-            {id ? "Sign in" : "Find your next movie"}
-            <ArrowRight size={16} />
-          </Link>
         </Empty>
       )}
       {confirmation && filtered.length > 0 && (
@@ -437,167 +472,6 @@ export function MyTickets({
     </main>
   );
 }
-function DigitalTicket({
-  booking: b,
-  onCancel,
-  notify,
-}: {
-  booking: BookingRecord;
-  onCancel: () => void;
-  notify: (s: string) => void;
-}) {
-  const [qr, setQr] = useState("");
-  const snap = b.snapshot;
-  useEffect(() => {
-    QRCode.toDataURL(`${window.location.origin}/ticket/${b.token}`, {
-      width: 280,
-      margin: 1,
-      color: { dark: "#090b12", light: "#ffffff" },
-    }).then(setQr);
-  }, [b.token]);
-  async function download() {
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = 800;
-      canvas.height = 1120;
-      const ctx = canvas.getContext("2d")!;
-      ctx.fillStyle = "#101117";
-      ctx.fillRect(0, 0, 800, 1120);
-      ctx.fillStyle = "#f9be3c";
-      ctx.font = "bold 34px sans-serif";
-      ctx.fillText("MOVIEVERSE", 48, 64);
-      ctx.fillStyle = "#a2a4b4";
-      ctx.font = "15px sans-serif";
-      ctx.fillText("YOUR UNIVERSE. YOUR MOVIE. YOUR SEAT.", 48, 98);
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 48px sans-serif";
-      ctx.fillText(snap.movie.title, 48, 180);
-      ctx.font = "23px sans-serif";
-      [
-        snap.venue.name,
-        snap.auditorium,
-        `${snap.show.date}  ·  ${snap.show.time} IST`,
-        `${snap.show.language}  ·  ${snap.show.format}`,
-        `Seats: ${b.seats.join(", ")}`,
-        `Total: ${rupees(b.pricing.total)}  ·  ${b.status.toUpperCase()}`,
-      ].forEach((t, i) => ctx.fillText(t, 48, 248 + i * 47));
-      ctx.strokeStyle = "#383943";
-      ctx.setLineDash([7, 8]);
-      ctx.beginPath();
-      ctx.moveTo(48, 550);
-      ctx.lineTo(752, 550);
-      ctx.stroke();
-      const image = new Image();
-      image.src = qr;
-      await image.decode();
-      ctx.drawImage(image, 260, 590, 280, 280);
-      ctx.font = "15px monospace";
-      ctx.fillStyle = "#a2a4b4";
-      ctx.fillText(`Booking ${b.id}`, 48, 930);
-      ctx.font = "17px sans-serif";
-      ctx.fillStyle = "#f9be3c";
-      ctx.fillText("DEMO TICKET · NO REAL CINEMA ADMISSION", 48, 990);
-      ctx.fillStyle = "#a2a4b4";
-      ctx.fillText("Simulated payment. No money was charged.", 48, 1030);
-      const link = document.createElement("a");
-      link.download = `MovieVerse-${b.id.slice(0, 8)}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    } catch {
-      notify(
-        "Ticket download is unavailable. Your QR ticket is still visible here.",
-      );
-    }
-  }
-  const future =
-    new Date(`${snap.show.date}T${snap.show.time}:00+05:30`).getTime() >
-    Date.now();
-  return (
-    <article
-      className={`digital-ticket ${b.status === "cancelled" ? "cancelled" : ""}`}
-    >
-      <div className="ticket-main">
-        <div className="ticket-brand">
-          <Logo />
-          <span
-            className={`ticket-status ${b.status === "cancelled" ? "cancelled" : ""}`}
-          >
-            {b.status === "cancelled" ? (
-              <X size={12} />
-            ) : (
-              <CheckCircle2 size={12} />
-            )}{" "}
-            {b.status === "confirmed" ? "BOOKING CONFIRMED" : "CANCELLED"}
-          </span>
-        </div>
-        <div className="ticket-movie">
-          <img src={snap.movie.poster} alt="" />
-          <div>
-            <span className="eyebrow">
-              {snap.show.language} · {snap.show.format} ·{" "}
-              {snap.movie.certificate}
-            </span>
-            <h2>{snap.movie.title}</h2>
-            <p>{snap.venue.name}</p>
-            <small>{snap.venue.address}</small>
-          </div>
-        </div>
-        <div className="ticket-facts">
-          <div>
-            <span>DATE & TIME</span>
-            <strong>
-              {new Date(snap.show.date + "T12:00:00+05:30").toLocaleDateString(
-                "en-IN",
-                { day: "numeric", month: "short", weekday: "short" },
-              )}
-            </strong>
-            <small>{snap.show.time} IST</small>
-          </div>
-          <div>
-            <span>AUDITORIUM</span>
-            <strong>{snap.auditorium.split(" · ")[0]}</strong>
-            <small>{snap.auditorium.split(" · ")[1]}</small>
-          </div>
-          <div>
-            <span>YOUR SEATS</span>
-            <strong>{b.seats.join(", ")}</strong>
-            <small>
-              {b.seats.length} ticket{b.seats.length > 1 ? "s" : ""}
-            </small>
-          </div>
-        </div>
-        <div className="ticket-footer">
-          <span>
-            BOOKING ID <strong>{b.id.slice(0, 8).toUpperCase()}</strong>
-          </span>
-          <span>
-            Total <strong>{rupees(b.pricing.total)}</strong>
-          </span>
-        </div>
-      </div>
-      <div className="ticket-stub">
-        {qr && (
-          <img
-            className="qr-code"
-            src={qr}
-            alt={`QR verification for booking ${b.id.slice(0, 8)}`}
-          />
-        )}
-        <strong>YOUR NEXT GREAT ESCAPE</strong>
-        <p>Demo ticket · no cinema admission</p>
-        <button className="btn btn-gold" onClick={download} disabled={!qr}>
-          <Download size={15} />
-          Download ticket
-        </button>
-        {future && b.status !== "cancelled" && (
-          <button className="cancel-ticket" onClick={onCancel}>
-            Cancel demo booking
-          </button>
-        )}
-      </div>
-    </article>
-  );
-}
 export function VerifyTicket({ token }: { token: string }) {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState("");
@@ -616,7 +490,7 @@ export function VerifyTicket({ token }: { token: string }) {
           : data
             ? data.status === "confirmed"
               ? "Booking verified."
-              : "Booking cancelled."
+              : data.status === "cancelled" ? "Booking cancelled." : data.status === "failed" ? "Booking failed." : "Awaiting booking confirmation."
             : "Checking your ticket…"}
       </h1>
       {error ? (

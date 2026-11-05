@@ -1,10 +1,18 @@
+import { rowCurvature } from "./seat-layout";
 import { enrichMovieMedia } from "./movie-media";
 import type { TrailerSource } from "./video/sources";
 import additions from "../data/coming-soon-movies.json" with { type: "json" };
+import discoveryAdditions from "../data/discovery-movies.json" with { type: "json" };
+import { discoveryStatus } from "./movie-discovery";
 import { enrichMovieInformation, type MovieInformation } from "./movie-information";
 export type Movie = {
+  providerGenreIds?: number[];
+  originalLanguage?: string;
+  productionCountries?: string[];
+  originCountries?: string[];
   id: string;
   title: string;
+  aliases?: string[];
   tagline: string;
   description: string;
   genre: string[];
@@ -195,7 +203,7 @@ const seedMovies: Movie[] = [
     formats: ["2D", "Dolby Atmos"],
   },
 ];
-export const movies: Movie[] = [...seedMovies, ...(additions as Movie[]).filter(m => !seedMovies.some(s => s.id === m.id))].map(m => enrichMovieInformation(enrichMovieMedia(m)));
+export const movies: Movie[] = [...seedMovies, ...(additions as Movie[]), ...(discoveryAdditions as Movie[])].filter((m,i,all)=>all.findIndex(x=>x.id===m.id)===i).map(m => enrichMovieInformation(enrichMovieMedia(m)));
 export type City = {
   id: string;
   name: string;
@@ -264,6 +272,7 @@ export const cities: City[] = [
     symbol: "landmark",
   },
 ];
+export type SeatClass = { id: string; name: string; description: string; price: number; color: string };
 export type Blueprint = {
   id: string;
   name: string;
@@ -285,7 +294,17 @@ export type Blueprint = {
     rotationY?: number;
   };
   balcony: boolean;
+  balconyRows?: number;
+  balconyElevation?: number;
   style: "classic" | "grand" | "luxury";
+  layoutType?: "traditional" | "multiplex" | "large-format" | "studio" | "recliner";
+  stage?: { width: number; height: number; depth: number };
+  presentation?: { ceilingStyle?: "coffered" | "linear" | "plain"; curtains?: boolean; curtainColor?: string; wallColor?: string; floorColor?: string; lightColor?: string };
+  aisleWidth?: number;
+  curvature?: number;
+  stagger?: number;
+  seatClasses?: SeatClass[];
+  rowConfig?: { label?: string; category?: string; omitted?: number[]; accessible?: number[]; blocked?: number[] }[];
   modelUrl?: string;
   seatMap?: Record<string, string>;
   verified: boolean;
@@ -293,7 +312,9 @@ export type Blueprint = {
 export const blueprints: Blueprint[] = [
   {
     id: "grand",
-    name: "The Grand · Screen 1",
+    layoutType: "traditional",
+    presentation: { curtains: true, curtainColor: "#650e20", wallColor: "#382329", floorColor: "#43282a", lightColor: "#ffd396" },
+    name: "Grand Balcony Cinema · Screen 1",
     width: 32,
     depth: 34,
     height: 16,
@@ -310,6 +331,8 @@ export const blueprints: Blueprint[] = [
   },
   {
     id: "classic",
+    layoutType: "studio",
+    presentation: { ceilingStyle: "plain", curtains: false, wallColor: "#252c36", floorColor: "#20232c" },
     name: "The Studio · Screen 2",
     width: 24,
     depth: 26,
@@ -328,6 +351,8 @@ export const blueprints: Blueprint[] = [
   },
   {
     id: "luxury",
+    layoutType: "recliner",
+    presentation: { curtains: false, wallColor: "#38212d", floorColor: "#271923", lightColor: "#e4b47c" },
     name: "The Lounge · Screen 3",
     width: 24,
     depth: 23,
@@ -342,6 +367,21 @@ export const blueprints: Blueprint[] = [
     balcony: false,
     style: "luxury",
     verified: false,
+  },
+  {
+    id: "multiplex", name: "The Premiere \u00b7 Screen 4", layoutType: "multiplex",
+    width: 30, depth: 31, height: 14, rows: 12, columns: 22,
+    rowLengths: [18,20,22,22,22,22,22,22,22,22,20,18], aisles: [7,15],
+    spacing: 1.05, rowSpacing: 1.7, slope: .25, screenWidth: 24,
+    balcony: false, style: "classic", verified: false, stagger: .12,
+    presentation: {ceilingStyle: "linear", curtains: false, wallColor: "#202630", floorColor: "#20232a", lightColor: "#efcf9b"},
+  },
+  {
+    id: "large-format", name: "The Horizon \u00b7 Large-format demo", layoutType: "large-format",
+    width: 36, depth: 38, height: 18, rows: 15, columns: 28,
+    aisles: [7,21], spacing: 1.04, rowSpacing: 1.8, slope: .36,
+    screenWidth: 29, balcony: false, style: "classic", verified: false, curvature: .35,
+    presentation: {curtains: false, wallColor: "#141b25", floorColor: "#171c24", lightColor: "#b4c9df"},
   },
 ];
 export type Venue = {
@@ -435,6 +475,12 @@ export const venues: Venue[] = cities.flatMap((city, ci) =>
     image: `/assets/cinema-${i % 3}.webp`,
   })),
 );
+// Additional demo venues have new identities, so existing show IDs and saved
+// inventory snapshots never change their auditorium assignment.
+venues.push(...cities.flatMap(city => [
+  {id:`${city.id}-premiere-demo`,cityId:city.id,name:"Premiere Multiplex (Demo)",locality:"Cinema district",address:`Illustrative venue, ${city.name}`,distance:0,amenities:["Parking","Wheelchair access","Recliners","Food court"],formats:["2D","Dolby Atmos"],blueprints:["multiplex"],movieIds:movies.filter(m=>m.status==="showing").map(m=>m.id),price:240,image:"/assets/cinema-1.webp"},
+  {id:`${city.id}-horizon-demo`,cityId:city.id,name:"Horizon Large Format (Demo)",locality:"Cinema district",address:`Illustrative venue, ${city.name}`,distance:0,amenities:["Parking","Wheelchair access"],formats:["2D"],blueprints:["large-format"],movieIds:movies.filter(m=>m.status==="showing").map(m=>m.id),price:280,image:"/assets/cinema-0.webp"},
+]));
 export const categories = [
   {
     id: "classic",
@@ -473,8 +519,12 @@ export type Seat = {
   y: number;
   z: number;
   category: string;
+  classDefinition?: SeatClass;
   accessible: boolean;
   blocked: boolean;
+  section?: string;
+  level?: number;
+  rotationY?: number;
   pair?: string;
 };
 export function makeSeats(b: Blueprint): Seat[] {
@@ -482,20 +532,27 @@ export function makeSeats(b: Blueprint): Seat[] {
   for (let r = 0; r < b.rows; r++) {
     const length = b.rowLengths?.[r] ?? b.columns;
     for (let c = 0; c < length; c++) {
-      const row = String.fromCharCode(65 + r);
+      const config = b.rowConfig?.[r];
+      if (config?.omitted?.includes(c + 1)) continue;
+      const row = config?.label ?? String.fromCharCode(65 + r);
       const offset = (b.columns - length) / 2;
       const col = c + offset;
-      const aisle = b.aisles.reduce((n, a) => n + (col >= a ? 1.5 : 0), 0);
-      const total = b.aisles.length * 1.5;
-      const balcony = b.balcony && r >= b.rows - 3;
+      const aisle = b.aisles.reduce((n, a) => n + (col >= a ? (b.aisleWidth ?? 1.5) : 0), 0);
+      const total = b.aisles.length * (b.aisleWidth ?? 1.5);
+      const balcony = b.balcony && r >= b.rows - (b.balconyRows ?? 3);
+      const x = (col - (b.columns - 1) / 2) * b.spacing + aisle - total / 2 + (r % 2 ? b.stagger ?? 0 : 0);
+      const curve = rowCurvature(b);
       result.push({
         id: `${row}${c + 1}`,
         row,
         number: c + 1,
-        x: (col - (b.columns - 1) / 2) * b.spacing + aisle - total / 2,
-        y: r * b.slope + (balcony ? 2.3 : 0),
-        z: -b.depth / 2 + 7 + r * b.rowSpacing,
-        category:
+        x,
+        section: `${balcony ? "balcony" : "stalls"}-${b.aisles.filter(a => col >= a).length + 1}`,
+        level: balcony ? 1 : 0,
+        rotationY: -Math.atan2(x * curve, b.id === "grand" ? 40 : 20),
+        y: r * b.slope + (balcony ? (b.balconyElevation ?? 2.3) : 0),
+        z: -b.depth / 2 + 7 + r * b.rowSpacing - curve * (x / (b.width / 2)) ** 2,
+        category: config?.category ?? (
           b.style === "luxury"
             ? "recliner"
             : r >= b.rows - 1
@@ -506,16 +563,19 @@ export function makeSeats(b: Blueprint): Seat[] {
                   ? "recliner"
                   : r < 3
                     ? "classic"
-                    : "prime",
-        accessible: r === 0 && (c === 0 || c === length - 1),
-        blocked: r === 0 && c === Math.floor(length / 2),
+                    : "prime"),
+        accessible: config?.accessible ? config.accessible.includes(c + 1) : r === 0 && (c === 0 || c === length - 1),
+        blocked: config?.blocked ? config.blocked.includes(c + 1) : r === 0 && c === Math.floor(length / 2),
         ...(b.style === "luxury"
           ? { pair: `${row}-${Math.floor(c / 2)}` }
           : {}),
       });
     }
   }
-  return result;
+  return result.map(seat => ({...seat, ...(b.seatClasses?.find(c=>c.id===seat.category) ? {classDefinition:b.seatClasses.find(c=>c.id===seat.category)} : {})}));
+}
+export function seatClassesFor(b: Blueprint) {
+  return [...categories.filter(c=>!b.seatClasses?.some(custom=>custom.id===c.id)), ...(b.seatClasses??[])];
 }
 export type Show = {
   id: string;
@@ -585,10 +645,7 @@ export function getShow(
     : undefined;
 }
 export function cityMovies(cityId: string) {
-  const ids = new Set(
-    venues.filter((v) => v.cityId === cityId).flatMap((v) => v.movieIds),
-  );
-  return movies.filter((m) => ids.has(m.id));
+  return movies.filter((m) => discoveryStatus(m, cityId, venues) === "now-showing");
 }
 export const snacks = [
   {
