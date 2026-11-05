@@ -1,7 +1,7 @@
 import {test,expect} from "@playwright/test";
 test("movie filters survive a detail visit and poster failure preserves the card",async({page})=>{
   await page.goto("/movies");
-  const query=page.getByRole("textbox",{name:"Search movie titles"});await expect(query).toBeVisible();
+  const query=page.getByRole("textbox",{name:"Search cinema movies"});await expect(query).toBeVisible();
   await query.fill("Jailer");await expect(page.locator(".movie-grid .movie-card")).toHaveCount(1);
   await page.locator(".movie-grid .movie-art").click();await expect(page).toHaveURL(/movies\/jailer/);
   await page.goBack();await expect(query).toHaveValue("Jailer");
@@ -10,7 +10,7 @@ test("movie filters survive a detail visit and poster failure preserves the card
   await art.locator("img").evaluate(img=>img.dispatchEvent(new Event("error")));
   await expect(art.locator(".poster-fallback")).toBeVisible();
   expect((await art.boundingBox())!.height).toBeCloseTo(box!.height,2);
-  await page.goto("/coming-soon");await expect(query).toHaveValue("");
+  await page.goto("/coming-soon");await expect(page.getByRole("textbox",{name:"Search movie titles"})).toHaveValue("");
   await page.screenshot({path:"outputs/browse-polish.png"});
 });
 test("movie list restores scroll when returning from a movie",async({page})=>{

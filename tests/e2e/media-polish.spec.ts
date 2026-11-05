@@ -44,9 +44,9 @@ test("date changes animate and update every screening date", async ({
   );
   expect(
     await page
-      .locator(".showtime-list")
+      .locator(".screening-rows")
       .evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe("screenings-enter");
+  ).toBe("screening-reveal");
   const directory = page.getByRole("region", {
     name: "Chennai cinema directory",
   });
@@ -66,10 +66,14 @@ test("carousel wraps smoothly and honours reduced motion", async ({ page }) => {
   const lobby = page.getByRole("region", {
     name: "Interactive movie panorama",
   });
-  await expect(lobby).toHaveAttribute("data-featured-movie", "varanasi");
-  for (let i = 0; i < 13; i++)
+  await expect(lobby).toHaveAttribute("data-featured-movie", /.+/);
+  const original = await lobby.getAttribute("data-featured-movie");
+  const count = Number(await page.locator(".cinematic-panorama").getAttribute("data-movie-count"));
+  for (let i = 0; i < count; i++)
     await page.getByRole("button", { name: "Next movie", exact: true }).click();
-  await expect(lobby).toHaveAttribute("data-featured-movie", "toxic");
+  await expect(lobby).toHaveAttribute("data-featured-movie", original!);
+  await page.getByRole("button", { name: "Next movie", exact: true }).click();
+  await expect(lobby).not.toHaveAttribute("data-featured-movie", original!);
   await expect(page.locator(".panorama-screen.current")).toHaveCount(1);
   await expect(
     page.locator(".panorama-screen.current img.screen-poster"),

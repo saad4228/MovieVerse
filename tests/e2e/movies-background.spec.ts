@@ -15,14 +15,11 @@ test('Movies listing keeps cinematic artwork through scrolling and preserves dis
  await page.screenshot({path:'outputs/movies-gallery-desktop-top.png'});
  await page.evaluate(()=>window.scrollTo(0,1000));expect(await layer.evaluate(el=>el.getBoundingClientRect().top)).toBe(0);
  await page.screenshot({path:'outputs/movies-gallery-desktop-middle.png'});
- await page.getByLabel('Search movie titles',{exact:true}).fill('Sintel');await expect(cards).toHaveCount(1);
- await page.getByLabel('Search movie titles',{exact:true}).fill('');await expect(cards).toHaveCount(count);
+ await page.getByLabel('Search cinema movies',{exact:true}).fill('Sintel');await expect(cards).toHaveCount(1);
+ await page.getByLabel('Search cinema movies',{exact:true}).fill('');await expect(cards).toHaveCount(count);
  await expect(cards.first().locator('img')).toHaveAttribute('src',poster!);
- await page.getByRole('button',{name:'Hindi',exact:true}).click();await expect(page).toHaveURL(/language=Hindi/);expect(await cards.count()).toBeLessThan(count);
- await page.getByRole('button',{name:'All',exact:true}).click();await expect(cards).toHaveCount(count);
- await page.getByLabel('Filter genre',{exact:true}).selectOption('Action');expect(await cards.count()).toBeGreaterThan(0);
- await page.getByLabel('Filter genre',{exact:true}).selectOption('All genres');await expect(cards).toHaveCount(count);
- await page.getByRole('combobox',{name:'Sort by'}).selectOption('Top rated');await expect(cards).toHaveCount(count);
+ await page.getByLabel('Screening language',{exact:true}).selectOption('Hindi');expect(await cards.count()).toBeLessThan(count);
+ await page.getByLabel('Screening language',{exact:true}).selectOption('All');await expect(cards).toHaveCount(count);
  await page.getByRole('button',{name:'Search movies and cinemas'}).click();await expect(page.getByRole('dialog',{name:'Search MovieVerse'})).toBeVisible();await page.keyboard.press('Escape');
  for(const width of [768,390]){
   await page.setViewportSize({width,height:844});await page.evaluate(()=>window.scrollTo(0,0));
@@ -32,6 +29,9 @@ test('Movies listing keeps cinematic artwork through scrolling and preserves dis
  await cards.first().locator('a').first().click();await expect(page).toHaveURL(/movies\/[^/?]+/);await expect(layer).toHaveCount(0);await expect(nav).toHaveCount(0);
  await page.goto('/coming-soon');await expect(nav).toHaveClass(/movies-navbar/);await expect(layer).toHaveCount(1);
  await expect(page.locator('.movie-grid .movie-card').first()).toBeVisible();
+ await page.getByLabel('Filter genre',{exact:true}).selectOption('Action');await expect(cards.first()).toBeVisible();
+ await page.getByLabel('Filter genre',{exact:true}).selectOption('All genres');
+ await page.getByRole('combobox',{name:'Sort by'}).selectOption('Top rated');await expect(cards.first()).toBeVisible();
  expect(await layer.evaluate(el=>getComputedStyle(el).backgroundImage)).toContain('cinema-theater-background.webp');
  await page.screenshot({path:'outputs/coming-soon-theater-background-mobile.png'});
  await page.setViewportSize({width:1440,height:1000});

@@ -20,13 +20,14 @@ test('rotation starts while its button is hovered or focused, pauses, and includ
  await page.getByRole('button',{name:'Pause automatic rotation',exact:true}).click();
  await page.emulateMedia({reducedMotion:'reduce'});
  await expect(page.getByRole('button',{name:'Automatic rotation off · reduced motion',exact:true})).toBeDisabled();
+ const available=await(await page.request.get('/api/bookable-featured?city=chennai')).json();
+ const expected=available.featured.map((movie:Movie)=>movie.id);
  const seen=new Set<string>();
- for(let i=0;i<12;i++) {
+ for(let i=0;i<expected.length;i++) {
    await page.getByRole('button',{name:'Next movie',exact:true}).click();
    seen.add((await carousel.getAttribute('data-active-movie'))!);
  }
- for(const id of ['udta-teer','drishyam-the-conclusion','prahaar-the-untold-story-of-ujjwal-nikam','clayface','hanuman-ansh']) expect(seen.has(id)).toBe(true);
- expect(seen.size).toBe(12);
+ expect([...seen].sort()).toEqual(expected.sort());
 });
 test('panorama exact drag targeting, side click, direction reversal and autoplay pause',async({page})=>{
  await page.setViewportSize({width:1920,height:1080});await page.goto('/');
@@ -46,7 +47,12 @@ test('screening language and price variants use real persisted demo inventory su
 });
 test('movie metadata, regional releases and Nagpur directory connect to actual records',async({page})=>{
  await page.goto('/movies/leo');await expect(page.getByRole('heading',{name:'Meet the cast.'})).toBeVisible();const photo=page.locator('.person-card img').first();await photo.scrollIntoViewIfNeeded();await expect.poll(()=>photo.evaluate((e:HTMLImageElement)=>e.naturalWidth)).toBeGreaterThan(200);await expect(page.locator('.film-crew')).toContainText('Director');
- await page.goto('/coming-soon');await expect(page.locator('.movie-grid')).toContainText('Avengers: Doomsday');await expect(page.locator('.release-card-date').first()).toContainText('17 December 2026');await page.getByLabel('Release market').selectOption('US');await expect(page.locator('.release-card-date').first()).toContainText('18 December 2026');
- await page.goto('/cinemas');await page.getByRole('button',{name:'Chennai',exact:true}).click();await page.getByPlaceholder('Search for your city').fill('Nag');await page.getByRole('button',{name:'Nagpur',exact:true}).click();await expect(page.locator('.venue-directory-grid article')).toHaveCount(18);await page.getByLabel('Search cinema directory').fill('AM Cinema');await expect(page.locator('.venue-directory-grid article')).toHaveCount(5);await page.getByLabel('Search cinema directory').fill('Empress');await expect(page.locator('.venue-directory-grid')).toContainText('Status needs confirmation');await page.getByLabel('Search cinema directory').fill('Sangam');await expect(page.locator('.venue-directory-grid article')).toHaveCount(1);
+ await page.goto('/coming-soon');
+ const avengers=page.locator('.browse-card-enter').filter({has:page.getByRole('heading',{name:'Avengers: Doomsday',exact:true})});
+ await expect(avengers).toBeVisible();
+ await expect(avengers.locator('.release-card-date')).toContainText('17 December 2026');
+ await page.getByLabel('Release market').selectOption('US');
+ await expect(avengers.locator('.release-card-date')).toContainText('18 December 2026');
+ await page.goto('/cinemas');await expect(page.locator('.header')).toHaveAttribute('data-interactive','true');await page.getByRole('button',{name:'Chennai',exact:true}).click();await page.getByPlaceholder('Search for your city').fill('Nag');await page.getByRole('button',{name:'Nagpur',exact:true}).click();await expect(page.locator('.venue-directory-grid article')).toHaveCount(18);await page.getByLabel('Search cinema directory').fill('AM Cinema');await expect(page.locator('.venue-directory-grid article')).toHaveCount(5);await page.getByLabel('Search cinema directory').fill('Empress');await expect(page.locator('.venue-directory-grid')).toContainText('Status needs confirmation');await page.getByLabel('Search cinema directory').fill('Sangam');await expect(page.locator('.venue-directory-grid article')).toHaveCount(1);
  await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'outputs/expansion-mobile-directory.png',fullPage:true});
 });

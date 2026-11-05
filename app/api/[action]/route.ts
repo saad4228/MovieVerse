@@ -1,4 +1,5 @@
 import { checkoutOffer } from "@/lib/checkout-offers";
+import { RequestError, readRequestJson } from "@/lib/request-json";
 import { catalogueApi } from "@/lib/catalogue-api";
 import {bookableFeatured} from "@/lib/bookable-featured";
 import {readWatchlist,changeWatchlist,watchlistInput,WatchlistMovieError} from "@/lib/watchlist";
@@ -21,7 +22,7 @@ import {
   catalogSchema,
   type Catalog,
 } from "@/lib/catalog-config";
-import { calculatePrice, seededUnavailable } from "@/lib/booking";
+import { calculatePrice, screeningStarted, selectionError, seededUnavailable } from "@/lib/booking";
 import { enrichMovieMedia } from "@/lib/movie-media";
 import { cinemaListings } from "@/lib/cinema-listings";
 import { metadataProvider } from "@/lib/metadata-provider";
@@ -120,7 +121,7 @@ async function configuredCatalog(): Promise<Catalog> {
 async function ensureInventory(showId: string, catalog: Catalog) {
   const show = getShow(showId, catalog.venues, catalog.movies);
   if (!show)
-    throw new Error(
+    throw new RequestError(
       "This screening is no longer available. Choose another showtime.",
     );
   const saved = await db()
@@ -285,7 +286,7 @@ async function handler(req: Request) {
     if(action==="watchlist"){
       if(!s.user_id)return reply({error:"Sign in to use your watchlist."},401);
       if(req.method!=="POST"&&req.method!=="GET")return reply({error:"Method not allowed."},405);
-      const input=req.method==="POST"?watchlistInput.parse(await req.json()):null;
+      const input=req.method==="POST"?watchlistInput.parse(await readRequestJson(req)):null;
       try{
         if(input)return reply({userId:s.user_id,...await changeWatchlist(db(),s.user_id,catalog,input)});
         return reply({userId:s.user_id,entries:await readWatchlist(db(),s.user_id,catalog)});
@@ -365,7 +366,7 @@ async function handler(req: Request) {
       }
       return reply({ error: "Not found." }, 404);
     }
-    const body = await req.json();
+    const body = await readRequestJson(req, action === "catalog" ? 250_000 : 40_000);
     if (action === "register" || action === "login") {
       const input = z
         .object({
@@ -471,12 +472,8 @@ async function handler(req: Request) {
     if (action === "hold") {
       const input = holdSchema.parse(body);
       const unique = [...new Set(input.seats)];
-      if (unique.length !== input.seats.length)
-        return reply({ error: "Duplicate seat." }, 400);
       const { seats, show } = await ensureInventory(input.showId, catalog);
-      if (
-        new Date(`${show.date}T${show.time}:00+05:30`).getTime() <= Date.now()
-      )
+      if (screeningStarted(show))
         return reply(
           {
             error:
@@ -484,26 +481,12 @@ async function handler(req: Request) {
           },
           409,
         );
-      if (unique.some((id) => !seats.some((s) => s.id === id && !s.blocked)))
-        return reply({ error: "Invalid seat selection." }, 400);
-      const picked = seats.filter((x) => unique.includes(x.id));
-      if (
-        picked.some(
-          (x) =>
-            x.pair && !picked.some((y) => y.id !== x.id && y.pair === x.pair),
-        )
-      )
-        return reply(
-          {
-            error:
-              "Recliner seats are sold in pairs. Please select both seats.",
-          },
-          400,
-        );
+      const invalidSelection = selectionError(input.seats, seats);
+      if (invalidSelection) return reply({ error: invalidSelection }, 400);
       const marks = unique.map(() => "?").join(",");
       const now = Date.now();
       const expires = now + 8 * 60000;
-      const result = await db()
+      const hold = db()
         .prepare(
           `UPDATE inventory SET status='held',owner=?,expires=? WHERE show_id=? AND seat_id IN (${marks}) AND (SELECT count(*) FROM inventory WHERE show_id=? AND seat_id IN (${marks}) AND (status='available' OR (status='held' AND (expires<? OR owner=?))))=?`,
         )
@@ -517,19 +500,20 @@ async function handler(req: Request) {
           now,
           s.id,
           unique.length,
+        );
+      // Holding the new selection and releasing the old one must share a transaction.
+      // Otherwise two tabs in the same session can release one another's new hold.
+      const releasePrevious = db()
+        .prepare(
+          `UPDATE inventory SET status='available',owner=NULL,expires=NULL WHERE owner=? AND status='held' AND (show_id!=? OR seat_id NOT IN (${marks})) AND (SELECT count(*) FROM inventory WHERE show_id=? AND seat_id IN (${marks}) AND status='held' AND owner=? AND expires=?)=?`,
         )
-        .run();
+        .bind(s.id, input.showId, ...unique, input.showId, ...unique, s.id, expires, unique.length);
+      const [result] = await db().batch([hold, releasePrevious]);
       if (result.meta.changes !== unique.length)
         return reply(
           { error: "One of those seats was just taken. Please choose again." },
           409,
         );
-      await db()
-        .prepare(
-          `UPDATE inventory SET status='available',owner=NULL,expires=NULL WHERE owner=? AND status='held' AND (show_id!=? OR seat_id NOT IN (${marks}))`,
-        )
-        .bind(s.id, input.showId, ...unique)
-        .run();
       return reply({ expires });
     }
     if (action === "checkout") {
@@ -558,20 +542,13 @@ async function handler(req: Request) {
         seats,
         blueprint: b,
       } = await ensureInventory(input.showId, catalog);
+      if (screeningStarted(show)) {
+        return reply({ error: "This screening has already started. Please choose another showtime." }, 409);
+      }
       const ids = [...new Set(input.seats)];
-      if (
-        ids.length !== input.seats.length ||
-        ids.some((id) => !seats.some((s) => s.id === id && !s.blocked))
-      )
-        return reply({ error: "Invalid seats." }, 400);
+      const invalidSelection = selectionError(input.seats, seats);
+      if (invalidSelection) return reply({ error: invalidSelection }, 400);
       const selected = seats.filter((s) => ids.includes(s.id));
-      if (
-        selected.some(
-          (x) =>
-            x.pair && !selected.some((y) => y.id !== x.id && y.pair === x.pair),
-        )
-      )
-        return reply({ error: "Recliner seats are sold in pairs." }, 400);
       const pricing = calculatePrice(
         selected,
         show,
@@ -853,11 +830,11 @@ async function handler(req: Request) {
         error:
           error instanceof z.ZodError
             ? "Please check the values and try again."
-            : error instanceof Error
+            : error instanceof RequestError
               ? error.message
               : "Unable to complete the request.",
       },
-      400,
+      error instanceof RequestError ? error.status : error instanceof z.ZodError ? 400 : 500,
       s?.cookie,
     );
   }

@@ -17,6 +17,44 @@ function provider(){vi.stubGlobal("fetch",vi.fn(async(input:string)=>{
 }));}
 afterEach(()=>{vi.unstubAllGlobals();ids=[1,2];broken=false;});
 describe("persistent catalogue generations",()=>{
+ it("releases the lease if creating the sync run fails",async()=>{
+  const {db,sqlite}=discoveryDb();
+  sqlite.exec("CREATE TRIGGER fail_run BEFORE INSERT ON discovery_sync_runs BEGIN SELECT RAISE(FAIL, 'run write failed'); END");
+  await expect(syncCatalogue(db,settings,"trending")).rejects.toThrow("run write failed");
+  expect(sqlite.prepare("SELECT count(*) AS n FROM discovery_sync_lock").get()?.n).toBe(0);
+  sqlite.close();
+ });
+ it("rolls back publication if pruning old memberships fails",async()=>{
+  const {db,sqlite}=discoveryDb();provider();await syncCatalogue(db,settings,"trending");
+  const before=sqlite.prepare("SELECT generation FROM discovery_collections WHERE id='trending-day'").get()?.generation;
+  sqlite.exec("CREATE TRIGGER fail_prune BEFORE DELETE ON discovery_memberships BEGIN SELECT RAISE(FAIL, 'prune failed'); END");
+  const movie=normalizeMovie(raw(1),new Map(),new Date().toISOString());
+  await expect(publishCollection(db,{id:"trending-day",path:"",params:{},pages:1},[movie],"new-generation")).rejects.toThrow("prune failed");
+  expect(sqlite.prepare("SELECT generation FROM discovery_collections WHERE id='trending-day'").get()?.generation).toBe(before);
+  expect((await cataloguePage(db,new URLSearchParams({collection:"trending-day"}))).totalResults).toBe(2);
+  sqlite.close();
+ });
+ it("waits for remaining detail requests before releasing a failed sync lease",async()=>{
+  const {db,sqlite}=discoveryDb();
+  let started!:()=>void,finish!:()=>void;
+  const detailStarted=new Promise<void>(resolve=>{started=resolve;});
+  const delayed=new Promise<void>(resolve=>{finish=resolve;});
+  vi.stubGlobal("fetch",vi.fn(async(input:string)=>{
+   const path=new URL(input).pathname;
+   if(path.endsWith("genre/movie/list"))return Response.json({genres:[]});
+   if(path.endsWith("movie/1"))return Response.json({status_message:"unauthorized"},{status:401});
+   if(path.endsWith("movie/2")){started();await delayed;return Response.json(raw(2));}
+   return Response.json({page:1,total_pages:1,total_results:2,results:[raw(1),raw(2)]});
+  }));
+  const run=syncCatalogue(db,settings,"trending");
+  const failure=expect(run).rejects.toThrow();
+  await detailStarted;
+  await new Promise(resolve=>setTimeout(resolve,10));
+  expect(sqlite.prepare("SELECT count(*) AS n FROM discovery_sync_lock").get()?.n).toBe(1);
+  finish();await failure;
+  expect(sqlite.prepare("SELECT count(*) AS n FROM discovery_sync_lock").get()?.n).toBe(0);
+  sqlite.close();
+ });
  it("keeps recent releases and future regional collections separate without duplicating records",async()=>{
   const {db,sqlite}=discoveryDb();provider();await syncCatalogue(db,settings,"trending");
   const today=indiaToday();

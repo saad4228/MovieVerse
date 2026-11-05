@@ -529,7 +529,7 @@ function VenueShowtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
               ))}
             </div>
             <p className="showtime-disclaimer">
-              Demo schedule · Availability is checked against this screening's inventory
+              Demo schedule · Availability is checked against this screening&apos;s inventory
             </p>
           </article>
         ))}

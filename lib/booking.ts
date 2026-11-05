@@ -14,9 +14,38 @@ export type Inventory = Record<
     expires?: number;
   }
 >;
+
+export function screeningStarted(show: Show, now = Date.now()) {
+  return Date.parse(`${show.date}T${show.time}:00+05:30`) <= now;
+}
+
+/** Shared by hold and checkout so both enforce the same physical-seat rules. */
+export function selectionError(
+  ids: string[],
+  seats: Seat[],
+): string | undefined {
+  if (new Set(ids).size !== ids.length) return "Duplicate seat.";
+  const selected = seats.filter((seat) => ids.includes(seat.id));
+  if (selected.length !== ids.length || selected.some((seat) => seat.blocked)) {
+    return "Invalid seat selection.";
+  }
+  if (
+    selected.some(
+      (seat) =>
+        seat.pair &&
+        !selected.some(
+          (other) => other.id !== seat.id && other.pair === seat.pair,
+        ),
+    )
+  ) {
+    return "Recliner seats are sold in pairs. Please select both seats.";
+  }
+}
 export function seatPrice(seat: Seat, show: Show) {
   return (
-    (seat.classDefinition?.price ?? categories.find((c) => c.id === seat.category)?.price ?? 160) +
+    (seat.classDefinition?.price ??
+      categories.find((c) => c.id === seat.category)?.price ??
+      160) +
     show.price -
     160
   );
@@ -35,7 +64,7 @@ export function calculatePrice(
   );
   const fee = seats.length * 28;
   const tax = Math.round(fee * 0.18);
-  const discount = couponDiscount(promo,tickets,food);
+  const discount = couponDiscount(promo, tickets, food);
   return {
     tickets,
     food,

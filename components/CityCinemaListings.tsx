@@ -128,7 +128,7 @@ export default function CityCinemaListings({
           {result.checked && ` Directory checked ${result.checked}.`}
         </p>
       )}
-      {venueId && (!matching.length || matching.every(v=>!v.shows.length)) && <p className="directory-note">No confirmed screenings supplied for this film, venue and date. Check the operator's listings.</p>}
+      {venueId && (!matching.length || matching.every(v=>!v.shows.length)) && <p className="directory-note">No confirmed screenings supplied for this film, venue and date. Check the operator&apos;s listings.</p>}
     </section>
   );
 }

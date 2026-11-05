@@ -42,12 +42,14 @@ export default function CheckoutExperience({show,selected,active,notify,renderSu
   const [outcome,setOutcome]=useState<"success"|"failure"|"cancel">("success");
   const [busy,setBusy]=useState(false),[error,setError]=useState("");
   const [confirmed,setConfirmed]=useState(false);
-  const lock=useRef(false),request=useRef(crypto.randomUUID());
+  const lock=useRef(false);
+  const [requestId]=useState(()=>crypto.randomUUID());
   const errorRef=useRef<HTMLDivElement>(null);
   const pricing=calculatePrice(selected,show,cart,promo);
   const chosen=methods.find(m=>m.id===method)!;
   useEffect(()=>{let current=true;api("session").then(result=>{
-    if(current&&result.user){setName(value=>value||result.user.name);setEmail(value=>value||result.user.email);}
+    const user=result.user;
+    if(current&&user){setName(value=>value||user.name);setEmail(value=>value||user.email);}
   }).catch(()=>{});return()=>{current=false;};},[]);
   // A snack offer ceases to apply when the user removes all snacks on the prior step.
   const applicablePromo=promo&&couponDiscount(promo,pricing.tickets,pricing.food)>0;
@@ -72,7 +74,7 @@ export default function CheckoutExperience({show,selected,active,notify,renderSu
     if(invalid.name||invalid.email){(invalid.name?nameInput:emailInput).current?.focus();return;}
     lock.current=true;setBusy(true);setError("");
     try{
-      const result=await bookingProvider.checkout({showId:show.id,seats:selected.map(s=>s.id),cart,promo,requestId:request.current,outcome});
+      const result=await bookingProvider.checkout({showId:show.id,seats:selected.map(s=>s.id),cart,promo,requestId,outcome});
       // Success is shown only after the existing backend confirms the reservation.
       setConfirmed(true);markTicketArrival(result.id);router.push(`/booking/confirmation/${result.id}`);
     }catch(failure){setConfirmed(false);lock.current=false;setBusy(false);const message=(failure as Error).message;setError(message);notify(message);requestAnimationFrame(()=>errorRef.current?.focus());}

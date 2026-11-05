@@ -7,23 +7,26 @@ import { movieImageProvider } from "@/lib/image-provider";
 import { trailerSources } from "@/lib/video/sources";
 const cache = new Map<string, {expires:number; value:Promise<Information | undefined>}>();
 export function useMovieInformation(movie?:Movie) {
-  const [info,setInfo] = useState(movie?.metadata || (movie && bundledInformation(movie.id)));
+  const id = movie?.id;
+  const seed = movie?.metadata || (id ? bundledInformation(id) : undefined);
+  const [result,setResult] = useState<{id?:string;info?:Information}>({id,info:seed});
   useEffect(() => {
-    if (!movie) return;
+    if (!id) return;
     let active = true;
-    const seed = movie.metadata || bundledInformation(movie.id);
-    setInfo(seed);
-    let entry = cache.get(movie.id);
+    let entry = cache.get(id);
     if (!entry || entry.expires < Date.now()) {
-      entry = {expires:Date.now()+300000,value:fetch(`/api/movie-information?id=${encodeURIComponent(movie.id)}`).then(async r => r.ok ? await r.json() as { metadata?: Information } : { metadata: seed }).then(d => d.metadata || seed).catch(() => seed)};
-      cache.set(movie.id,entry);
+      entry = {expires:Date.now()+300000,value:fetch(`/api/movie-information?id=${encodeURIComponent(id)}`).then(async r => r.ok ? await r.json() as { metadata?: Information } : { metadata: seed }).then(d => d.metadata || seed).catch(() => seed)};
+      cache.set(id,entry);
     }
-    entry.value.then(value => { if(active) setInfo(value); });
+    entry.value.then(info => { if(active) setResult({id,info}); });
     return () => { active=false; };
-  },[movie?.id]);
-  return info;
+  },[id,seed]);
+  return result.id === id ? result.info : seed;
 }
 export function MovieBackdrop({ movie }: { movie:Movie }) {
+  return <MovieBackdropArtwork key={movie.id} movie={movie}/>;
+}
+function MovieBackdropArtwork({ movie }: { movie:Movie }) {
   const images = movieImageProvider.resolve(movie);
   const [index,setIndex] = useState(0);
   const choices=[...new Set([images.backdrop,...images.alternatives,images.poster].filter(Boolean))];
@@ -39,7 +42,7 @@ export function MovieBackdrop({ movie }: { movie:Movie }) {
   },[original,preview]);
   return <div className={`movie-backdrop ${poster ? "poster-composition" : ""}`}>
     <div className="movie-backdrop-fill" aria-hidden="true" style={{backgroundImage:preview?`url("${preview}")`:undefined}}/>
-    <img className="movie-backdrop-art" src={ready===original?original:preview} data-full-resolution-src={original} srcSet={index===0 ? images.srcSet : undefined} sizes="100vw" alt={`${movie.title} banner artwork`} fetchPriority="high" style={{objectPosition:images.position}} onError={() => setIndex(i=>Math.min(i+1,choices.length-1))}/>
+    <img className="movie-backdrop-art" src={ready===original?original:preview} data-full-resolution-src={original} srcSet={index===0 ? images.srcSet : undefined} sizes="100vw" alt={`${movie.title} banner artwork`} fetchPriority="high" style={{objectPosition:images.position}} onError={event => { event.currentTarget.removeAttribute("srcset"); setIndex(i=>Math.min(i+1,choices.length-1)); }}/>
   </div>;
 }
 export default function MovieInformation({ movie, info }: { movie:Movie; info?:Information }) {

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { Armchair, CalendarDays, Check, CheckCircle2, Clock, Copy, Download, IndianRupee, MapPin, Monitor, Printer, Ticket, X } from "lucide-react";
-import type { BookingRecord } from "./Account";
+import type { BookingRecord } from "@/lib/booking-record";
 import { Logo } from "./ui";
 import { rupees } from "@/lib/booking";
 import { ticketImage } from "@/lib/ticket-image";

@@ -27,7 +27,7 @@ test('navigation can supersede an RSC response whose body is still streaming',as
    return wrapped;
   };
  });
- await page.goto('/movies');await expect(page.locator('.discovery-toolbar')).toBeVisible();
+ await page.goto('/movies');await expect(page.getByLabel('Search cinema movies')).toBeVisible();
  await page.evaluate(()=>{
   const runtime=(window as any)[Symbol.for('vinext.navigationRuntime')];
   runtime.functions.clearNavigationCaches();
@@ -57,7 +57,7 @@ test('a superseded request is still cancelled before decoder handoff',async({pag
    });
   };
  });
- await page.goto('/movies');await expect(page.locator('.discovery-toolbar')).toBeVisible();
+ await page.goto('/movies');await expect(page.getByLabel('Search cinema movies')).toBeVisible();
  await page.evaluate(()=>{
   const runtime=(window as any)[Symbol.for('vinext.navigationRuntime')];
   runtime.functions.clearNavigationCaches();

@@ -48,15 +48,18 @@ export default function Navigation({
   const isMovieListingPage = ["/explore", "/watchlist", "/movies", "/movies/", "/coming-soon", "/coming-soon/"].includes(path);
   const isCinemaPage = path === "/cinemas" || path.startsWith("/cinemas/");
   useEffect(() => {
+    let active = true;
+    let request = 0;
     setHydrated(true);
     const update = () => {
+      const current = ++request;
       api("session")
-        .then((x) => setUser(x.user))
+        .then((x) => { if (active && current === request) setUser(x.user); })
         .catch(() => {});
     };
     update();
     window.addEventListener("mv-auth", update);
-    return () => window.removeEventListener("mv-auth", update);
+    return () => { active = false; window.removeEventListener("mv-auth", update); };
   }, []);
   const previousPath = useRef(path);
   useEffect(() => {

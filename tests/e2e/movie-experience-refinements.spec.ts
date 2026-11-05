@@ -6,7 +6,7 @@ test("carousel contains bookable city screenings and has slightly tighter spacin
  await page.goto("/",{waitUntil:"domcontentloaded"});await expect(page.locator(".featured-movie h2")).toBeVisible();
  const featured=await page.locator(".moonlit-lobby").getAttribute("data-featured-movie");
  expect(expected.featured.some((m:any)=>m.id===featured)).toBe(true);
- for(const href of await page.locator(".panorama-screen>a").evaluateAll(els=>els.map(el=>el.getAttribute("href"))))expect(expected.featured.some((m:any)=>href===`/movies/${m.id}`)).toBe(true);
+ for(const path of await page.locator(".panorama-screen>a").evaluateAll(els=>els.map(el=>new URL((el as HTMLAnchorElement).href).pathname)))expect(expected.featured.some((m:{id:string})=>path===`/movies/${m.id}`)).toBe(true);
  const spacing=await page.locator(".cinematic-panorama").evaluate(el=>{
   const panel=el.querySelector<HTMLElement>(".panorama-screen")!;
   return {step:Number((el as HTMLElement).dataset.posterStep),old:Math.max(panel.offsetWidth+parseFloat(getComputedStyle(el).getPropertyValue("--poster-gap")),el.clientWidth/6.9),width:panel.offsetWidth};

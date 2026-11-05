@@ -13,7 +13,27 @@ import {
   recommendSeats,
   seededUnavailable,
   type Inventory,
+  screeningStarted,
+  selectionError,
 } from "../lib/booking";
+describe("shared booking validation", () => {
+  const show = showsFor(venues[0], venues[0].movieIds[0], dates()[1])[0];
+  it("treats the exact screening start as closed for holds and checkout", () => {
+    const start = Date.parse(`${show.date}T${show.time}:00+05:30`);
+    expect(screeningStarted(show, start - 1)).toBe(false);
+    expect(screeningStarted(show, start)).toBe(true);
+    expect(screeningStarted(show, start + 60_000)).toBe(true);
+  });
+  it("rejects duplicate, unknown, blocked and incomplete paired seats", () => {
+    const seats = makeSeats(blueprints[2]);
+    const pair = seats.find(seat => seat.pair && !seat.blocked)!;
+    expect(selectionError([pair.id, pair.id], seats)).toBe("Duplicate seat.");
+    expect(selectionError(["ZZ99"], seats)).toBe("Invalid seat selection.");
+    expect(selectionError([pair.id], seats)).toContain("sold in pairs");
+    expect(selectionError(seats.filter(seat => seat.pair === pair.pair).map(seat => seat.id), seats)).toBeUndefined();
+    expect(selectionError([pair.id], [{...pair, blocked: true}])).toBe("Invalid seat selection.");
+  });
+});
 describe("city and show relationships", () => {
   it("keeps venues local and supplies independent city catalogs", () => {
     const nagpur = venues.filter((v) => v.cityId === "nagpur");

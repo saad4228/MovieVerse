@@ -22,7 +22,8 @@ test('automatic conveyor keeps constant speed, freezes in place and crosses the 
  const travelMs=Math.ceil((count+.2-second)*step/32*1000);
  await page.clock.runFor(travelMs);
  expect(await position()).toBeGreaterThan(count);
- expect(await carousel.getAttribute('data-active-movie')).toBe(await carousel.locator('.current a').getAttribute('href').then(href=>href!.split('/').pop()));
+ const activeHref=await carousel.locator('.current a').getAttribute('href');
+ expect(await carousel.getAttribute('data-active-movie')).toBe(new URL(activeHref!,page.url()).pathname.split('/').pop());
  expect(await carousel.locator('.panorama-screen').count()).toBe(9);
  // A real panel survives the last/first boundary without a reset or jump.
  const sampleIndex=Number(centreBefore)+1;
@@ -75,7 +76,8 @@ test('manual controls resume autoplay and the active movie still opens',async({p
  expect(Number(await carousel.getAttribute('data-position'))).toBe(final);
  await page.clock.resume();
  const href=await carousel.locator('.current a').getAttribute('href');
- await carousel.locator('.current a').click();await expect(page).toHaveURL(new RegExp(`${href}$`));
+ const destination=new URL(href!,page.url()).href;
+ await carousel.locator('.current a').click();await expect(page).toHaveURL(destination);
 });
 
 test('mouse dragging and touch swiping preserve the conveyor position',async({page})=>{

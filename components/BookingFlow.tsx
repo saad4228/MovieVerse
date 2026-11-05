@@ -121,7 +121,7 @@ export default function BookingFlow({
   const [data, setData] = useState<InventoryResponse | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(Date.now);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [preferredCategory, setPreferredCategory] = useState("all");
   const [selectionHistory, setSelectionHistory] = useState<string[][]>([]);

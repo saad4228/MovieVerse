@@ -22,6 +22,8 @@ import {
   Info,
 } from "lucide-react";
 import { api } from "@/lib/client";
+import type { BookingRecord } from "@/lib/booking-record";
+export type { BookingRecord } from "@/lib/booking-record";
 import { Empty, Modal } from "./ui";
 export function Auth({
   register = false,
@@ -171,10 +173,12 @@ export function Account({ notify }: { notify: (s: string) => void }) {
   const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
+    let active = true;
     api("session")
-      .then((x) => setUser(x.user))
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
+      .then((x) => { if (active) setUser(x.user); })
+      .catch((e) => { if (active) setError(e.message); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, []);
   return (
     <main className="account-page section-container personal-lounge">
@@ -256,28 +260,6 @@ export function Account({ notify }: { notify: (s: string) => void }) {
     </main>
   );
 }
-export type BookingRecord = {
-  id: string;
-  status: string;
-  created: number;
-  token: string;
-  seats: string[];
-  pricing: {
-    total: number;
-    tickets: number;
-    food: number;
-    fee: number;
-    tax: number;
-    discount: number;
-  };
-  cart: Record<string, number>;
-  snapshot: {
-    movie: { title: string; poster: string; backdrop?: string; backdropPosition?: string; certificate: string };
-    venue: { name: string; address: string };
-    show: { date: string; time: string; language: string; format: string };
-    auditorium: string;
-  };
-};
 export function MyTickets({
   id,
   confirmation = false,
@@ -294,7 +276,7 @@ export function MyTickets({
   const [cancel, setCancel] = useState<BookingRecord | null>(null);
   const [busy, setBusy] = useState(false);
   const refresh = () =>
-    api("tickets")
+    api<{ bookings: BookingRecord[] }>("tickets")
       .then((x) => setBookings(x.bookings))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -473,12 +455,15 @@ export function MyTickets({
   );
 }
 export function VerifyTicket({ token }: { token: string }) {
-  const [data, setData] = useState<any>(null);
-  const [error, setError] = useState("");
+  type Verification = { id: string; status: string; movie: string; seats: string[]; demo: boolean };
+  const [result, setResult] = useState<{token: string; data?: Verification; error?: string}>({token});
+  const {data, error} = result.token === token ? result : {data: undefined, error: ""};
   useEffect(() => {
-    api(`ticket?token=${encodeURIComponent(token)}`)
-      .then(setData)
-      .catch((e) => setError(e.message));
+    let active = true;
+    api<Verification>(`ticket?token=${encodeURIComponent(token)}`)
+      .then(data => { if (active) setResult({token, data}); })
+      .catch(error => { if (active) setResult({token, error: error.message}); });
+    return () => { active = false; };
   }, [token]);
   return (
     <main className="empty ticket-verification">

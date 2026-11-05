@@ -38,11 +38,11 @@ export default function PosterWall({movies:supplied}:{movies?:Movie[]}={}) {
           <ArrowUpRight size={16} />
         </Link>
         <div className="wall-genres">
-          <Link href="/movies?genre=Action">Feel the adrenaline</Link>
+          <Link href="/explore?collection=all&genre=Action">Feel the adrenaline</Link>
           <i />
-          <Link href="/movies?genre=Adventure">Escape the ordinary</Link>
+          <Link href="/explore?collection=all&genre=Adventure">Escape the ordinary</Link>
           <i />
-          <Link href="/movies?genre=Animation">Bring the whole crew</Link>
+          <Link href="/explore?collection=all&genre=Animation">Bring the whole crew</Link>
         </div>
       </div>
     </section>

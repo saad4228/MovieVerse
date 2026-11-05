@@ -7,7 +7,7 @@ import type { GenreCollection, GenreResult } from "@/lib/genre-catalog";
 import { loadGenre, peekGenre } from "@/lib/genre-client";
 import { MovieCard } from "./MovieCards";
 import MovieRail from "./MovieRail";
-import { TmdbAttribution } from "./LiveMovieDiscovery";
+import { TmdbAttribution } from "./TmdbAttribution";
 
 function useResource<T>(url: string | null) {
   const [attempt, setAttempt] = useState(0);
@@ -93,7 +93,7 @@ export function GenrePage({ slug }: { slug: string }) {
   }
   useEffect(() => { setSearch(params.get("q") || ""); }, [params]);
   return <main className="discovery-page section-container genre-page">
-    <Link className="back-link" href="/movies#explore-genres"><ChevronLeft size={16}/>Back to movies</Link>
+    <Link className="back-link" href="/explore#explore-genres"><ChevronLeft size={16}/>Back to movies</Link>
     <div className="page-intro"><span className="eyebrow">EXPLORE BY GENRE</span><h1>{data?.collection.name || slug.replaceAll("-", " ")}</h1><p>{data?.collection.description || "Discover films that match your mood."}</p></div>
     <div className="genre-filters" ref={top}>
       {genres && <label>Genre<select aria-label="Choose genre" value={slug} onChange={e=>router.push(`/genres/${e.target.value}${params.size?`?${params}`:""}`)}>{genres.collections.map(g=><option key={g.slug} value={g.slug}>{g.name}</option>)}</select></label>}

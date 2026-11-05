@@ -1,15 +1,9 @@
 "use client";
-import { useRef, type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import {useDiscoveryHome} from "@/lib/discovery-client";
 import type {Movie} from "@/lib/catalog";
 
-/** Snapshot catalogue art once so switching forms never rearranges the scene. */
-export default function AuthPosterCollage() {
-  const {data}=useDiscoveryHome();
-  const snapshot=useRef<Movie[]|null>(null);
-  const movies=data?.collections.popular??[];
-  const posters = (() => {
-    if(snapshot.current)return snapshot.current;
+function selectPosters(movies: Movie[]) {
     const unique = [...new Map(movies.filter(movie => movie.poster).map(movie => [movie.poster, movie])).values()];
     const english = unique.filter(movie => movie.languages.includes("English"));
     const regional = unique.filter(movie => !movie.languages.includes("English"));
@@ -18,10 +12,15 @@ export default function AuthPosterCollage() {
       if (regional[i]) result.push(regional[i]);
       if (english[i]) result.push(english[i]);
     }
-    const selection=result.slice(0,16);
-    if(selection.length)snapshot.current=selection;
-    return selection;
-  })();
+    return result.slice(0,16);
+}
+
+/** Snapshot catalogue art once so switching forms never rearranges the scene. */
+export default function AuthPosterCollage() {
+  const {data}=useDiscoveryHome();
+  const [snapshot,setSnapshot]=useState<Movie[]>(()=>selectPosters(data?.collections.popular??[]));
+  const posters=snapshot.length ? snapshot : selectPosters(data?.collections.popular??[]);
+  if(!snapshot.length && posters.length)setSnapshot(posters);
   return <div className="auth-collage" aria-hidden="true">
     <div className="auth-poster-installation">
       {posters.map((movie, index) => <div className={`auth-poster depth-${index % 3}`} key={movie.id} style={{"--poster-angle": `${[-5, 4, -2, 6][index % 4]}deg`, "--poster-offset": `${[0, -22, 18, -8][index % 4]}px`} as CSSProperties}>

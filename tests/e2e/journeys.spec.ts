@@ -18,9 +18,8 @@ test("Nagpur movie-first journey, failure recovery, booking, QR and history", as
   await page.getByRole("button", { name: "Nagpur", exact: true }).click();
   await page.goto("/movies");
   await expect(
-    page.getByRole("heading", { name: "Movies. A world of stories." }),
+    page.getByRole("heading", { name: "Movies in Nagpur" }),
   ).toBeVisible();
-  await page.getByLabel("Movie collection",{exact:true}).selectOption("demo");
   await page.getByRole("link", { name: /Jailer 2 movie poster/ }).click();
   await page.locator("#showtimes").scrollIntoViewIfNeeded();
   // Keep this flow valid when the suite runs after today's evening shows start.
@@ -103,13 +102,13 @@ test("city switching and cinema-first booking preserve venue and layout", async 
   await expect(
     page.getByRole("button", { name: "Best 2 seats" }),
   ).toBeEnabled();
-  await expect(page.locator(".layout-note")).toContainText("The Grand");
+  await expect(page.locator(".layout-note")).toContainText("Grand Balcony Cinema");
   await page.getByRole("button", { name: "Mumbai", exact: true }).click();
   await page.getByPlaceholder("Search for your city").fill("Nagpur");
   await page.getByRole("button", { name: "Nagpur", exact: true }).click();
   await expect(page).toHaveURL(/\/movies$/);
   await expect(
-    page.getByRole("heading", { name: "Now showing in Nagpur." }),
+    page.getByRole("heading", { name: "Movies in Nagpur" }),
   ).toBeVisible();
   await page.reload();
   await expect(
@@ -274,18 +273,20 @@ test("reference lobby lighting, dragging and poster-wall discovery", async ({
   const lobby = page.getByRole("region", {
     name: "Interactive movie panorama",
   });
-  await expect(lobby).toHaveAttribute("data-featured-movie", "varanasi");
+  await expect(lobby).toHaveAttribute("data-featured-movie", /.+/);
+  const firstMovie=await lobby.getAttribute("data-featured-movie");
   const initialAccent = await lobby.evaluate((el) =>
     getComputedStyle(el).getPropertyValue("--lobby-accent"),
   );
   await page.getByRole("button", { name: "Next movie", exact: true }).click();
-  await expect(lobby).toHaveAttribute("data-featured-movie", "toxic");
+  await expect(lobby).not.toHaveAttribute("data-featured-movie", firstMovie!);
   expect(
     await lobby.evaluate((el) =>
       getComputedStyle(el).getPropertyValue("--lobby-accent"),
     ),
   ).not.toBe(initialAccent);
   const panorama = await page.locator(".panorama").boundingBox();
+  const beforeDrag=await page.locator('.cinematic-panorama').getAttribute('data-position');
   await page.mouse.move(panorama!.x + panorama!.width / 2, panorama!.y + 120);
   await page.mouse.down();
   await page.mouse.move(
@@ -294,12 +295,15 @@ test("reference lobby lighting, dragging and poster-wall discovery", async ({
     { steps: 8 },
   );
   await page.mouse.up();
-  await expect(lobby).toHaveAttribute("data-featured-movie", "jailer-2");
+  await expect(page.locator('.cinematic-panorama')).not.toHaveAttribute('data-position',beforeDrag!);
+  const featured=await lobby.getAttribute('data-featured-movie');
+  const bookable=await(await page.request.get('/api/bookable-featured?city=chennai')).json();
+  expect(bookable.featured.some((movie:{id:string})=>movie.id===featured)).toBe(true);
   await page
     .getByRole("link", { name: "Find your next story", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Now showing in Chennai." }),
+    page.getByRole("heading", { name: "Movies in Chennai" }),
   ).toBeVisible();
 });
 
@@ -326,7 +330,7 @@ test("sample-film hero controls and compact showtime comparisons", async ({
     .toBe(false);
   await page.getByRole("button", { name: "Mute video" }).click();
   await page.getByLabel("Sort showtime cinemas").selectOption("Lowest price");
-  await expect(page.locator(".showtime-row").first()).toContainText("Palazzo");
+  await expect(page.locator(".screening-row").first()).toContainText("Palazzo");
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator("#showtimes").scrollIntoViewIfNeeded();
   expect(

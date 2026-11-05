@@ -1,13 +1,15 @@
 import {test,expect} from '@playwright/test';
-import {blueprints,dates,venues,showsFor,makeSeats} from '../../lib/catalog';
+import {dates,venues,showsFor} from '../../lib/catalog';
+import type {InventorySnapshot} from '../../lib/providers';
 import {clampRoom,cameraObstructed,cameraView,type Point} from '../../lib/auditorium';
 test('fast orbit, pan and zoom stay inside floor, seats and room boundaries',async({page})=>{
  test.setTimeout(150000);
  await page.addInitScript(()=>localStorage.setItem('movieverse-v1',JSON.stringify({state:{city:'pune',recentCities:[],seats:[],cart:{}},version:0})));
  const show=showsFor(venues.find(v=>v.cityId==='pune')!,'sintel',dates()[3])[0];
- const b=blueprints.find(b=>b.id===show.blueprintId)!, seats=makeSeats(b);
+ const {blueprint:b,seats}:InventorySnapshot=await(await page.request.get(`/api/inventory?show=${encodeURIComponent(show.id)}`)).json();
  await page.goto(`/booking/${encodeURIComponent(show.id)}`);
  const canvas=page.locator('canvas');await expect(canvas).toHaveAttribute('data-camera-moving','false');
+ await expect(canvas).toHaveAttribute('data-camera-position',/^-?[\d.]+,-?[\d.]+,-?[\d.]+$/);
  const box=(await canvas.boundingBox())!;
  const x=box.x+box.width*.5,y=box.y+box.height*.55;
  const positions:string[]=[];

@@ -14,7 +14,8 @@ async function mock(page:Page){
 }
 test("all genre rails reuse cards, scroll independently, and preserve city through detail navigation",async({page})=>{
   await mock(page);
-  await page.goto("/movies");
+  await page.goto("/explore");
+  await expect(page.locator(".explore-hero")).toBeVisible();
   await page.getByRole("button",{name:"Chennai",exact:true}).click();
   await page.getByPlaceholder("Search for your city").fill("Nag");
   await page.getByRole("button",{name:"Nagpur",exact:true}).click();
@@ -49,7 +50,7 @@ test("all genre rails reuse cards, scroll independently, and preserve city throu
   await expect(page.getByRole("button",{name:"Nagpur",exact:true})).toBeVisible();
   await expect(page.getByLabel("Original language",{exact:true})).toHaveValue("hi");
   await page.getByRole("link",{name:"Back to movies",exact:true}).click();
-  await expect(page).toHaveURL(/\/movies#explore-genres/);
+  await expect(page).toHaveURL(/\/explore#explore-genres/);
   await expect(page.locator("#explore-genres")).toBeInViewport();
 });
 test("genre mobile filters, search, errors and missing integration stay compact",async({page})=>{
@@ -65,7 +66,7 @@ test("genre mobile filters, search, errors and missing integration stay compact"
   await page.screenshot({path:"test-results/genre-mobile.png",fullPage:false});
   await page.unroute("**/api/movie-genres");
   await page.route("**/api/movie-genres",route=>route.fulfill({status:503,json:{code:"TMDB_NOT_CONFIGURED"}}));
-  await page.goto("/movies");
+  await page.goto("/explore");
   await page.locator("#explore-genres").scrollIntoViewIfNeeded();
   await expect(page.locator("#explore-genres .genre-notice")).toContainText("not connected yet");
   await expect(page.locator(".genre-row")).toHaveCount(0);

@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CheckCircle2, RotateCcw } from "lucide-react";
-import type { BookingRecord } from "./Account";
+import type { BookingRecord } from "@/lib/booking-record";
 import DigitalTicket from "./DigitalTicket";
 
 type AnimationPhase = "ready" | "preparing" | "printing" | "stamping" | "completed";

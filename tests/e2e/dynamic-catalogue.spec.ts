@@ -12,10 +12,10 @@ test("D1 catalogue supplies the balanced hero, Hollywood, genres, search and mov
  expect(bookable.featured.some((m:any)=>m.id===featured)).toBe(true);
  await expect(page.locator("#now-showing h2")).toHaveText("Now playing in India");
  const nowIds=home.collections["now-playing-IN"].map((m:any)=>m.id);
- for(const href of await page.locator("#now-showing .movie-art").evaluateAll(els=>els.map(el=>el.getAttribute("href")!.split("/").pop())))expect(nowIds).toContain(href);
+ for(const id of await page.locator("#now-showing .movie-art").evaluateAll(els=>els.map(el=>new URL((el as HTMLAnchorElement).href).pathname.split("/").pop())))expect(nowIds).toContain(id);
  await expect.poll(()=>page.locator(".panorama-screen.current .screen-poster").evaluate((img:HTMLImageElement)=>img.naturalWidth),{timeout:30000}).toBeGreaterThan(0);
  await page.screenshot({path:"outputs/dynamic-home.png"});
- await page.goto("/movies",{waitUntil:"domcontentloaded"});await expect(page.locator(".movie-grid .movie-card")).toHaveCount(40);
+ await page.goto("/explore?collection=all",{waitUntil:"domcontentloaded"});await expect(page.locator(".movie-grid .movie-card")).toHaveCount(40);
  await page.getByLabel("Movie collection",{exact:true}).selectOption("hollywood");
  await expect.poll(async()=>page.locator(".results-count").textContent()).not.toBe("0 films");
  const hollywood=await (await page.request.get("/api/catalogue?collection=hollywood")).json();
@@ -28,7 +28,7 @@ test("D1 catalogue supplies the balanced hero, Hollywood, genres, search and mov
  await expect(page.locator(".live-movie-heading h1")).toHaveText(movie.title);
  await expect(page.locator(".header")).toHaveCount(0);
  await page.goto("/genres/action?country=US",{waitUntil:"domcontentloaded"});await expect(page.locator(".movie-grid .movie-card")).not.toHaveCount(0);
- await page.goto("/movies",{waitUntil:"domcontentloaded"});await expect(page.locator(".movie-grid .movie-card")).toHaveCount(40);await page.getByRole("button",{name:/Search movies/}).first().click();
+ await page.goto("/explore?collection=all",{waitUntil:"domcontentloaded"});await expect(page.locator(".movie-grid .movie-card")).toHaveCount(40);await page.getByRole("button",{name:/Search movies/}).first().click();
  await page.getByLabel("Search movies, cinemas and cities").fill(movie.title);
  await expect(page.locator(".search-result").filter({hasText:movie.title}).first()).toBeVisible();
  await page.setViewportSize({width:390,height:844});await page.goto("/coming-soon",{waitUntil:"domcontentloaded"});

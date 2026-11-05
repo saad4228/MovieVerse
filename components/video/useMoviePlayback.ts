@@ -75,6 +75,11 @@ export function useMoviePlayback(
     try {
       await video.play();
       if (current !== generation.current) return;
+      if (desired.current.paused || !desired.current.active || document.hidden) {
+        video.pause();
+        setStatus("paused");
+        return;
+      }
       playbackDiagnostic(identity.current, "play-resolved", { readyState: video.readyState });
       setStatus("playing");
       setReady(true);
@@ -153,7 +158,7 @@ export function useMoviePlayback(
       setStatus("buffering");
       // A temporary stall must not destroy the decoded last frame or player.
       // Fatal media/HLS errors still take the normal alternate-source path.
-      if (!ready && video.readyState < 2 && video.currentTime === 0) armTimeout();
+      if (video.readyState < 2 && video.currentTime === 0) armTimeout();
     };
     const onPause = () => {
       if (!failed && !disposed) setStatus(video.ended ? "ended" : "paused");
@@ -175,8 +180,8 @@ export function useMoviePlayback(
         video.pause();
         clearTimeout(timeout);
       } else if (resumeVisible.current && !desired.current.paused) {
+        if (video.readyState < 2) armTimeout();
         void play();
-        armTimeout();
       }
     };
     video.addEventListener("canplay", loaded);

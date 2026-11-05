@@ -98,6 +98,6 @@ test("city rails expose boundaries, preserve drag and open the chosen movie", as
     const link = rail.locator(".movie-art").nth(2);
     const href = await link.getAttribute("href");
     await link.click();
-    await expect(page).toHaveURL(new RegExp(href! + "$"));
+    await expect(page).toHaveURL(new URL(href!,page.url()).href);
   }
 });

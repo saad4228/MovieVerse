@@ -1,5 +1,7 @@
 import {test,expect} from '@playwright/test';
-import {dates,showsFor,makeSeats,type Venue,type Blueprint} from '../../lib/catalog';
+import {dates,showsFor,type Venue} from '../../lib/catalog';
+import {seatEye} from '../../lib/auditorium';
+import type {InventorySnapshot} from '../../lib/providers';
 
 test('front, middle and back seat previews retain the larger screen and selected seats',async({page})=>{
  test.setTimeout(120000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
@@ -18,6 +20,8 @@ test('front, middle and back seat previews retain the larger screen and selected
  await page.getByRole('button',{name:'3D view',exact:true}).click();
  const originalCanvas=page.locator('canvas');
  await expect(originalCanvas).toHaveAttribute('data-camera-moving','false');
+ await expect(originalCanvas).toHaveAttribute('data-camera-position',/^-?[\d.]+,-?[\d.]+,-?[\d.]+$/);
+ await expect(originalCanvas).toHaveAttribute('data-camera-target',/^-?[\d.]+,-?[\d.]+,-?[\d.]+$/);
  const originalPosition=await originalCanvas.getAttribute('data-camera-position');
  const originalTarget=await originalCanvas.getAttribute('data-camera-target');
  await page.getByRole('button',{name:'View from this seat',exact:true}).click();
@@ -27,11 +31,12 @@ test('front, middle and back seat previews retain the larger screen and selected
  for(const id of ids){
   await page.getByLabel('Preview selected seat').selectOption(id);
   await expect.poll(()=>canvas.getAttribute('data-camera-moving'),{timeout:20000}).toBe('false');
-  const blueprint=catalog.blueprints.find((b:Blueprint)=>b.id==='classic');
-  const seat=makeSeats(blueprint).find(s=>s.id===id)!;
+  const snapshot:InventorySnapshot=await(await page.request.get(`/api/inventory?show=${encodeURIComponent(show.id)}`)).json();
+  const seat=snapshot.seats.find(seat=>seat.id===id)!;
   await expect.poll(async()=>{
    const p=(await canvas.getAttribute('data-camera-position'))!.split(',').map(Number);
-   return Math.max(Math.abs(p[0]-seat.x),Math.abs(p[1]-seat.y-1.5),Math.abs(p[2]-seat.z+.2));
+   const eye=seatEye(seat);
+   return Math.max(...p.map((value,index)=>Math.abs(value-eye[index])));
   }).toBeLessThan(.002);
   const frame=JSON.parse((await canvas.getAttribute('data-screen-frame'))!);
   const target=(await canvas.getAttribute('data-camera-target'))!.split(',').map(Number);
@@ -62,16 +67,20 @@ for(const style of ['grand','luxury']) test(`single or paired seat preview and m
  await expect(page.locator('canvas')).toBeVisible();
  await page.getByRole('button',{name:'2D map',exact:true}).click();
  await expect(page.getByRole('button',{name:'View from this seat',exact:true})).toHaveCount(0);
- const seat=page.getByRole('button',{name:/^[A-Z]\d+, [^,]+, available(?:,|$)/}).last();
- const id=(await seat.getAttribute('aria-label'))!.split(',')[0];await seat.click();
+ const snapshot:InventorySnapshot=await(await page.request.get(`/api/inventory?show=${encodeURIComponent(show.id)}`)).json();
+ const available=snapshot.seats.filter(seat=>!seat.blocked&&snapshot.inventory[seat.id]?.status==='available'&&(!seat.pair||snapshot.seats.filter(other=>other.pair===seat.pair).every(other=>snapshot.inventory[other.id]?.status==='available')));
+ const id=available.at(-1)!.id;
+ if(available.at(-1)!.level===1)await page.locator('.map-levels').getByRole('button',{name:'Balcony',exact:true}).click();
+ const seat=page.getByRole('button',{name:new RegExp(`^${id}, [^,]+, available(?:,|$)`)});
+ await seat.click();
  await page.getByRole('button',{name:'View from this seat',exact:true}).click();
  const canvas=page.locator('canvas');
- const blueprint=catalog.blueprints.find((b:Blueprint)=>b.id===style);
- const actual=makeSeats(blueprint).find(s=>s.id===id)!;
+ const actual=snapshot.seats.find(seat=>seat.id===id)!;
  await expect.poll(async()=>{
   const value=await canvas.getAttribute('data-camera-position');if(!value)return Infinity;
   const p=value.split(',').map(Number);
-  return Math.max(Math.abs(p[0]-actual.x),Math.abs(p[1]-actual.y-1.5),Math.abs(p[2]-actual.z+.2));
+  const eye=seatEye(actual);
+  return Math.max(...p.map((value,index)=>Math.abs(value-eye[index])));
  },{timeout:30000}).toBeLessThan(.002);
  await expect(page.getByRole('button',{name:'Next Seat',exact:true})).toHaveCount(style==='luxury'?1:0);
  const controls=await page.locator(".seat-view-return").boundingBox();

@@ -11,11 +11,19 @@ import {
   showsFor,
 } from "@/lib/catalog";
 import { api } from "@/lib/client";
+import type { InventorySnapshot } from "@/lib/providers";
 import {
   catalogSchema,
   assertCatalog,
   type Catalog,
 } from "@/lib/catalog-config";
+const catalogSections = {
+  Cities: "cities",
+  Cinemas: "venues",
+  Movies: "movies",
+  Snacks: "snacks",
+} as const;
+
 export default function CatalogEditor({
   kind,
   notify,
@@ -23,15 +31,7 @@ export default function CatalogEditor({
   kind: string;
   notify: (s: string) => void;
 }) {
-  const key =
-    (
-      {
-        Cities: "cities",
-        Cinemas: "venues",
-        Movies: "movies",
-        Snacks: "snacks",
-      } as const
-    )[kind as "Cities"] || "cities";
+  const key = catalogSections[kind as keyof typeof catalogSections] || "cities";
   const [catalog, setCatalog] = useState<Catalog>({
     cities: [...cities],
     movies: [...movies],
@@ -98,7 +98,7 @@ export default function CatalogEditor({
           <button
             className="btn btn-outline"
             onClick={() => {
-              const first = catalog[key][0] as any;
+              const first = catalog[key][0];
               if (!first) {
                 notify("Add the first product through a full catalog import.");
                 return;
@@ -122,13 +122,13 @@ export default function CatalogEditor({
       </div>
       <div className="catalog-editor-columns">
         <div className="catalog-record-list">
-          {catalog[key].map((record: any, i) => (
+          {catalog[key].map((record, i) => (
             <button
               key={record.id}
               className={i === index ? "selected" : ""}
               onClick={() => setIndex(i)}
             >
-              <strong>{record.title || record.name}</strong>
+              <strong>{"title" in record ? record.title : record.name}</strong>
               <small>{record.id}</small>
             </button>
           ))}
@@ -245,7 +245,7 @@ export function InventoryEditor({ notify }: { notify: (s: string) => void }) {
   const [movie, setMovie] = useState(venues[0].movieIds[0]);
   const [date, setDate] = useState(dates()[0]);
   const [index, setIndex] = useState(0);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<InventorySnapshot | null>(null);
   const [seatIds, setSeatIds] = useState("");
   const [status, setStatus] = useState("blocked");
   const [token, setToken] = useState("");
@@ -255,7 +255,7 @@ export function InventoryEditor({ notify }: { notify: (s: string) => void }) {
   const show = shows[index] || shows[0];
   const load = () => {
     if (show)
-      api(`inventory?show=${encodeURIComponent(show.id)}`)
+      api<InventorySnapshot>(`inventory?show=${encodeURIComponent(show.id)}`)
         .then(setData)
         .catch((e) => notify(e.message));
   };
@@ -327,7 +327,7 @@ export function InventoryEditor({ notify }: { notify: (s: string) => void }) {
                 <strong>
                   {
                     Object.values(data.inventory).filter(
-                      (x: any) => x.status === s,
+                      (x) => x.status === s,
                     ).length
                   }
                 </strong>
@@ -346,7 +346,7 @@ export function InventoryEditor({ notify }: { notify: (s: string) => void }) {
                 </tr>
               </thead>
               <tbody>
-                {data.seats.map((s: any) => (
+                {data.seats.map((s) => (
                   <tr key={s.id}>
                     <td>{s.id}</td>
                     <td>{s.category}</td>

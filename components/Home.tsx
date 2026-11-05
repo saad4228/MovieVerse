@@ -144,14 +144,14 @@ export default function Home() {
           </a>
           <span>AN ENTIRELY NEW POINT OF VIEW</span>
         </div>
-      </section> : <section className="cinema-lobby moonlit-lobby"><img className="lobby-backdrop" src="/assets/moonlit-theater.png" alt=""/><div className="section-container empty"><h1>Your universe of cinema.</h1><p role="status">{bookingError || (bookable ? "No bookable screenings in this city right now. Explore the worldwide catalogue." : "Finding bookable screenings...")}</p><button className="btn btn-outline" onClick={retryBookings}>Refresh screenings</button><Link className="text-link" href="/movies">Explore movies</Link></div></section>}
+      </section> : <section className="cinema-lobby moonlit-lobby"><img className="lobby-backdrop" src="/assets/moonlit-theater.png" alt=""/><div className="section-container empty"><h1>Your universe of cinema.</h1><p role="status">{bookingError || (bookable ? "No bookable screenings in this city right now. Explore the worldwide catalogue." : "Finding bookable screenings...")}</p><button className="btn btn-outline" onClick={retryBookings}>Refresh screenings</button><Link className="text-link" href="/explore">Explore movies</Link></div></section>}
       <section className="home-showing" id="now-showing">
         <div className="section-container" data-home-reveal>
           <SectionTitle
             eyebrow="DEMO SCREENINGS · SIMULATED BOOKINGS"
             title="Now playing in India"
             subtitle="TMDB movie discovery for India, not live cinema schedules. Available demo screenings and seat bookings are simulations."
-            link="/movies?collection=now-playing-IN"
+            link="/explore?collection=now-playing-IN"
             label={`See all (${nowPlaying.length})`}
           />
           <div className="chips" aria-label="Filter by language">
@@ -206,7 +206,7 @@ export default function Home() {
         </MovieRail> : <p className="discovery-empty">No verified advance bookings are listed for {city.name} today.</p>}
       </section>
       <PosterWall movies={discovery?.collections.popular??[]} />
-      {!!sections.released.length && <section className="section-container discovery-section"><SectionTitle title="More stories to discover" subtitle="Released films without verified local showtimes. Explore their stories and cast." link="/movies" label="Browse all films"/><MovieRail label="Released films">{sections.released.map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}</MovieRail></section>}
+      {!!sections.released.length && <section className="section-container discovery-section"><SectionTitle title="More stories to discover" subtitle="Released films without verified local showtimes. Explore their stories and cast." link="/explore?collection=all" label="Browse all films"/><MovieRail label="Released films">{sections.released.map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}</MovieRail></section>}
       <section className="experience-section section-container">
         <div className="experience-copy">
           <span className="eyebrow">DON’T JUST PICK A SEAT. STEP INSIDE.</span>
@@ -288,14 +288,14 @@ export default function Home() {
       </section>
       <section className="section-container discovery-section">
         {sections.trending.length > 0 && <>
-          <SectionTitle eyebrow="TRENDING WORLDWIDE" title="The stories everyone is discovering" subtitle="Fresh TMDB trends. Popularity does not confirm local screenings." link="/movies" label="Explore all" />
+          <SectionTitle eyebrow="TRENDING WORLDWIDE" title="The stories everyone is discovering" subtitle="Fresh TMDB trends. Popularity does not confirm local screenings." link="/explore?collection=trending-day" label="Explore all" />
           <MovieRail label={"Trending movies"}>
             {sections.trending.slice(0, 8).map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}
           </MovieRail>
         </>}
       </section>
       <section className="section-container discovery-section">
-        <SectionTitle eyebrow="FRESH FROM EVERY CORNER" title={`Popular regional picks in ${city.name}`} subtitle="Fresh Indian-language discoveries. Local screenings are separate from movie popularity." link="/movies" label="Browse movies" />
+        <SectionTitle eyebrow="FRESH FROM EVERY CORNER" title={`Popular regional picks in ${city.name}`} subtitle="Fresh Indian-language discoveries. Local screenings are separate from movie popularity." link="/explore?collection=indian" label="Browse movies" />
         <MovieRail label={`Regional movies in ${city.name}`}>
           {sections.regional.slice(0, 12).map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}
         </MovieRail>

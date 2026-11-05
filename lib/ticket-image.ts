@@ -1,4 +1,4 @@
-import type { BookingRecord } from "@/components/Account";
+import type { BookingRecord } from "./booking-record";
 import { rupees } from "./booking";
 
 type Rect = { x: number; y: number; width: number; height: number };
@@ -92,9 +92,9 @@ export async function ticketImage(b: BookingRecord, qr: string) {
   ctx.clip();
   ctx.fillStyle = "#0c0b12";
   ctx.fillRect(hero.x, hero.y, hero.width, hero.height);
-  let titleX = 45;
-  let titleWidth = 770;
-  let formatY = 492;
+  const titleX = 45;
+  const titleWidth = 770;
+  const formatY = 492;
   if (artwork) {
     const position = b.snapshot.movie.backdropPosition || "50% 50%";
     const blurred = coverRect(artwork.width, artwork.height, hero.x, hero.y, hero.width, hero.height, position);

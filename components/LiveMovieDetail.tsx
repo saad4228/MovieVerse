@@ -7,7 +7,7 @@ import { movies, venues, type Movie } from "@/lib/catalog";
 import { useApp } from "@/lib/store";
 import { discoveryStatus } from "@/lib/movie-discovery";
 import MovieInformation, { MovieBackdrop } from "./MovieInformation";
-import { TmdbAttribution } from "./LiveMovieDiscovery";
+import { TmdbAttribution } from "./TmdbAttribution";
 
 export default function LiveMovieDetail({ id }: { id: string }) {
   const city = useApp(s=>s.city);

@@ -30,27 +30,9 @@ MovieVerse brings the cinema journey into one place: discover films, find a scre
 
 These are compressed captures of the MovieVerse application. Booking and checkout images show the demo flow.
 
-<table>
-  <tr>
-    <td width="50%"><strong>Homepage · bookable demo screenings</strong><br /><img src="docs/screenshots/homepage-booking-carousel.jpg" alt="MovieVerse homepage with its cinema-style movie carousel" /></td>
-    <td width="50%"><strong>Movies · browse and discover</strong><br /><img src="docs/screenshots/movies-discovery.jpg" alt="MovieVerse movie discovery page" /></td>
-  </tr>
-  <tr>
-    <td><strong>Explore · wider movie collections</strong><br /><img src="docs/screenshots/explore-collections.jpg" alt="Explore page with curated film collections" /></td>
-    <td><strong>Movie details</strong><br /><img src="docs/screenshots/movie-details.jpg" alt="MovieVerse movie detail page with artwork and information" /></td>
-  </tr>
-  <tr>
-    <td><strong>Cinemas · venue discovery</strong><br /><img src="docs/screenshots/cinema-discovery.jpg" alt="MovieVerse cinema listing and discovery page" /></td>
-    <td><strong>Watchlist · saved films</strong><br /><img src="docs/screenshots/watchlist.jpg" alt="MovieVerse watchlist with saved movie cards" /></td>
-  </tr>
-  <tr>
-    <td><strong>3D theatre · interactive seat selection</strong><br /><img src="docs/screenshots/3d-seat-selection.jpg" alt="Three-dimensional MovieVerse cinema auditorium and seat selector" /></td>
-    <td><strong>Snacks · demo order flow</strong><br /><img src="docs/screenshots/snack-selection.jpg" alt="MovieVerse snack selection page" /></td>
-  </tr>
-  <tr>
-    <td colspan="2"><strong>Checkout · payment interface in demo mode</strong><br /><img src="docs/screenshots/demo-checkout.jpg" alt="MovieVerse checkout page with demo payment methods and booking summary" /></td>
-  </tr>
-</table>
+![MovieVerse homepage with its cinematic movie carousel and booking actions](docs/screenshots/homepage-booking-carousel.jpg)
+
+*The homepage carousel highlights films with configured demo screenings in the selected city.*
 
 ## What MovieVerse does
 
@@ -82,6 +64,25 @@ MovieVerse separates two different user needs:
 - Save a Watchlist to the signed-in account.
 - Keep browsing preferences and guest booking state in the application’s supported session/local storage flows.
 
+<details>
+<summary><strong>Browse the application gallery</strong> — Movies, Explore, details, cinemas, Watchlist, and profile</summary>
+<br />
+<table>
+  <tr>
+    <td width="50%"><strong>Movies</strong><br /><img src="docs/screenshots/movies-discovery.jpg" alt="Movie browsing with poster cards" /></td>
+    <td width="50%"><strong>Explore collections</strong><br /><img src="docs/screenshots/explore-collections.jpg" alt="Explore MovieVerse film collections" /></td>
+  </tr>
+  <tr>
+    <td><strong>Movie details</strong><br /><img src="docs/screenshots/movie-details.jpg" alt="Movie artwork, metadata, and actions on the detail page" /></td>
+    <td><strong>Cinema discovery</strong><br /><img src="docs/screenshots/cinema-discovery.jpg" alt="Cinema directory with city-specific listings" /></td>
+  </tr>
+  <tr>
+    <td><strong>Watchlist</strong><br /><img src="docs/screenshots/watchlist.jpg" alt="Saved movies in a personal Watchlist" /></td>
+    <td><strong>Profile</strong><br /><img src="docs/screenshots/profile.jpg" alt="Profile for a test account with Watchlist, tickets, and photo controls" /></td>
+  </tr>
+</table>
+</details>
+
 ## The 3D theatre
 
 The auditorium is rendered in the browser with React Three Fiber and Three.js. Auditorium layouts describe rows, aisles, screen dimensions, seat identifiers, and seating categories; the renderer turns those descriptions into interactive geometry. Seat selection is connected to the same booking summary and inventory checks used by the 2D map.
@@ -89,6 +90,28 @@ The auditorium is rendered in the browser with React Three Fiber and Three.js. A
 Camera presets, orbit/zoom/pan, selected-seat previews, category-aware pricing, and a 2D alternative support different ways to explore the room. The projection surface can show official YouTube embeds or configured, authorized hosted MP4/HLS media. Hosted video uses an HTML video element and Three.js `VideoTexture`; YouTube remains subject to YouTube’s own branding, embedding, and playback behaviour. Media playback is not a source of ticket or showtime data.
 
 The supplied auditorium blueprints and demo inventory are illustrative. They are not measured architectural plans or a connection to a cinema’s live seat map.
+
+![MovieVerse auditorium with balcony seating, projection screen, and selected-seat summary](docs/screenshots/3d-seat-selection.jpg)
+
+*The same seat identifiers connect the 3D chairs, 2D map, price calculation, and backend inventory.*
+
+### From seats to a demo ticket
+
+Continuing from seat selection acquires an eight-minute server-side hold. Snack selection and coupon calculations feed the checkout summary. The backend recalculates the amount, checks ownership and hold expiry, and records a simulated payment and booking in a D1 transaction. A repeated checkout request uses an idempotency key to return the existing booking. Confirmation, My Tickets, QR verification, and image/print exports use that saved booking snapshot.
+
+<details>
+<summary><strong>View snacks, checkout, and My Tickets</strong></summary>
+<br />
+
+![MovieVerse snack ordering and booking summary](docs/screenshots/snack-selection.jpg)
+
+![MovieVerse checkout with offers and explicitly simulated payment methods](docs/screenshots/demo-checkout.jpg)
+
+![My Tickets page with a backend-confirmed demo booking](docs/screenshots/my-tickets.jpg)
+
+*Profile and My Tickets captures use a test account and a real local demo booking. No real payment or cinema admission is involved.*
+
+</details>
 
 ## Technology
 
@@ -162,6 +185,15 @@ npm run dev
 
 Open the local URL printed by Vinext (normally `http://127.0.0.1:5173`). Local D1 state is stored under the ignored `.wrangler/` directory. If you already have a local database from an older version, do not delete it or replay the initial migrations blindly; first reconcile its migration baseline. `npm run start` previews the built Worker locally.
 
+To populate Explore on a fresh local database, configure your private TMDB credential and run the shared importer from a separate terminal:
+
+```powershell
+node --experimental-transform-types scripts/sync-catalogue-local.mjs
+node --experimental-transform-types scripts/sync-catalogue-local.mjs --status
+```
+
+The initial import can take several minutes. This helper operates on local D1; production setup and scheduled-run verification are documented in [Dynamic catalogue](docs/DYNAMIC_CATALOGUE.md).
+
 ## Environment variables
 
 Put local Worker values in ignored `.dev.vars`. In production, configure secrets through the Worker host’s secret settings; never use `NEXT_PUBLIC_*` or `VITE_*` for credentials.
@@ -193,7 +225,7 @@ Cloudflare D1 is bound as `DB`; it is not configured with a database URL. Before
 | `npm test` | Run Vitest unit tests. |
 | `npm run test:e2e` | Run Playwright browser tests; install Chromium with `npx playwright install chromium` if needed. |
 
-**Local verification on 5 November 2026:** TypeScript passed; Vitest passed (21 files, 138 tests); the production build completed with bundle-size and Vinext route-classification warnings. ESLint currently reports 190 errors and 73 warnings across the repository. The full Playwright suite was not run in this publish pass.
+**Local verification on 5 November 2026:** TypeScript passed; Vitest passed (23 files, 149 tests); the production build completed with bundle-size and Vinext route-classification warnings. ESLint reports 160 errors and 71 warnings, down from 190 and 73 before cleanup. The broad Playwright run recorded 99 passing, 31 failing, and one skipped test; subsequent focused runs verified corrections but the complete suite is not green. See the [code-quality audit](docs/CODE_QUALITY_AUDIT.md) for fixes, test scope, remaining issues, and an interview guide.
 
 ## Project layout
 
@@ -229,6 +261,19 @@ worker/index.ts          Cloudflare Worker request and scheduled handlers
 - [Seat-selection workspace](docs/SEAT_WORKSPACE.md)
 - [Watchlist storage and API](docs/WATCHLIST.md)
 - [Artwork and media credits](docs/ASSET_CREDITS.md)
+- [Code-quality audit and interview walkthrough](docs/CODE_QUALITY_AUDIT.md)
+
+## Next steps
+
+- Verify scheduled catalogue refreshes against the deployed Worker and production D1 bindings.
+- Connect an approved cinema inventory provider, including venue/show mappings, live holds, and booking confirmation.
+- Add a production payment provider and reconcile payment webhooks with booking state.
+- Resolve the remaining strict lint findings and maintain browser coverage as the dynamic catalogue changes.
+- Continue testing the auditorium on ordinary hardware; software WebGL tests do not establish hardware FPS.
+
+## Contributing
+
+Keep changes focused and explain the user-visible problem, implementation, and verification in the pull request. Run the relevant unit/browser checks, type checking, and production build. Preserve demo labels and provider boundaries. Add regression coverage for fixes to authentication, holds, pricing, or account-specific data; keep credentials and local database state out of commits.
 
 ## Attribution
 
