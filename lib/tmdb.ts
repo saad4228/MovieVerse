@@ -109,9 +109,14 @@ export async function tmdbRequest(path: string, params: Record<string, string>, 
     const diagnosticBase = { stage: context?.stage ?? path, collection: context?.collection, tokenPresent: Boolean(token) };
     try {
       if (!token) url.searchParams.set("api_key", apiKey!);
-      const response = await fetch(url.href, { headers: { accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) }, signal: AbortSignal.timeout(8000), redirect: "error" });
+      const response = await fetch(url.href, { headers: { accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) }, signal: AbortSignal.timeout(8000), redirect: "manual" });
       const requestId = response.headers.get("x-tmdb-request-id") ?? response.headers.get("x-request-id") ?? response.headers.get("cf-ray") ?? undefined;
       const details = response.ok ? undefined : safeProviderDetails(await response.clone().text());
+      if (response.status >= 300 && response.status < 400) {
+        const diagnostic = { ...diagnosticBase, upstreamStatus: response.status, category: "provider" as const, exceptionType: "TmdbRedirectError", requestId, responseDetails: details };
+        emitDiagnostic(context, { ...diagnostic, durationMs: Date.now() - started });
+        throw new TmdbError("TMDB_REDIRECTED", "Movie discovery returned an unexpected redirect.", 503, undefined, diagnostic);
+      }
       if (response.status === 429) {
         const rawDelay = Number(response.headers.get("Retry-After"));
         const delay = Number.isFinite(rawDelay) && rawDelay > 0 ? Math.min(300, Math.ceil(rawDelay)) : 30;

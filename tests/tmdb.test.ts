@@ -63,8 +63,29 @@ describe("TMDB server integration (fixture responses, not live proof)",()=>{
       log: diagnostic => diagnostics.push(diagnostic),
     })).rejects.toMatchObject({ code: "TMDB_AUTH_FAILED", diagnostic: { upstreamStatus: 401, category: "authentication" } });
     expect(fetcher.mock.calls[0][1].headers.Authorization).toBe(`Bearer ${token}`);
+    expect(fetcher.mock.calls[0][1].redirect).toBe("manual");
     expect(JSON.stringify(diagnostics)).not.toContain(token);
     expect(diagnostics[0]).toMatchObject({ stage: "protected-diagnostic", tokenPresent: true, upstreamStatus: 401, requestId: "tmdb-request-1" });
+  });
+  it("does not follow upstream redirects or forward authorization to a redirect target", async () => {
+    const token = ["test", "redirect", "value"].join("-");
+    const fetcher = vi.fn().mockResolvedValue(new Response(null, {
+      status: 302,
+      headers: { location: "https://example.invalid/redirect-target", "x-tmdb-request-id": "tmdb-redirect-1" },
+    }));
+    vi.stubGlobal("fetch", fetcher);
+    const diagnostics: unknown[] = [];
+    await expect(tmdbRequest("genre/movie/list", { language: "en-US" }, { TMDB_READ_TOKEN: token }, 0, (value) => genreSchema.safeParse(value).success, {
+      stage: "protected-diagnostic",
+      log: diagnostic => diagnostics.push(diagnostic),
+    })).rejects.toMatchObject({
+      code: "TMDB_REDIRECTED",
+      diagnostic: { upstreamStatus: 302, category: "provider", exceptionType: "TmdbRedirectError" },
+    });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(fetcher.mock.calls[0][1].redirect).toBe("manual");
+    expect(fetcher.mock.calls[0][1].headers.Authorization).toBe(`Bearer ${token}`);
+    expect(JSON.stringify(diagnostics)).not.toContain(token);
   });
   it("respects upstream rate limiting without automatic request storms",async()=>{
     const fetcher=vi.fn().mockResolvedValue(new Response("",{status:429,headers:{"Retry-After":"40"}})); vi.stubGlobal("fetch",fetcher);
