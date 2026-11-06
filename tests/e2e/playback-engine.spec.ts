@@ -8,10 +8,10 @@ for (const provider of ["direct-mp4", "hls"]) {
     test.setTimeout(150000);
     await page.addInitScript(() => {
       const create = document.createElement.bind(document);
-      (window as any).trackedCinemaVideos = [];
+      window.trackedCinemaVideos = [];
       document.createElement = ((tag: string, options?: ElementCreationOptions) => {
         const element = create(tag, options);
-        if (tag === "video") (window as any).trackedCinemaVideos.push(element);
+        if (tag === "video") window.trackedCinemaVideos.push(element as HTMLVideoElement);
         return element;
       }) as typeof document.createElement;
     });
@@ -22,7 +22,7 @@ for (const provider of ["direct-mp4", "hls"]) {
       });
       await page.route("**/api/catalog", async route => {
         const response = await route.fetch(), data = await response.json();
-        data.movies.find((m: any) => m.id === "sintel").trailers = [{ id: "licensed-fixture", provider, url: "/assets/test-stream/stream.m3u8", playbackAllowed: true, type: "sample", fit: "cover" }];
+        data.movies.find((m: import("../../lib/catalog").Movie) => m.id === "sintel").trailers = [{ id: "licensed-fixture", provider, url: "/assets/test-stream/stream.m3u8", playbackAllowed: true, type: "sample", fit: "cover" }];
         await route.fulfill({ response, json: data });
       });
     }
@@ -33,21 +33,22 @@ for (const provider of ["direct-mp4", "hls"]) {
     const texture = await canvas.getAttribute("data-video-texture-id");
     expect(texture).toBeTruthy();
     await page.evaluate(() => {
-      const video = (window as any).trackedCinemaVideos.findLast((v: HTMLVideoElement) => v.getAttribute("src") && !v.isConnected);
-      (window as any).cinemaVideo = video;
+      const video = window.trackedCinemaVideos.findLast((v: HTMLVideoElement) => v.getAttribute("src") && !v.isConnected)!;
+      window.cinemaVideo = video;
       video.dispatchEvent(new Event("waiting"));
     });
     await expect(canvas).toHaveAttribute("data-video-status", "buffering");
     await expect(canvas).toHaveAttribute("data-video-texture-id", texture!);
     await expect(page.getByText("Buffering trailer", { exact: true })).toBeVisible();
-    await page.evaluate(() => (window as any).cinemaVideo.dispatchEvent(new Event("playing")));
+    await page.evaluate(() => window.cinemaVideo.dispatchEvent(new Event("playing")));
     await expect(canvas).toHaveAttribute("data-video-status", "playing");
     await page.getByRole("button", { name: "Unmute film", exact: true }).click();
     await expect(canvas).toHaveAttribute("data-video-muted", "false");
     await page.getByRole("button", { name: "Pause film", exact: true }).click();
     await expect(canvas).toHaveAttribute("data-video-status", "paused");
     await expect(canvas).toHaveAttribute("data-video-texture-id", texture!);
-    await page.evaluate(async () => { const v = (window as any).cinemaVideo; v.currentTime = v.duration - .1; await v.play(); });
+    await page.evaluate(() => { const v = window.cinemaVideo; v.currentTime = v.duration - .1; });
+    await page.getByRole("button", { name: "Play film", exact: true }).click();
     await expect(canvas).toHaveAttribute("data-video-status", "ended");
     await page.getByRole("button", { name: "Replay trailer", exact: true }).click();
     await expect(canvas).toHaveAttribute("data-video-status", "playing");
@@ -61,7 +62,7 @@ for (const provider of ["direct-mp4", "hls"]) {
     await page.screenshot({ path: `outputs/playback-${provider}.png` });
     await page.getByRole("link", { name: "Back", exact: true }).click();
     await expect(page.locator("canvas")).toHaveCount(0);
-    expect(await page.evaluate(() => { const v = (window as any).cinemaVideo; return v.paused && !v.getAttribute("src"); })).toBe(true);
+    expect(await page.evaluate(() => { const v = window.cinemaVideo; return v.paused && !v.getAttribute("src"); })).toBe(true);
   });
 }
 
@@ -82,17 +83,17 @@ test("YouTube readiness, buffering, ended and retry retain one official player",
   const original=await iframe.elementHandle();
   const params=new URL((await iframe.getAttribute("src"))!).searchParams;
   expect(params.get("controls")).toBe("0");expect(params.has("modestbranding")).toBe(false);
-  const plays=await page.evaluate(()=>(window as any).player.plays);
+  const plays=await page.evaluate(()=>window.player.plays);
   await page.getByRole("button",{name:"Unmute film",exact:true}).click();
-  expect(await page.evaluate(()=>(window as any).player.plays)).toBe(plays);
-  await page.evaluate(()=>(window as any).player.emit(3));
+  expect(await page.evaluate(()=>window.player.plays)).toBe(plays);
+  await page.evaluate(()=>window.player.emit(3));
   await expect(canvas).toHaveAttribute("data-video-status","buffering");
   expect(await original!.evaluate(e=>e.isConnected)).toBe(true);
-  await page.evaluate(()=>(window as any).player.emit(0));
+  await page.evaluate(()=>window.player.emit(0));
   await expect(page.getByRole("button",{name:"Replay trailer",exact:true})).toBeVisible();
   await page.getByRole("button",{name:"Replay trailer",exact:true}).click();
   await expect(canvas).toHaveAttribute("data-video-status","playing");
-  await page.evaluate(()=>(window as any).player.fail());
+  await page.evaluate(()=>window.player.fail());
   await expect(iframe).toHaveCount(0);
   await page.getByRole("button",{name:"Retry trailer",exact:true}).click();
   await expect(canvas).toHaveAttribute("data-video-status","playing");

@@ -8,8 +8,8 @@ async function enterGrand(page: Page, movie = "sintel") {
   await page.goto(`/movies/${movie}`);
   const catalog=await (await catalogResponse).json();
   await page.getByRole("button",{name:/TOMORROW/}).click();
-  const venues=catalog.venues.filter((v:any)=>v.blueprints[0]==="grand");
-  const row=page.locator(".screening-row").filter({has:page.getByRole("heading",{name:new RegExp(venues.map((v:any)=>v.name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|"))})}).first();
+  const venues=catalog.venues.filter((v: import("../../lib/catalog").Venue)=>v.blueprints[0]==="grand");
+  const row=page.locator(".screening-row").filter({has:page.getByRole("heading",{name:new RegExp(venues.map((v: import("../../lib/catalog").Venue)=>v.name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|"))})}).first();
   const inventoryResponse=page.waitForResponse(r=>r.url().includes("/api/inventory?")&&r.ok());
   await row.locator(".time-slot").first().click();
   const inventory=await (await inventoryResponse).json();
@@ -42,7 +42,7 @@ test("Grand balcony is elevated, selectable in both maps and explorable at eye l
   await expect(seatButton).toHaveAttribute("aria-pressed","true");
   await page.getByRole("button",{name:"View from this seat",exact:true}).click();
   await expect(canvas).toHaveAttribute("data-camera-moving","false");
-  const seat=inventory.seats.find((s:any)=>s.id===id);
+  const seat=inventory.seats.find((s: import("../../lib/catalog").Seat)=>s.id===id);
   expect(seat.level).toBe(1);
   await expect.poll(async()=>Number((await canvas.getAttribute("data-camera-position"))!.split(",")[1])).toBeCloseTo(seat.y+1.5,2);
   await page.screenshot({path:"test-results/grand-seat-preview.png"});
@@ -53,12 +53,12 @@ test("Grand balcony is elevated, selectable in both maps and explorable at eye l
   await expect(canvas).toHaveAttribute("data-camera-moving","false");
   await expect(page.locator(".selected-seats-list")).toContainText(id);
   // Actual raycast click on an upper-level chair, with camera drag protection.
-  const projection=await canvas.evaluate((el:any)=>el.movieverseDiagnostics().seatBacks);
-  const candidate=inventory.seats.find((s:any)=>s.level===1&&s.id!==id&&!s.blocked&&inventory.inventory[s.id]?.status==="available"&&projection.some((p:any)=>p.id===s.id&&p.x>100&&p.x<950&&p.y>210&&p.y<825));
+  const projection=await canvas.evaluate((el:HTMLCanvasElement)=>el.movieverseDiagnostics().seatBacks);
+  const candidate=inventory.seats.find((s: import("../../lib/catalog").Seat)=>s.level===1&&s.id!==id&&!s.blocked&&inventory.inventory[s.id]?.status==="available"&&projection.some((p: import("./browser-fixtures").ProjectionPoint)=>p.id===s.id&&p.x>100&&p.x<950&&p.y>210&&p.y<825));
   expect(candidate, "An actual available upper-level chair must be in the overhead viewport").toBeTruthy();
   if(candidate){
-    const point=projection.find((s:any)=>s.id===candidate.id);
-    await page.mouse.click(point.x,point.y);
+    const point=projection.find((s)=>s.id===candidate.id);
+    await page.mouse.click(point!.x,point!.y);
     await expect(page.locator(".selected-seats-list")).toContainText(candidate.id);
     await expect.poll(async()=>Number(await canvas.getAttribute("data-camera-fov"))).toBeGreaterThan(90);
   }
@@ -79,16 +79,16 @@ test("Grand balcony is elevated, selectable in both maps and explorable at eye l
 test("native trailer clock, presented frames and GPU uploads advance during 30 seconds of camera movement",async({page})=>{
   test.setTimeout(180000);
   await page.addInitScript(()=>{
-    (window as any).cinemaVideos=[];
+    window.cinemaVideos=[];
     const create=document.createElement.bind(document);
-    document.createElement=((tag:string,options?:ElementCreationOptions)=>{const el=create(tag,options);if(tag==="video")(window as any).cinemaVideos.push(el);return el;}) as typeof document.createElement;
+    document.createElement=((tag:string,options?:ElementCreationOptions)=>{const el=create(tag,options);if(tag==="video")window.cinemaVideos.push(el as HTMLVideoElement);return el;}) as typeof document.createElement;
   });
   await enterGrand(page);
   const canvas=page.locator("canvas");
   await expect(canvas).toHaveAttribute("data-video-status","playing",{timeout:60000});
   const sample=()=>canvas.evaluate(el=>({media:JSON.parse(el.dataset.mediaTelemetry!),render:JSON.parse(el.dataset.renderTelemetry!),texture:el.dataset.videoTextureId,status:el.dataset.videoStatus}));
   await expect.poll(()=>canvas.getAttribute("data-media-telemetry")).toBeTruthy();
-  await page.evaluate(()=>{const v=(window as any).cinemaVideos.findLast((v:HTMLVideoElement)=>v.src&&!v.isConnected);v.currentTime=0;});
+  await page.evaluate(()=>{const v=window.cinemaVideos.findLast((v:HTMLVideoElement)=>v.src&&!v.isConnected)!;v.currentTime=0;});
   await page.waitForTimeout(700);
   const samples=[await sample()];
   const bounds=(await canvas.boundingBox())!;

@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useResettableState } from "@/hooks/use-resettable-state";
+import { useEffect, useEffectEvent, useState } from "react";
 import { Download, Plus, Trash2, Save, Check, RefreshCw } from "lucide-react";
 import {
   cities,
@@ -39,22 +40,18 @@ export default function CatalogEditor({
     snacks: [...snacks],
     blueprints: [...blueprints],
   });
-  const [index, setIndex] = useState(0);
-  const [editor, setEditor] = useState("");
+  const [index, setIndex] = useResettableState(kind, 0);
+  const record = JSON.stringify(catalog[key][index] ?? {}, null, 2);
+  const [editor, setEditor] = useResettableState(record, record);
   const [token, setToken] = useState("");
   const [busy, setBusy] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const reportLoadError = useEffectEvent((error: Error) => notify(error.message));
   useEffect(() => {
     api<Catalog>("catalog")
       .then(setCatalog)
-      .catch((e) => notify(e.message));
+      .catch((e: Error) => reportLoadError(e));
   }, []);
-  useEffect(() => {
-    setIndex(0);
-  }, [kind]);
-  useEffect(() => {
-    setEditor(JSON.stringify(catalog[key][index] ?? {}, null, 2));
-  }, [catalog, key, index]);
   function apply() {
     try {
       const row = JSON.parse(editor);
@@ -242,15 +239,15 @@ export default function CatalogEditor({
 }
 export function InventoryEditor({ notify }: { notify: (s: string) => void }) {
   const [venue, setVenue] = useState(venues[0].id);
-  const [movie, setMovie] = useState(venues[0].movieIds[0]);
+  const v = venues.find((x) => x.id === venue)!;
+  const [movie, setMovie] = useResettableState(venue, v.movieIds[0]);
   const [date, setDate] = useState(dates()[0]);
-  const [index, setIndex] = useState(0);
-  const [data, setData] = useState<InventorySnapshot | null>(null);
+  const [index, setIndex] = useResettableState(venue, 0);
+  const [data, setData] = useResettableState<InventorySnapshot | null>(venue, null);
   const [seatIds, setSeatIds] = useState("");
   const [status, setStatus] = useState("blocked");
   const [token, setToken] = useState("");
   const [busy, setBusy] = useState(false);
-  const v = venues.find((x) => x.id === venue)!;
   const shows = showsFor(v, movie, date);
   const show = shows[index] || shows[0];
   const load = () => {
@@ -259,11 +256,6 @@ export function InventoryEditor({ notify }: { notify: (s: string) => void }) {
         .then(setData)
         .catch((e) => notify(e.message));
   };
-  useEffect(() => {
-    setMovie(v.movieIds[0]);
-    setIndex(0);
-    setData(null);
-  }, [venue]);
   return (
     <div className="inventory-editor">
       <h2>Manage a screening’s inventory</h2>

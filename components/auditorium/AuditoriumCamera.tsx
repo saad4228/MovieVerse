@@ -1,12 +1,14 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useCallback, useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three-stdlib";
 import * as THREE from "three";
 import type { Blueprint, Seat } from "@/lib/catalog";
+import { screenFramingFov } from "@/lib/camera-framing";
 import { cameraMovementConfig } from "@/lib/camera-config";
 import {
   cameraView,
+  screenFrame,
   auditoriumEnvelope,
   clampRoom,
   cameraObstructed,
@@ -40,8 +42,8 @@ export default function AuditoriumCamera({
   const savedView = useRef<{ position: Point; target: Point; fov: number } | null>(null);
   const wasPreview = useRef(false);
   const controls = useRef<OrbitControls | null>(null);
-  const live = useRef({ b, seats, preset, preview, onFreeView });
-  live.current = { b, seats, preset, preview, onFreeView };
+  const live = useRef({ b, seats, selected, preset, preview, onFreeView });
+  useLayoutEffect(() => { live.current = { b, seats, selected, preset, preview, onFreeView }; }, [b, seats, selected, preset, preview, onFreeView]);
   const movement = useRef<{
     path: Point[];
     start: THREE.Vector3;
@@ -57,8 +59,15 @@ export default function AuditoriumCamera({
   const debugElapsed = useRef(0);
   const zoomGoal = useRef<number | null>(null);
   const fovGoal = useRef(64);
+  const framingCorners = useMemo(() => {
+    const frame = screenFrame(b);
+    return [-1,1].flatMap(x => [-1,1].map(y => new THREE.Vector3(x*frame.width/2,y*frame.height/2,0)
+      .applyAxisAngle(new THREE.Vector3(0,1,0),frame.rotationY).add(new THREE.Vector3(frame.x,frame.y,frame.z))));
+  }, [b]);
+  const cameraCorners = useMemo(() => framingCorners.map(corner => corner.clone()), [framingCorners]);
   const dollyDirection = useRef(new THREE.Vector3());
-  function move(position: Point, target: Point) {
+  const move = useCallback((position: Point, target: Point) => {
+    const { b, seats, selected, preset, preview } = live.current;
     const c = controls.current;
     if (!c) return;
     // Drain residual input once, before starting a programmatic transition.
@@ -111,8 +120,9 @@ export default function AuditoriumCamera({
       segment: 0,
     };
     invalidate();
-  }
+  }, [camera, gl, invalidate]);
   useEffect(() => {
+    const { b, seats } = live.current;
     reduced.current = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const eventRoot = gl.domElement.closest<HTMLElement>(".seat-scene-root") || gl.domElement;
     const c = new OrbitControls(camera, eventRoot);
@@ -161,7 +171,8 @@ export default function AuditoriumCamera({
       c.dispose();
       controls.current = null;
     };
-  }, [camera, gl, b.id]);
+  }, [camera, gl, b.id, invalidate]);
+  const seatPreview = preset === "My seat" ? preview : null;
   useEffect(() => {
     if (preset !== "Free view") fovGoal.current = preset === "Bird\u2019s eye" ? 94 : preset === "Balcony" ? 74 : 64;
     gl.domElement.dataset.cameraPreset = preset;
@@ -188,7 +199,7 @@ export default function AuditoriumCamera({
       current.b,
       preset,
       current.seats,
-      preview,
+      seatPreview,
       viewIndex,
     );
     if (preset === "My seat") {
@@ -197,7 +208,7 @@ export default function AuditoriumCamera({
       scene.updateMatrixWorld(true);
       scene.traverse(object => {
         if (!(object instanceof THREE.InstancedMesh)) return;
-        const index = (object.userData.seatIds as string[] | undefined)?.indexOf(preview || "") ?? -1;
+        const index = (object.userData.seatIds as string[] | undefined)?.indexOf(seatPreview || "") ?? -1;
         if (index < 0) return;
         const matrix = new THREE.Matrix4();
         object.getMatrixAt(index, matrix);
@@ -205,7 +216,7 @@ export default function AuditoriumCamera({
         view.position = eye.toArray() as Point;
       });
       if (current.b.modelUrl && current.b.seatMap) {
-        const meshName = Object.entries(current.b.seatMap).find(([, id]) => id === preview)?.[0];
+        const meshName = Object.entries(current.b.seatMap).find(([, id]) => id === seatPreview)?.[0];
         const mesh = meshName ? scene.getObjectByName(meshName) : undefined;
         if (mesh) {
           const bounds = new THREE.Box3().setFromObject(mesh);
@@ -224,7 +235,7 @@ export default function AuditoriumCamera({
       dwell: 0,
     };
     // Inventory refreshes and seat selection never issue camera commands.
-  }, [b.id, preset, viewIndex, command, preset === "My seat" ? preview : null]);
+  }, [b.id, preset, viewIndex, command, seatPreview, camera, gl, scene, move]);
   useFrame((_state, frameDelta) => {
     const c = controls.current;
     if (!c) return;
@@ -256,6 +267,19 @@ export default function AuditoriumCamera({
           movement.current = null;
           gl.domElement.dataset.cameraMoving = "false";
           c.update();
+          // In demand-render mode there may be no frame after this one, so
+          // publish the final state now instead of leaving the throttled
+          // diagnostic attributes at their last mid-transition sample.
+          gl.domElement.dataset.cameraPosition = camera.position
+            .toArray()
+            .map((n) => n.toFixed(6))
+            .join(",");
+          gl.domElement.dataset.cameraTarget = c.target
+            .toArray()
+            .map((n) => n.toFixed(3))
+            .join(",");
+          debugElapsed.current = 0;
+          invalidate();
         } else {
           m.start.copy(camera.position);
           m.startedAt = performance.now();
@@ -296,14 +320,20 @@ export default function AuditoriumCamera({
     // camera between frames, so frame-start position is not a safe origin.
     previous.current.copy(camera.position);
     camera.updateMatrixWorld();
+    if (camera instanceof THREE.PerspectiveCamera && !movement.current && live.current.preset === "Overview") {
+      cameraCorners.forEach((corner,index) => corner.copy(framingCorners[index]).applyMatrix4(camera.matrixWorldInverse));
+      const fitted = screenFramingFov(cameraCorners,camera.aspect);
+      if (Math.abs(fitted-fovGoal.current)>.001) { fovGoal.current=fitted; invalidate(); }
+    }
+    const cameraMoving = !!movement.current || camera instanceof THREE.PerspectiveCamera && Math.abs(camera.fov-fovGoal.current)>.02;
+    gl.domElement.dataset.cameraMoving = String(cameraMoving);
     debugElapsed.current += frameDelta;
     if (debugElapsed.current > 0.2) {
       debugElapsed.current = 0;
       gl.domElement.dataset.cameraPosition = camera.position
         .toArray()
-        .map((n) => n.toFixed(3))
+        .map((n) => n.toFixed(6))
         .join(",");
-      gl.domElement.dataset.cameraMoving = String(!!movement.current);
       gl.domElement.dataset.cameraFov = camera instanceof THREE.PerspectiveCamera ? camera.fov.toFixed(3) : "";
       gl.domElement.dataset.cameraTarget = c.target.toArray().map(n => n.toFixed(3)).join(",");
     }

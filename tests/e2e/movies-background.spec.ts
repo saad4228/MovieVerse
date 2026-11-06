@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {movies} from '../../lib/catalog';
 
 test('Movies listing keeps cinematic artwork through scrolling and preserves discovery controls',async({page})=>{
  test.setTimeout(120000);
@@ -27,6 +28,13 @@ test('Movies listing keeps cinematic artwork through scrolling and preserves dis
   await page.screenshot({path:`outputs/movies-gallery-${width}.png`});
  }
  await cards.first().locator('a').first().click();await expect(page).toHaveURL(/movies\/[^/?]+/);await expect(layer).toHaveCount(0);await expect(nav).toHaveCount(0);
+ // A visual/filter regression must not depend on today's live upcoming inventory.
+ // Reuse real local artwork and records in an explicit test-only response.
+ await page.route('**/api/catalogue?**',route=>{
+  if(new URL(route.request().url()).searchParams.get('collection')!=='upcoming')return route.continue();
+  const fixtures=movies.filter(movie=>movie.genre.includes('Action')).slice(0,2);
+  return route.fulfill({json:{source:'tmdb-d1',movies:fixtures,page:1,totalPages:1,totalResults:fixtures.length,lastSync:null}});
+ });
  await page.goto('/coming-soon');await expect(nav).toHaveClass(/movies-navbar/);await expect(layer).toHaveCount(1);
  await expect(page.locator('.movie-grid .movie-card').first()).toBeVisible();
  await page.getByLabel('Filter genre',{exact:true}).selectOption('Action');await expect(cards.first()).toBeVisible();

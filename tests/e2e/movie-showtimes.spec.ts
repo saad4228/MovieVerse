@@ -27,7 +27,9 @@ test("movie-first filters, sorting and shared city remain consistent", async ({ 
   await expect(section.locator(".screening-venue").first()).not.toContainText("km away");
   await page.getByRole("link", { name: "Back to movies", exact: true }).click();
   await expect(page.getByRole("button", { name: "Nagpur", exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Nagpur", exact: true }).click();
+  // The departing details page also has a Nagpur screening-tab button. Target
+  // the navigation control, which mounts when the destination route commits.
+  await page.locator(".header").getByRole("button", { name: "Nagpur", exact: true }).click();
   await page.getByPlaceholder("Search for your city").fill("Mumbai");
   await page.getByRole("button", { name: "Mumbai", exact: true }).click();
   await page.goto("/movies/leo");

@@ -199,7 +199,7 @@ const holdSchema = z.object({
     .max(8),
 });
 const checkoutSchema = holdSchema.extend({
-  cart: z.record(z.number().int().min(0).max(10)),
+  cart: z.record(z.string(), z.number().int().min(0).max(10)),
   promo: z.string().max(30).default(""),
   requestId: z.string().uuid(),
   outcome: z.enum(["success", "failure", "cancel"]).default("success"),

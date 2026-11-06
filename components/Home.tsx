@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import "./home-atmosphere.css";
 import {useBrowseState} from "@/lib/use-browse-state";
 import WatchlistButton from "./WatchlistButton";
@@ -74,12 +75,12 @@ export default function Home() {
           if (e.key === "ArrowRight") rotate(1);
         }}
       >
-        <img className="lobby-backdrop" src="/assets/moonlit-theater.png" alt="" aria-hidden="true" fetchPriority="high" decoding="async" />
+        <AssetImage className="lobby-backdrop" src="/assets/moonlit-theater.png" alt="" aria-hidden="true" fetchPriority="high" decoding="async" />
         <div className="lobby-atmosphere" aria-hidden="true" />
         <div className="lobby-heading">
           <span className="lobby-kicker">WELCOME TO YOUR NEXT ESCAPE</span>
           <h1 aria-label="MOVIEVERSE">
-            <img className="hero-official-logo" src="/assets/movieverse-logo.png" alt="MovieVerse" width={649} height={117}/>
+            <AssetImage className="hero-official-logo" src="/assets/movieverse-logo.png" alt="MovieVerse" width={649} height={117}/>
           </h1>
           <p>
             DRAG TO EXPLORE <span>·</span> TAP A SCREEN TO BOOK
@@ -144,7 +145,7 @@ export default function Home() {
           </a>
           <span>AN ENTIRELY NEW POINT OF VIEW</span>
         </div>
-      </section> : <section className="cinema-lobby moonlit-lobby"><img className="lobby-backdrop" src="/assets/moonlit-theater.png" alt=""/><div className="section-container empty"><h1>Your universe of cinema.</h1><p role="status">{bookingError || (bookable ? "No bookable screenings in this city right now. Explore the worldwide catalogue." : "Finding bookable screenings...")}</p><button className="btn btn-outline" onClick={retryBookings}>Refresh screenings</button><Link className="text-link" href="/explore">Explore movies</Link></div></section>}
+      </section> : <section className="cinema-lobby moonlit-lobby"><AssetImage className="lobby-backdrop" src="/assets/moonlit-theater.png" alt=""/><div className="section-container empty"><h1>Your universe of cinema.</h1><p role="status">{bookingError || (bookable ? "No bookable screenings in this city right now. Explore the worldwide catalogue." : "Finding bookable screenings...")}</p><button className="btn btn-outline" onClick={retryBookings}>Refresh screenings</button><Link className="text-link" href="/explore">Explore movies</Link></div></section>}
       <section className="home-showing" id="now-showing">
         <div className="section-container" data-home-reveal>
           <SectionTitle
@@ -235,7 +236,7 @@ export default function Home() {
           </div>
         </div>
         <div className="experience-image">
-          <img
+          <AssetImage
             src="/assets/auditorium.webp"
             alt="An illustrative 3D cinema with individually selectable seats"
             loading="lazy"
@@ -264,7 +265,7 @@ export default function Home() {
                 href={`/movies/${m.id}`}
                 className="upcoming-card"
               >
-                <img
+                <AssetImage
                   src={m.poster}
                   srcSet={posterSet(m)}
                   sizes="(max-width:760px) 220px, 420px"

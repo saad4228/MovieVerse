@@ -29,13 +29,13 @@ Proceed autonomously on routine debugging. Keep me informed with concise finding
 Original Windows workspace:
 
 ```text
-C:\Users\Saad\Downloads\Projects\MovieVerse
+path\to\MovieVerse
 ```
 
 Actual application root — run commands here:
 
 ```text
-C:\Users\Saad\Downloads\Projects\MovieVerse\movieverse-app
+path\to\MovieVerse\movieverse-app
 ```
 
 Last completed application checkpoint:
@@ -75,7 +75,7 @@ Then consult `README.md`, `docs/SYSTEM_ARCHITECTURE.md`, `docs/DATABASE_SCHEMA.m
 
 ## 4. Stack and runtime
 
-- React 19.2.6, TypeScript, Next.js App Router interfaces.
+- React 19.2.9, TypeScript, Next.js App Router interfaces. See [dependency remediation](DEPENDENCY_SECURITY_REMEDIATION.md) for the audited framework/tooling versions and scoped overrides.
 - **Vinext on Vite** implements the application for Cloudflare Worker/Sites compatibility. This is not a conventional `next dev` deployment. Preserve `scripts/run-framework.mjs` and the existing Vite/Worker setup.
 - Three.js 0.187.0, React Three Fiber 9.8.2, Drei 10.7.9.
 - Zustand for convenience/UI state; Zod for configuration validation.
@@ -93,7 +93,7 @@ First check `http://127.0.0.1:5173` and `/api/catalog`. If the correct app alrea
 For an already installed, initialised checkout:
 
 ```powershell
-Set-Location 'C:\Users\Saad\Downloads\Projects\MovieVerse\movieverse-app'
+Set-Location 'path\to\MovieVerse\movieverse-app'
 npm run dev
 ```
 

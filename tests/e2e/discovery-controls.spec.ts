@@ -55,10 +55,10 @@ test("auditorium gesture handoff, seat targets and responsive input retain physi
 test("blocked autoplay keeps screen artwork and recovers through a single start gesture", async ({ page }) => {
   test.setTimeout(120000);
   await page.addInitScript(() => {
-    (window as any).__blockPlayback = true;
+    window.__blockPlayback = true;
     const original = HTMLMediaElement.prototype.play;
     HTMLMediaElement.prototype.play = function () {
-      return (window as any).__blockPlayback ? Promise.reject(new DOMException("Test browser policy", "NotAllowedError")) : original.call(this);
+      return window.__blockPlayback ? Promise.reject(new DOMException("Test browser policy", "NotAllowedError")) : original.call(this);
     };
   });
   await page.goto("/movies/sintel");
@@ -66,7 +66,7 @@ test("blocked autoplay keeps screen artwork and recovers through a single start 
   const start = page.getByRole("button", { name: "Tap to start movie", exact: true });
   await expect(start).toBeVisible({ timeout: 60000 });
   await expect(page.locator("canvas")).toHaveAttribute("data-screen-media", "poster-texture");
-  await page.evaluate(() => { (window as any).__blockPlayback = false; });
+  await page.evaluate(() => { window.__blockPlayback = false; });
   await start.click();
   await expect(page.locator("canvas")).toHaveAttribute("data-video-status", "playing");
   await expect(page.locator("canvas")).toHaveAttribute("data-screen-media", "video-texture");

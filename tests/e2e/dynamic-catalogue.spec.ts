@@ -4,14 +4,14 @@ test("D1 catalogue supplies the balanced hero, Hollywood, genres, search and mov
  await page.setViewportSize({width:1440,height:1000});await page.emulateMedia({reducedMotion:"reduce"});
  const home=await (await page.request.get("/api/discovery-home")).json();
  expect(home.source).toBe("tmdb-d1");expect(home.featured.length).toBeGreaterThan(5);
- expect(home.featured.some((m:any)=>m.originCountries?.includes("US"))).toBe(true);
- expect(home.featured.some((m:any)=>m.originCountries?.includes("IN"))).toBe(true);
+ expect(home.featured.some((m: import("../../lib/catalog").Movie)=>m.originCountries?.includes("US"))).toBe(true);
+ expect(home.featured.some((m: import("../../lib/catalog").Movie)=>m.originCountries?.includes("IN"))).toBe(true);
  await page.goto("/",{waitUntil:"domcontentloaded"});await expect(page.locator(".featured-movie h2")).toBeVisible();
  const featured=await page.locator(".moonlit-lobby").getAttribute("data-featured-movie");
  const bookable=await (await page.request.get("/api/bookable-featured?city=chennai")).json();
- expect(bookable.featured.some((m:any)=>m.id===featured)).toBe(true);
+ expect(bookable.featured.some((m: import("../../lib/catalog").Movie)=>m.id===featured)).toBe(true);
  await expect(page.locator("#now-showing h2")).toHaveText("Now playing in India");
- const nowIds=home.collections["now-playing-IN"].map((m:any)=>m.id);
+ const nowIds=home.collections["now-playing-IN"].map((m: import("../../lib/catalog").Movie)=>m.id);
  for(const id of await page.locator("#now-showing .movie-art").evaluateAll(els=>els.map(el=>new URL((el as HTMLAnchorElement).href).pathname.split("/").pop())))expect(nowIds).toContain(id);
  await expect.poll(()=>page.locator(".panorama-screen.current .screen-poster").evaluate((img:HTMLImageElement)=>img.naturalWidth),{timeout:30000}).toBeGreaterThan(0);
  await page.screenshot({path:"outputs/dynamic-home.png"});
@@ -37,5 +37,5 @@ test("D1 catalogue supplies the balanced hero, Hollywood, genres, search and mov
  await page.screenshot({path:"outputs/dynamic-upcoming-mobile.png"});
  const result=await (await page.request.get("/api/catalogue?collection=upcoming&region=IN")).json();
  const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata"}).format(new Date());
- for(const film of result.movies){const release=film.metadata.releaseDates.find((r:any)=>r.region==="IN");expect(release.date>today).toBe(true);}
+ for(const film of result.movies){const release=film.metadata.releaseDates.find((r: {region:string;date:string})=>r.region==="IN");expect(release.date>today).toBe(true);}
 });

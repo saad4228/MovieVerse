@@ -1,4 +1,5 @@
 "use client";
+import { useResettableState } from "@/hooks/use-resettable-state";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -36,9 +37,9 @@ export function Auth({
   const authParams=useSearchParams();
   const authNext=authParams.get("next")?`?next=${encodeURIComponent(authParams.get("next")!)}`:"";
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [visible, setVisible] = useState(false);
-  useEffect(() => { setError(""); setVisible(false); }, [register]);
+  const [error, setError] = useResettableState(register, "");
+  const [visible, setVisible] = useResettableState(register, false);
+
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setBusy(true);
@@ -270,8 +271,8 @@ export function MyTickets({
   notify: (s: string) => void;
 }) {
   const [bookings, setBookings] = useState<BookingRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useResettableState(`${id}:${confirmation}`, true);
+  const [error, setError] = useResettableState(`${id}:${confirmation}`, "");
   const [tab, setTab] = useState("Upcoming");
   const [cancel, setCancel] = useState<BookingRecord | null>(null);
   const [busy, setBusy] = useState(false);
@@ -283,8 +284,6 @@ export function MyTickets({
   const [animateArrival, setAnimateArrival] = useState(false);
   useEffect(() => {
     let active = true;
-    setLoading(true);
-    setError("");
     api<{ bookings: BookingRecord[] }>("tickets")
       .then(({ bookings: records }) => {
         if (!active) return;
@@ -295,7 +294,8 @@ export function MyTickets({
       .catch(e => { if (active) setError(e.message); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [id, confirmation]);
+  }, [id, confirmation, setError, setLoading, setAnimateArrival, setBookings]);
+  const [now] = useState(Date.now);
   const filtered = bookings.filter((b) =>
     id
       ? b.id === id
@@ -305,10 +305,10 @@ export function MyTickets({
           (tab === "Upcoming"
             ? new Date(
                 `${b.snapshot.show.date}T${b.snapshot.show.time}:00+05:30`,
-              ).getTime() >= Date.now()
+              ).getTime() >= now
             : new Date(
                 `${b.snapshot.show.date}T${b.snapshot.show.time}:00+05:30`,
-              ).getTime() < Date.now()),
+              ).getTime() < now),
   );
   return (
     <main

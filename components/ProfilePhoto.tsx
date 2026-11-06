@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import { useEffect, useRef, useState } from "react";
 import { Camera, Upload, Trash2 } from "lucide-react";
 import { api } from "@/lib/client";
@@ -48,14 +49,14 @@ export default function ProfilePhoto({name,notify}:{name:string;notify:(message:
   return <div className="profile-photo-control">
     <input ref={input} className="profile-photo-file" tabIndex={-1} type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose profile photo" onChange={event=>void choose(event.target.files?.[0])}/>
     <button type="button" className="profile-photo-avatar" aria-label={avatar?"Change profile photo":"Add profile photo"} disabled={busy} onClick={()=>input.current?.click()}>
-      {avatar?<img src={avatar} alt={`${name}'s profile photo`} width={104} height={104} onError={()=>setAvatar(null)}/>:<span aria-hidden="true">{name.slice(0,1).toUpperCase()}</span>}
+      {avatar?<AssetImage src={avatar} alt={`${name}'s profile photo`} width={104} height={104} onError={()=>setAvatar(null)}/>:<span aria-hidden="true">{name.slice(0,1).toUpperCase()}</span>}
       <span className="profile-photo-camera" aria-hidden="true"><Camera size={15}/></span>
     </button>
     <button type="button" className="text-link photo-change" disabled={busy} onClick={()=>input.current?.click()}>{busy?"Preparing...":avatar?"Change photo":"Add photo"}</button>
     {avatar&&<button type="button" className="photo-remove" aria-label="Remove profile photo" disabled={busy} onClick={()=>void save(null)}><Trash2 size={12}/>Remove</button>}
     {error&&!candidate&&<p className="photo-feedback" role="alert">{error}</p>}
     {candidate&&<Modal title="Preview profile photo" onClose={()=>{if(!busy)setCandidate("");}}>
-      <div className="profile-photo-preview"><span className="eyebrow">MAKE IT YOURS</span><h2>Your profile photo.</h2><img src={candidate} alt="Profile photo preview" width={200} height={200}/><p>Your photo is cropped to a square and displayed in a circle.</p><p className="photo-file-hint">JPEG, PNG or WebP · up to 8 MB</p>
+      <div className="profile-photo-preview"><span className="eyebrow">MAKE IT YOURS</span><h2>Your profile photo.</h2><AssetImage src={candidate} alt="Profile photo preview" width={200} height={200}/><p>Your photo is cropped to a square and displayed in a circle.</p><p className="photo-file-hint">JPEG, PNG or WebP · up to 8 MB</p>
       {error&&<p className="form-error" role="alert">{error}</p>}
       <div className="photo-preview-actions"><button className="btn btn-outline" disabled={busy} onClick={()=>setCandidate("")}>Cancel</button><button className="btn btn-gold" disabled={busy} onClick={()=>void save(candidate)}><Upload size={15}/>{busy?"Saving...":"Save photo"}</button></div></div>
     </Modal>}

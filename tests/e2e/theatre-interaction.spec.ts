@@ -7,7 +7,7 @@ test('screen is decorative, seats synchronize, occupied seats stay unavailable',
  await page.goto(`/booking/${encodeURIComponent(show.id)}`);await expect(page.locator('canvas')).toBeVisible();
  const pause=page.getByRole('button',{name:'Pause film',exact:true});if(await pause.count())await pause.click();
  await page.waitForTimeout(6000);
- const screen=await page.locator('canvas').evaluate((el:any)=>el.movieverseDiagnostics().screen);
+ const screen=await page.locator('canvas').evaluate((el:HTMLCanvasElement)=>el.movieverseDiagnostics().screen);
  const selected=page.locator('.selected-seats-list');const before=await selected.count()?await selected.innerText():'';
  await page.mouse.move(screen.x,screen.y);await page.mouse.click(screen.x,screen.y);
  expect(await selected.count()?await selected.innerText():'').toBe(before);
@@ -19,7 +19,7 @@ test('screen is decorative, seats synchronize, occupied seats stay unavailable',
  const occupied=page.getByRole('button',{name:/, unavailable/}).first();await expect(occupied).toBeDisabled();
  await page.getByRole('button',{name:'3D view',exact:true}).click();
  await page.getByRole('button',{name:/Bird/}).click();await page.waitForTimeout(5000);
- const point=await page.locator('canvas').evaluate((el:any,id)=>el.movieverseDiagnostics().seats.find((s:any)=>s.id===id),id);
+ const point=await page.locator('canvas').evaluate((el:HTMLCanvasElement,id)=>el.movieverseDiagnostics().seats.find((s)=>s.id===id)!,id);
  console.log({id,point});await page.screenshot({path:"outputs/theatre-seat-interaction.png"});
  await page.mouse.click(point.x,point.y);
  await page.getByRole('button',{name:'2D map',exact:true}).click();

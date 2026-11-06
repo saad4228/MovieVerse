@@ -1,4 +1,5 @@
 "use client";
+import { useResettableState } from "@/hooks/use-resettable-state";
 import { useEffect, useState } from "react";
 import Link from "./MovieLink";
 import MovieBackLink from "./MovieBackLink";
@@ -13,19 +14,20 @@ export default function LiveMovieDetail({ id }: { id: string }) {
   const city = useApp(s=>s.city);
   const matched = movies.find(m=>m.metadata?.tmdbId === Number(id.replace(/^tmdb-/,"")));
   const screening = matched && ["now-showing","advance-booking"].includes(discoveryStatus(matched,city,venues));
-  const [movie, setMovie] = useState<Movie>();
-  const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
+  const [movie, setMovie] = useResettableState<Movie | undefined>(`${id}:${attempt}`, undefined);
+  const [error, setError] = useResettableState(`${id}:${attempt}`, "");
+
   useEffect(() => {
     const controller = new AbortController();
-    setMovie(undefined); setError("");
+
     fetch(`/api/tmdb-movie?id=${encodeURIComponent(id.replace(/^tmdb-/, ""))}`, { signal: controller.signal }).then(async response => {
       const data = await response.json() as { movie: Movie; error?: string };
       if (!response.ok) throw new Error(data.error || "Movie details are unavailable.");
       if (!controller.signal.aborted) setMovie(data.movie);
     }).catch(error=>{ if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "Movie details are unavailable."); });
     return ()=>controller.abort();
-  }, [id, attempt]);
+  }, [id, attempt, setError, setMovie]);
   if (!movie) return <main className="section-container empty"><MovieBackLink/><h1>Movie details</h1><p role="status">{error || "Loading movie details…"}</p>{error && <button className="btn btn-outline" onClick={()=>setAttempt(n=>n+1)}>Retry movie details</button>}</main>;
   return <main className="live-movie-detail">
     <section className="live-movie-hero">

@@ -52,3 +52,22 @@ export function movieMatches(movie: Movie, query: string) {
   const terms = normalize(query).split(/\s+/).filter(Boolean);
   return terms.every(term => catalog.includes(term));
 }
+
+/** Global search includes the app's local/demo titles as well as the catalogue.
+ * Metadata-provider absence must not make a bookable local record unfindable. */
+export function searchMovieRecords(remote: Movie[], local: Movie[], query: string) {
+  const records: Movie[] = [];
+  const identities = new Map<string, number>();
+  for (const movie of [...remote, ...local]) {
+    if (!movieMatches(movie, query)) continue;
+    const id = `id:${movie.id}`;
+    const tmdbId = movie.metadata?.tmdbId;
+    const tmdb = tmdbId ? `tmdb:${tmdbId}` : undefined;
+    const existing = identities.get(id) ?? (tmdb ? identities.get(tmdb) : undefined);
+    const index = existing ?? records.length;
+    records[index] = movie;
+    identities.set(id, index);
+    if (tmdb) identities.set(tmdb, index);
+  }
+  return records;
+}

@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useResettableState } from "@/hooks/use-resettable-state";
+import { useEffect } from "react";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { cities } from "@/lib/catalog";
 import type { CinemaDirectoryResult } from "@/lib/cinema-listings";
@@ -15,14 +16,12 @@ export default function CityCinemaListings({
   date: string;
   venueId?: string;
 }) {
-  const [result, setResult] = useState<CinemaDirectoryResult | null>(null);
-  const [expanded, setExpanded] = useState(false);
-  const [query, setQuery] = useState("");
+  const [result, setResult] = useResettableState<CinemaDirectoryResult | null>(`${city}:${movie}:${date}`, null);
+  const [expanded, setExpanded] = useResettableState(`${city}:${movie}:${date}`, false);
+  const [query, setQuery] = useResettableState(`${city}:${movie}:${date}`, "");
   useEffect(() => {
     const controller = new AbortController();
-    setResult(null);
-    setExpanded(false);
-    setQuery("");
+
     fetch(
       `/api/cinema-directory?city=${encodeURIComponent(city)}&movie=${encodeURIComponent(movie)}&date=${date}`,
       { signal: controller.signal },
@@ -41,7 +40,7 @@ export default function CityCinemaListings({
       })
       .catch(() => {});
     return () => controller.abort();
-  }, [city, movie, date]);
+  }, [city, movie, date, setResult]);
   if (!result) return null;
   const cityName = cities.find((c) => c.id === city)?.name || city;
   const live = result.status === "live";

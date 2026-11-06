@@ -14,9 +14,10 @@ export function useCinemaSurface(
     ),
   );
   const { gl } = useThree();
+  const [colorMap,normalMap,roughnessMap] = loaded;
   const maps = useMemo(
     () =>
-      loaded.map((original, index) => {
+      [colorMap,normalMap,roughnessMap].map((original, index) => {
         const texture = original.clone();
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(repeatX, repeatY);
@@ -26,10 +27,10 @@ export function useCinemaSurface(
         texture.needsUpdate = true;
         return texture;
       }),
-    [loaded[0], loaded[1], loaded[2], repeatX, repeatY, gl],
+    [colorMap, normalMap, roughnessMap, repeatX, repeatY, gl],
   );
   useEffect(() => () => maps.forEach((texture) => texture.dispose()), [maps]);
-  return {
+  return useMemo(() => ({
     map: kind === "fabric" ? null : maps[0],
     normalMap: maps[1],
     roughnessMap: maps[2],
@@ -37,7 +38,7 @@ export function useCinemaSurface(
       kind === "fabric" ? 0.085 : 0.3,
       kind === "fabric" ? 0.085 : 0.3,
     ),
-  };
+  }), [maps, kind]);
 }
 export function TextileMaterial({ color = "#521324" }: { color?: string }) {
   const surface = useCinemaSurface("fabric", 12, 18);

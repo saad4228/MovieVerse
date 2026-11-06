@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import { useState, type CSSProperties } from "react";
 import {useDiscoveryHome} from "@/lib/discovery-client";
 import type {Movie} from "@/lib/catalog";
@@ -24,7 +25,7 @@ export default function AuthPosterCollage() {
   return <div className="auth-collage" aria-hidden="true">
     <div className="auth-poster-installation">
       {posters.map((movie, index) => <div className={`auth-poster depth-${index % 3}`} key={movie.id} style={{"--poster-angle": `${[-5, 4, -2, 6][index % 4]}deg`, "--poster-offset": `${[0, -22, 18, -8][index % 4]}px`} as CSSProperties}>
-        <img src={movie.poster} width={400} height={600} alt="" decoding="async" loading={index < 8 ? "eager" : "lazy"} fetchPriority={index < 2 ? "high" : "auto"} onError={e => { e.currentTarget.style.visibility = "hidden"; }}/>
+        <AssetImage src={movie.poster} width={400} height={600} alt="" decoding="async" loading={index < 8 ? "eager" : "lazy"} fetchPriority={index < 2 ? "high" : "auto"} onError={e => { e.currentTarget.style.visibility = "hidden"; }}/>
       </div>)}
     </div>
   </div>;

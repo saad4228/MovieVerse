@@ -1,6 +1,7 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
+import AssetImage from "@/components/AssetImage";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
 import Link from "./MovieLink";
 import type { Movie } from "@/lib/catalog";
 import { posterSet } from "@/lib/movie-media";
@@ -31,14 +32,14 @@ const CinematicCarousel = forwardRef<CarouselHandle, { movies: Movie[]; onChange
   const [visibleRadius, setVisibleRadius] = useState(1);
   const active = useRef(initial);
   const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
+  useLayoutEffect(() => { onChangeRef.current = onChange; }, [onChange]);
   const lastInteraction = useRef(0);
   const keyboardFocus = useRef(false);
   const count = movies.length;
 
   // No layout reads or image filters in the animation loop. All panels share
   // one outward bow, with its centre tangent facing the viewer.
-  function paint() {
+  const paint = useCallback(() => {
     const root = viewport.current;
     if (!root || !count) return;
     const nearest = snapMovie(position.current);
@@ -63,8 +64,8 @@ const CinematicCarousel = forwardRef<CarouselHandle, { movies: Movie[]; onChange
       setFocused(nearest);
       onChangeRef.current(wrapMovieIndex(nearest, count));
     }
-  }
-  paintRef.current = paint;
+  }, [movies, count]);
+  useLayoutEffect(() => { paintRef.current = paint; }, [paint]);
   function schedule() {
     if (!animation.current && !document.hidden && !reduced.current && inViewport.current)
       animation.current = requestAnimationFrame(time => tickRef.current(time));
@@ -97,7 +98,7 @@ const CinematicCarousel = forwardRef<CarouselHandle, { movies: Movie[]; onChange
     if (pointer.current === null && ((auto && !keyboardFocus.current) || settling)) schedule();
     else last.current = 0;
   }
-  tickRef.current = tick;
+  useLayoutEffect(() => { tickRef.current = tick; });
   function go(next: number) {
     target.current = next;
     velocity.current = 0;
@@ -119,7 +120,7 @@ const CinematicCarousel = forwardRef<CarouselHandle, { movies: Movie[]; onChange
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
   }
   useImperativeHandle(ref, () => ({ step: direction => go(snapMovie(target.current) + direction) }));
-  useLayoutEffect(() => { paint(); }, [focused, movies]);
+  useLayoutEffect(() => { paint(); }, [focused, movies, paint]);
   useEffect(() => {
     const root = viewport.current!;
     const media = matchMedia("(prefers-reduced-motion: reduce)");
@@ -243,13 +244,13 @@ const CinematicCarousel = forwardRef<CarouselHandle, { movies: Movie[]; onChange
             if (event.detail && performance.now() < suppressClickUntil.current) { event.preventDefault(); suppressClickUntil.current = 0; return; }
             if (Math.abs(index - position.current) > .35) { event.preventDefault(); go(index); }
           }}>
-          <img className="screen-poster" src={visible ? movie.poster : movie.posterSmall || movie.poster}
+          <AssetImage className="screen-poster" src={visible ? movie.poster : movie.posterSmall || movie.poster}
             srcSet={visible ? posterSet(movie) : undefined} sizes="(max-width:760px) 220px, (max-width:1550px) 240px, 280px"
             alt={`${movie.title} poster`} draggable={false} decoding="async" loading={visible ? "eager" : "lazy"} fetchPriority={visible ? "high" : "low"}
             onLoad={event=>{event.currentTarget.style.visibility="";event.currentTarget.parentElement?.classList.remove("poster-unavailable");}}
             onError={event=>{event.currentTarget.style.visibility="hidden";event.currentTarget.parentElement?.classList.add("poster-unavailable");}} />
           <span className="poster-fallback carousel-poster-fallback"><span>{movie.title}</span><small>Poster unavailable</small></span>
-          <img className="reflection" src={movie.posterSmall || movie.poster} alt="" draggable={false} decoding="async" loading="lazy" />
+          <AssetImage className="reflection" src={movie.posterSmall || movie.poster} alt="" draggable={false} decoding="async" loading="lazy" />
         </Link>
       </div>;
     })}

@@ -1,8 +1,9 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type Hls from "hls.js";
 import type { Movie } from "@/lib/catalog";
-import { createMovieVideo, claimPreparedVideo } from "@/lib/video/preparation";
+import { createVideoResource } from "@/lib/video/resource";
+import { useResettableState } from "@/hooks/use-resettable-state";
 import { playbackDiagnostic } from "@/lib/video/diagnostics";
 import {
   directSources,
@@ -23,57 +24,37 @@ export function useMoviePlayback(
   movie: Movie,
   { paused = false, muted = true, active = true, auditorium = false } = {},
 ) {
-  const [video, setVideo] = useState<HTMLVideoElement | null>(null);
-  const [status, setStatus] = useState<PlaybackStatus>("poster");
-  const [ready, setReady] = useState(false);
-  const [index, setIndex] = useState(0);
+  const sources = useMemo(() => directSources(movie), [movie]);
+  const sourceKey = JSON.stringify(sources);
   const [attempt, setAttempt] = useState(0);
-  const [choice, setChoice] = useState<string | null>(null);
-  const [progress, setProgress] = useState({ time: 0, duration: 0, height: 0 });
-  const [levels, setLevels] = useState<{ index: number; height: number }[]>([]);
-  const [quality, setQuality] = useState(-1);
+  const [index, setIndex] = useResettableState(movie.id + sourceKey, 0);
+  const [choice, setChoice] = useResettableState<string | null>(movie.id + sourceKey, null);
+  const ordered = useMemo(() => choice ? [...sources.filter(s => s.id === choice), ...sources.filter(s => s.id !== choice)] : sources, [sources, choice]);
+  const source = ordered[index];
+  const loadKey = JSON.stringify([movie.id, source?.url, active, attempt]);
+  const [status, setStatus] = useResettableState<PlaybackStatus>(loadKey, active && source ? "loading" : "poster");
+  const [ready, setReady] = useResettableState(loadKey, false);
+  const [progress, setProgress] = useResettableState(loadKey, { time: 0, duration: 0, height: 0 });
+  const [levels, setLevels] = useResettableState<{index: number; height: number}[]>(loadKey, []);
+  const [quality, setQuality] = useResettableState(loadKey, -1);
   const hls = useRef<Hls | null>(null);
   const desired = useRef({ paused, muted, active });
-  desired.current = { paused, muted, active };
+  useLayoutEffect(() => { desired.current = { paused, muted, active }; }, [paused, muted, active]);
   const seekOnLoad = useRef(0);
   const resumeVisible = useRef(false);
   const generation = useRef(0);
   const failureHandler = useRef<(() => void) | null>(null);
   const identity = useRef(movie);
-  identity.current = movie;
-  const sources = directSources(movie);
-  const sourceKey = JSON.stringify(sources);
-  const ordered = choice
-    ? [
-        ...sources.filter((s) => s.id === choice),
-        ...sources.filter((s) => s.id !== choice),
-      ]
-    : sources;
-  const source = ordered[index];
-  useEffect(() => {
-    if (!sources.length) { setVideo(null); return; }
-    const v = (auditorium && claimPreparedVideo(movie)) || createMovieVideo();
-    v.loop = !auditorium;
-    v.setAttribute("aria-label", `${movie.title} video`);
-    setVideo(v);
-    return () => {
-      v.pause();
-      v.removeAttribute("src");
-      v.load();
-      v.remove();
-    };
-  }, [movie.id, movie.title, auditorium, sourceKey]);
-  useEffect(() => {
-    setIndex(0);
-    setChoice(null);
-    seekOnLoad.current = 0;
-  }, [movie.id, sourceKey]);
-  const play = useCallback(async () => {
-    if (!video) return;
+  useLayoutEffect(() => { identity.current = movie; }, [movie]);
+  const resource = useMemo(() => createVideoResource(movie, auditorium, sources.length > 0), [movie, auditorium, sources.length]);
+  const video = useSyncExternalStore(resource.subscribe, resource.getSnapshot, resource.getServerSnapshot);
+  useEffect(() => { seekOnLoad.current = 0; }, [movie.id, sourceKey]);
+  if (source && hasFailed(source.url)) setIndex(index + 1);
+  const play = useCallback(() => {
+    if (!video) return Promise.resolve();
     const current = generation.current;
     playbackDiagnostic(identity.current, "play-attempt", { readyState: video.readyState, muted: video.muted });
-    try {
-      await video.play();
+    return video.play().then(() => {
       if (current !== generation.current) return;
       if (desired.current.paused || !desired.current.active || document.hidden) {
         video.pause();
@@ -83,26 +64,22 @@ export function useMoviePlayback(
       playbackDiagnostic(identity.current, "play-resolved", { readyState: video.readyState });
       setStatus("playing");
       setReady(true);
-    } catch (e) {
+    }).catch((e: unknown) => {
       if (current !== generation.current) return;
       const error = e as DOMException;
       playbackDiagnostic(identity.current, "play-rejected", { reason: error.name, readyState: video.readyState });
       if (error.name === "NotAllowedError") setStatus("blocked");
       else if (error.name !== "AbortError") failureHandler.current?.();
-    }
-  }, [video]);
+    });
+  }, [video, setStatus, setReady]);
   useEffect(() => {
     if (!video) return;
-    generation.current++;
+    const sourceGeneration = ++generation.current;
+    let instance: Hls | null = null;
     let disposed = false,
       failed = false;
     let timeout: ReturnType<typeof setTimeout> | undefined;
-    setReady(false);
-    setLevels([]);
-    setQuality(-1);
-    setProgress({ time: 0, duration: 0, height: 0 });
     if (!active || !source) {
-      setStatus("poster");
       playbackDiagnostic(identity.current, "artwork-fallback", { sourceType: source?.provider || "none", urlAvailable: !!source?.url });
       return;
     }
@@ -116,11 +93,6 @@ export function useMoviePlayback(
       setIndex((i) => i + 1);
     };
     failureHandler.current = fail;
-    if (hasFailed(source.url)) {
-      setIndex((i) => i + 1);
-      return;
-    }
-    setStatus("loading");
     playbackDiagnostic(identity.current, "source-loading", { sourceType: source.provider, sourceId: source.id, urlAvailable: !!source.url, readyState: video.readyState });
     const armTimeout = () => {
       clearTimeout(timeout);
@@ -150,6 +122,8 @@ export function useMoviePlayback(
       else setStatus("paused");
     };
     const playing = () => {
+      if (disposed) return;
+      if (desired.current.paused || !desired.current.active || document.hidden) { video.pause(); return; }
       clearTimeout(timeout);
       setStatus("playing");
       setReady(true);
@@ -179,7 +153,7 @@ export function useMoviePlayback(
         resumeVisible.current = !video.paused;
         video.pause();
         clearTimeout(timeout);
-      } else if (resumeVisible.current && !desired.current.paused) {
+      } else if (resumeVisible.current && desired.current.active && !desired.current.paused) {
         if (video.readyState < 2) armTimeout();
         void play();
       }
@@ -208,7 +182,7 @@ export function useMoviePlayback(
               fail();
               return;
             }
-            const instance = new Hls({
+            instance = new Hls({
               enableWorker: false,
               maxBufferLength: 20,
               maxMaxBufferLength: 40,
@@ -218,9 +192,11 @@ export function useMoviePlayback(
               capLevelToPlayerSize: !auditorium,
             });
             hls.current = instance;
+            const player = instance;
             instance.on(Hls.Events.MANIFEST_PARSED, () => {
+              if (disposed) return;
               setLevels(
-                instance.levels.map((level, index) => ({
+                player.levels.map((level, index) => ({
                   index,
                   height: level.height,
                 })),
@@ -248,9 +224,10 @@ export function useMoviePlayback(
       video!.load();
     }
     void load();
-    return () => {
+    const dispose = () => {
+      if (disposed) return;
       disposed = true;
-      generation.current++;
+      generation.current = sourceGeneration + 1;
       failureHandler.current = null;
       clearTimeout(timeout);
       video.removeEventListener("canplay", loaded);
@@ -261,13 +238,16 @@ export function useMoviePlayback(
       video.removeEventListener("timeupdate", time);
       video.removeEventListener("error", fail);
       document.removeEventListener("visibilitychange", visibility);
-      hls.current?.destroy();
-      hls.current = null;
+      instance?.destroy();
+      if (hls.current === instance) hls.current = null;
       video.pause();
       video.removeAttribute("src");
       video.load();
+      resource.clearSourceCleanup(dispose);
     };
-  }, [video, source?.url, source?.provider, active, attempt, play, auditorium]);
+    resource.attachSourceCleanup(video, dispose);
+    return dispose;
+  }, [resource, video, source, active, attempt, play, auditorium, setReady, setLevels, setQuality, setProgress, setStatus, setIndex]);
   useEffect(() => {
     if (!video) return;
     video.muted = muted;
@@ -288,11 +268,11 @@ export function useMoviePlayback(
       setIndex(0);
     }
   }
-  function retry() {
+  const retry = useCallback(() => {
     clearFailures(sources);
     setIndex(0);
     setAttempt((a) => a + 1);
-  }
+  }, [sources, setIndex]);
   function seek(time: number) {
     if (!video || !Number.isFinite(time)) return;
     video.currentTime = time;

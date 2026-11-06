@@ -258,7 +258,7 @@ function SeatBatch({
         roughness: 0.9,
       }),
     }),
-    [fabric.normalMap, fabric.roughnessMap, leather, detail],
+    [fabric, leather, detail],
   );
   const colorMotions = useRef(new Map<THREE.InstancedMesh, Map<number, {from: THREE.Color; to: THREE.Color; start: number}>>());
   const colorScratch = useMemo(() => new THREE.Color(), []);
@@ -293,7 +293,7 @@ function SeatBatch({
       mesh.computeBoundingSphere();
     });
     gl.shadowMap.needsUpdate = true;
-  }, [geometryKey, parts, gl]);
+  }, [geometryKey, seats, parts, gl]);
   useEffect(() => {
     const color = new THREE.Color();
     parts.forEach((part, pi) => {
@@ -332,7 +332,7 @@ function SeatBatch({
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
     });
     invalidate();
-  }, [inventory, selected, hovered, geometryKey, parts, invalidate]);
+  }, [inventory, selected, hovered, seats, geometryKey, parts, invalidate]);
   useEffect(() => () => { parts.forEach(p => p.geometry.dispose()); }, [parts]);
   useEffect(() => () => { Object.values(materials).forEach(m => m.dispose()); }, [materials]);
   useEffect(() => () => { document.body.style.cursor = "auto"; }, []);

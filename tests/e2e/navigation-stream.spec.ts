@@ -8,11 +8,11 @@ test('navigation can supersede an RSC response whose body is still streaming',as
    if(!String(input).includes('navigation-stream-test')||!response.headers.get('content-type')?.includes('text/x-component')||!init?.signal)return response;
    const signal=init.signal;
    const reader=response.body!.getReader();
-   (window as any).slowNavigationAborted=false;
+   window.slowNavigationAborted=false;
    let firstChunk=true;
    const body=new ReadableStream({
     start(controller){
-     signal.addEventListener('abort',()=>{(window as any).slowNavigationAborted=true;controller.error(signal.reason)},{once:true});
+     signal.addEventListener('abort',()=>{window.slowNavigationAborted=true;controller.error(signal.reason)},{once:true});
     },
     async pull(controller){
      if(firstChunk){firstChunk=false;await new Promise(resolve=>setTimeout(resolve,1500));}
@@ -21,7 +21,7 @@ test('navigation can supersede an RSC response whose body is still streaming',as
     cancel:reason=>reader.cancel(reason)
    });
    const nativeTee=body.tee.bind(body);
-   body.tee=()=>{(window as any).decoderStarted=true;return nativeTee()};
+   body.tee=()=>{window.decoderStarted=true;return nativeTee()};
    const wrapped=new Response(body,{status:response.status,headers:response.headers});
    Object.defineProperty(wrapped,"url",{value:response.url});
    return wrapped;
@@ -29,16 +29,16 @@ test('navigation can supersede an RSC response whose body is still streaming',as
  });
  await page.goto('/movies');await expect(page.getByLabel('Search cinema movies')).toBeVisible();
  await page.evaluate(()=>{
-  const runtime=(window as any)[Symbol.for('vinext.navigationRuntime')];
+  const runtime=window[Symbol.for('vinext.navigationRuntime')];
   runtime.functions.clearNavigationCaches();
   void runtime.functions.navigate('/cinemas?navigation-stream-test=1',0,'navigate','push');
  });
- await page.waitForFunction(()=>(window as any).decoderStarted===true);
- await page.evaluate(()=>{void (window as any)[Symbol.for('vinext.navigationRuntime')].functions.navigate('/my-tickets?navigation-test=2',0,'navigate','push')});
+ await page.waitForFunction(()=>window.decoderStarted===true);
+ await page.evaluate(()=>{void window[Symbol.for('vinext.navigationRuntime')].functions.navigate('/my-tickets?navigation-test=2',0,'navigate','push')});
  await expect(page).toHaveURL(/\/my-tickets/);
  await page.waitForTimeout(2500);
  await expect(page).toHaveURL(/\/my-tickets/);
- expect(await page.evaluate(()=>(window as any).slowNavigationAborted)).toBe(false);
+ expect(await page.evaluate(()=>window.slowNavigationAborted)).toBe(false);
  expect(errors).toEqual([]);
 });
 
@@ -48,10 +48,10 @@ test('a superseded request is still cancelled before decoder handoff',async({pag
   const nativeFetch=window.fetch;
   window.fetch=async(input,init)=>{
    if(!String(input).includes('pending-navigation-test')||!init?.signal)return nativeFetch(input,init);
-   (window as any).pendingNavigationStarted=true;
+   window.pendingNavigationStarted=true;
    return new Promise<Response>((resolve,reject)=>{
     init.signal!.addEventListener('abort',()=>{
-     (window as any).pendingNavigationAborted=true;
+     window.pendingNavigationAborted=true;
      reject(init.signal!.reason);
     },{once:true});
    });
@@ -59,13 +59,13 @@ test('a superseded request is still cancelled before decoder handoff',async({pag
  });
  await page.goto('/movies');await expect(page.getByLabel('Search cinema movies')).toBeVisible();
  await page.evaluate(()=>{
-  const runtime=(window as any)[Symbol.for('vinext.navigationRuntime')];
+  const runtime=window[Symbol.for('vinext.navigationRuntime')];
   runtime.functions.clearNavigationCaches();
   void runtime.functions.navigate('/cinemas?pending-navigation-test=1',0,'navigate','push');
  });
- await page.waitForFunction(()=>(window as any).pendingNavigationStarted===true);
- await page.evaluate(()=>{void (window as any)[Symbol.for('vinext.navigationRuntime')].functions.navigate('/my-tickets?navigation-test=3',0,'navigate','push')});
+ await page.waitForFunction(()=>window.pendingNavigationStarted===true);
+ await page.evaluate(()=>{void window[Symbol.for('vinext.navigationRuntime')].functions.navigate('/my-tickets?navigation-test=3',0,'navigate','push')});
  await expect(page).toHaveURL(/\/my-tickets/);
- expect(await page.evaluate(()=>(window as any).pendingNavigationAborted)).toBe(true);
+ expect(await page.evaluate(()=>window.pendingNavigationAborted)).toBe(true);
  expect(errors).toEqual([]);
 });

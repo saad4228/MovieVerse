@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import { useEffect, useRef, useState } from "react";
 import {
   ExternalLink,
@@ -66,7 +67,7 @@ export default function MovieVideoPlayer({
       data-status={status}
       data-source-id={source?.id || "poster"}
     >
-      <img
+      <AssetImage
         className="mv-video-poster"
         src={source?.posterImage || movie.backdrop}
         alt=""

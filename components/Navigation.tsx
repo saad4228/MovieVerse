@@ -1,5 +1,8 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useHydrated } from "@/hooks/use-hydrated";
+import { useResettableState } from "@/hooks/use-resettable-state";
+import AssetImage from "@/components/AssetImage";
+import { useEffect, useState } from "react";
 import Link from "./MovieLink";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -15,9 +18,9 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { cities, venues } from "@/lib/catalog";
+import { cities, venues, movies } from "@/lib/catalog";
 import {useMovieSearch,useDiscoveryHome} from "@/lib/discovery-client";
-import { movieMatches } from "@/lib/movie-discovery";
+import { movieMatches, searchMovieRecords } from "@/lib/movie-discovery";
 import { useApp } from "@/lib/store";
 import {movieHref,rememberMovieNavigation} from "@/lib/movie-navigation";
 import { api } from "@/lib/client";
@@ -27,19 +30,21 @@ export default function Navigation({
 }: {
   notify: (s: string) => void;
 }) {
-  const [modal, setModal] = useState<"city" | "search" | null>(null);
-  const [query, setQuery] = useState("");
-  const [mobile, setMobile] = useState(false);
+  const path = usePathname();
+  const searchParams=useSearchParams();
+  const savedSearch=searchParams.get("movieSearch");
+  const routeKey = `${path}:${savedSearch}`;
+  const [modal, setModal] = useResettableState<"city" | "search" | null>(routeKey, savedSearch !== null ? "search" : null);
+  const [query, setQuery] = useResettableState(routeKey, savedSearch ?? "");
+  const [mobile, setMobile] = useResettableState(path, false);
   const [user, setUser] = useState<{ name: string } | null>(null);
   const [focus, setFocus] = useState(0);
-  const [hydrated, setHydrated] = useState(false);
+  const hydrated = useHydrated();
   const cityId = useApp((s) => s.city),
     setCity = useApp((s) => s.setCity),
     recent = useApp((s) => s.recentCities);
   const city = cities.find((c) => c.id === cityId)!;
-  const path = usePathname();
-  const searchParams=useSearchParams();
-  const savedSearch=searchParams.get("movieSearch");
+
   const router = useRouter();
   const isHomePage = path === "/";
   const isTheatrePage = /^\/booking\/(?!confirmation(?:\/|$))[^/]+\/(?:seats|snacks|checkout)\/?$/.test(path);
@@ -50,7 +55,6 @@ export default function Navigation({
   useEffect(() => {
     let active = true;
     let request = 0;
-    setHydrated(true);
     const update = () => {
       const current = ++request;
       api("session")
@@ -61,18 +65,6 @@ export default function Navigation({
     window.addEventListener("mv-auth", update);
     return () => { active = false; window.removeEventListener("mv-auth", update); };
   }, []);
-  const previousPath = useRef(path);
-  useEffect(() => {
-    if (previousPath.current !== path) {
-      setModal(null);
-      setMobile(false);
-      previousPath.current = path;
-    }
-    if (savedSearch !== null) {
-      setQuery(savedSearch);
-      setModal("search");
-    }
-  }, [path, savedSearch]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -83,7 +75,7 @@ export default function Navigation({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [setModal, setQuery]);
   function open(which: "city" | "search") {
     setQuery("");
     setFocus(0);
@@ -100,7 +92,7 @@ export default function Navigation({
   }
   const {data:searchData}=useMovieSearch(query,modal==="search");
   const {data:discovery}=useDiscoveryHome(modal==="search"&&!query.trim());
-  const searchMovies=query.trim()?(searchData?.movies??[]):(discovery?.featured??[]);
+  const searchMovies=query.trim()?searchMovieRecords(searchData?.movies??[], movies, query):(discovery?.featured??[]);
   const q = query.toLowerCase();
   const results = [
     ...searchMovies
@@ -359,7 +351,7 @@ export default function Navigation({
                 className={`search-result ${focus === i ? "focused" : ""}`}
                 onClick={() => navigate(r)}
               >
-                {r.image ? <img src={r.image} alt="" /> : <MapPin />}
+                {r.image ? <AssetImage src={r.image} alt="" /> : <MapPin />}
                 <span>
                   <small>{r.type}</small>
                   <strong>{r.title}</strong>

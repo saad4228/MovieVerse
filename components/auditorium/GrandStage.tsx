@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import * as THREE from "three";
 import type { Blueprint } from "@/lib/catalog";
 import { screenFrame } from "@/lib/auditorium";
@@ -9,14 +9,14 @@ export default function GrandStage({ blueprint: b }: { blueprint: Blueprint }) {
   const frame = screenFrame(b);
   const width = b.stage?.width ?? Math.min(b.width - 1.2, frame.width + 2.6);
   const depth = b.stage?.depth ?? 2.8, height = b.stage?.height ?? .9;
-  const edge = (x: number) => .4 + depth - .7 * (x / (width / 2)) ** 2;
+  const edge = useCallback((x: number) => .4 + depth - .7 * (x / (width / 2)) ** 2, [depth,width]);
   const geometry = useMemo(() => {
     const shape = new THREE.Shape(); shape.moveTo(-width/2, .1); shape.lineTo(width/2, .1);
     for (let i=32;i>=0;i--) { const x=-width/2+i/32*width; shape.lineTo(x,-edge(x)); }
     shape.closePath();
     const geometry = new THREE.ExtrudeGeometry(shape,{depth:height,bevelEnabled:false});
     geometry.rotateX(-Math.PI/2); return geometry;
-  }, [width, depth, height]);
+  }, [width, edge, height]);
   useEffect(()=>()=>geometry.dispose(),[geometry]);
   return <group name="grand-projection-stage" position={[frame.x,0,frame.z]} rotation={[0,frame.rotationY,0]}>
     <mesh geometry={geometry} receiveShadow raycast={()=>null}><WoodMaterial color="#68432a"/></mesh>

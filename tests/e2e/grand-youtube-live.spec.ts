@@ -18,14 +18,14 @@ test("live YouTube continues presenting frames during Grand auditorium camera mo
   await frame.waitForSelector("video");
   await frame.evaluate(()=>{
     const video=document.querySelector("video")!;
-    (window as any).movieverseProbe={video,frames:0};
-    const tick=()=>{(window as any).movieverseProbe.frames++;video.requestVideoFrameCallback(tick);};
+    window.movieverseProbe={video,frames:0};
+    const tick=()=>{window.movieverseProbe.frames++;video.requestVideoFrameCallback(tick);};
     video.requestVideoFrameCallback(tick);
   });
   const sample=async()=>({
     player:await canvas.evaluate(el=>JSON.parse(el.dataset.mediaTelemetry!)),
     renderer:await canvas.evaluate(el=>JSON.parse(el.dataset.renderTelemetry!)),
-    media:await frame.evaluate(()=>{const p=(window as any).movieverseProbe,v=p.video as HTMLVideoElement;const q=v.getVideoPlaybackQuality();return {time:v.currentTime,frames:p.frames,ready:v.readyState,paused:v.paused,total:q.totalVideoFrames,dropped:q.droppedVideoFrames,sameElement:document.querySelector("video")===v};}),
+    media:await frame.evaluate(()=>{const p=window.movieverseProbe,v=p.video as HTMLVideoElement;const q=v.getVideoPlaybackQuality();return {time:v.currentTime,frames:p.frames,ready:v.readyState,paused:v.paused,total:q.totalVideoFrames,dropped:q.droppedVideoFrames,sameElement:document.querySelector("video")===v};}),
   });
   await expect.poll(()=>canvas.getAttribute("data-media-telemetry")).toBeTruthy();
   const samples=[await sample()];

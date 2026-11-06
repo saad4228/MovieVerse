@@ -1,5 +1,6 @@
 "use client";
 
+import AssetImage from "@/components/AssetImage";
 import Link from "next/link";
 import { ArrowUpRight, Ticket } from "lucide-react";
 import type {Movie} from "@/lib/catalog";
@@ -16,7 +17,7 @@ export default function PosterWall({movies:supplied}:{movies?:Movie[]}={}) {
             {Array.from({ length: 12 }, (_, column) => {
               const movie = movies[(column + row * 3) % movies.length];
               return (
-                <img key={column} src={movie.poster} alt="" loading="lazy" />
+                <AssetImage key={column} src={movie.poster} alt="" loading="lazy" />
               );
             })}
           </div>

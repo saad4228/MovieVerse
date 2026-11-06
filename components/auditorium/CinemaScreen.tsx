@@ -1,6 +1,7 @@
 "use client";
+import { useResettableState } from "@/hooks/use-resettable-state";
 import type { TrailerController, TrailerState } from "@/lib/video/controller";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -38,25 +39,25 @@ export default function CinemaScreen({
   refined?: boolean;
 }) {
   const playback = useMoviePlayback(movie, { muted, paused, auditorium: true });
-  const { video, ready, status, source, progress } = playback;
+  const { video, ready, status, source, progress, play, retry } = playback;
   const embedded = embeddedTrailer(movie);
-  const [embeddedError, setEmbeddedError] = useState<string | null>(null);
-  useEffect(() => setEmbeddedError(null), [movie.id]);
-  const embeddedFailure = useCallback((reason: string) => setEmbeddedError(reason), []);
+  const [embeddedError, setEmbeddedError] = useResettableState<string | null>(movie.id, null);
+
+  const embeddedFailure = useCallback((reason: string) => setEmbeddedError(reason), [setEmbeddedError]);
   const useEmbed = !!embedded && !embeddedError && (directSources(movie).length === 0 || (!source && status === "poster"));
   useEffect(() => {
     if (useEmbed) return;
     onPlaybackReady?.({
-      play: () => { if (video?.ended) video.currentTime = 0; void playback.play(); },
+      play: () => { if (video?.ended) video.currentTime = 0; void play(); },
       pause: () => video?.pause(),
       setMuted: value => { if (video) video.muted = value; },
-      retry: () => { setEmbeddedError(null); playback.retry(); },
+      retry: () => { setEmbeddedError(null); retry(); },
     });
     return () => onPlaybackReady?.(null);
-  }, [playback.play, onPlaybackReady, useEmbed, embeddedError, source?.id]);
+  }, [play, retry, video, onPlaybackReady, useEmbed, setEmbeddedError]);
   useEffect(() => {
     if (!useEmbed) onPlaybackState?.(embeddedError || status === "poster" && directSources(movie).length > 0 ? "error" : status === "poster" ? "idle" : status);
-  }, [useEmbed, status, embeddedError, movie.id, onPlaybackState]);
+  }, [useEmbed, status, embeddedError, movie, onPlaybackState]);
   const poster = useTexture(movie.backdrop);
   const { gl, invalidate } = useThree();
   useEffect(() => {
@@ -80,7 +81,7 @@ export default function CinemaScreen({
     if (!video || useEmbed) return;
     return observeNativePlayback(video, gl.domElement);
   }, [video, useEmbed, gl]);
-  const renderStats = useRef({ frames: 0, started: performance.now() });
+  const renderStats = useRef({ frames: 0, started: 0 });
   const surface = useRef<THREE.Mesh>(null);
   const filmMaterial = useRef<THREE.MeshBasicMaterial>(null);
   const posterMaterial = useRef<THREE.MeshBasicMaterial>(null);
@@ -95,7 +96,7 @@ export default function CinemaScreen({
     t.generateMipmaps = false;
     playbackDiagnostic(movie, "video-texture-created", { readyState: video.readyState });
     return t;
-  }, [video, source?.url]);
+  }, [video, source, movie]);
   useEffect(() => () => texture?.dispose(), [texture]);
   useEffect(() => {
     gl.domElement.dataset.screenFrame = JSON.stringify(screenFrame(b));
@@ -133,7 +134,7 @@ export default function CinemaScreen({
     status,
     source?.id,
     progress.height,
-    movie.title,
+    movie, b, video, source,
     texture,
     gl,
     onMediaStatus,
@@ -143,7 +144,8 @@ export default function CinemaScreen({
     ready,
   ]);
   useFrame((_state, dt) => {
-    const stats = renderStats.current; stats.frames++;
+    const stats = renderStats.current;
+    if (!stats.started) stats.started = performance.now(); stats.frames++;
     const now = performance.now();
     if (now - stats.started >= 500) {
       gl.domElement.dataset.renderTelemetry = JSON.stringify({ fps: Math.round(stats.frames * 10000 / (now-stats.started))/10,

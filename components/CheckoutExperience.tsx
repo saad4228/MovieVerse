@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import "./checkout-experience.css";
 import {useEffect,useRef,useState,type CSSProperties,type ReactNode} from "react";
 import Link from "next/link";
@@ -53,9 +54,13 @@ export default function CheckoutExperience({show,selected,active,notify,renderSu
   }).catch(()=>{});return()=>{current=false;};},[]);
   // A snack offer ceases to apply when the user removes all snacks on the prior step.
   const applicablePromo=promo&&couponDiscount(promo,pricing.tickets,pricing.food)>0;
-  useEffect(()=>{
-    if(promo&&!applicablePromo){setPromo("");setFeedback({kind:"info",text:"Coupon removed because this order no longer meets its terms."});}
-  },[promo,applicablePromo,setPromo]);
+  const eligibilityKey=`${promo}:${Boolean(applicablePromo)}`;
+  const [lastEligibility,setLastEligibility]=useState<string|null>(null);
+  if(lastEligibility!==eligibilityKey){
+    setLastEligibility(eligibilityKey);
+    if(promo&&!applicablePromo)setFeedback({kind:"info",text:"Coupon removed because this order no longer meets its terms."});
+  }
+  useEffect(()=>{if(promo&&!applicablePromo)setPromo("");},[promo,applicablePromo,setPromo]);
   function apply(code:string){
     if(busy||!active)return;
     const offer=checkoutOffer(code);
@@ -121,10 +126,10 @@ export default function CheckoutExperience({show,selected,active,notify,renderSu
         <div className="block-heading"><span>03</span><div><h3>Your way to pay.</h3><p>Choose a payment experience. Every method below is simulated.</p></div></div>
         <div className="payment-methods" role="group" aria-label="Payment method">
           {methods.map(({id,title,description,image})=><button type="button" key={id} className={method===id?"selected":""} aria-label={id} aria-pressed={method===id} disabled={busy} onClick={()=>setMethod(id)}>
-            <span className="payment-method-icon"><img src={`/assets/payments/${image}`} alt="" width={64} height={44}/></span><strong>{title}</strong><small>{description}</small><span className="method-check">{method===id&&<Check size={12}/>}</span>
+            <span className="payment-method-icon"><AssetImage src={`/assets/payments/${image}`} alt="" width={64} height={44}/></span><strong>{title}</strong><small>{description}</small><span className="method-check">{method===id&&<Check size={12}/>}</span>
           </button>)}
         </div>
-        <div className="test-payment" key={method}><span className="payment-method-icon"><img src={`/assets/payments/${chosen.image}`} alt="" width={64} height={44}/></span><div><strong>{method} · Test payment</strong><p>{chosen.detail}</p><small>No live payment provider is connected.</small></div></div>
+        <div className="test-payment" key={method}><span className="payment-method-icon"><AssetImage src={`/assets/payments/${chosen.image}`} alt="" width={64} height={44}/></span><div><strong>{method} · Test payment</strong><p>{chosen.detail}</p><small>No live payment provider is connected.</small></div></div>
         <label className="test-outcome">Simulated result<select disabled={busy} value={outcome} onChange={e=>{setOutcome(e.target.value as typeof outcome);setError("");}}><option value="success">Successful payment</option><option value="failure">Payment failure</option><option value="cancel">Payment cancelled</option></select></label>
       </div>
       {error&&<div ref={errorRef} tabIndex={-1} className="checkout-failure" role="alert"><AlertCircle size={20}/><div><strong>Booking could not be completed</strong><p>{error}</p><span><RotateCcw size={13}/> You can retry using the Pay Now button.</span></div></div>}

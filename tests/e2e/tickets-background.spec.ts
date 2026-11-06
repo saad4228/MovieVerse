@@ -21,7 +21,9 @@ async function recordFrames(page: Page) {
           position:style.backgroundPosition,size:style.backgroundSize,image:style.backgroundImage,
           transform:style.transform,mainTransform:main ? getComputedStyle(main).transform : null});
       }
-      if (samples.length < 2000) requestAnimationFrame(sample);
+      // Keep recording across a deliberately gated catalogue request. A cold
+      // load can outlast 2000 frames before the ticket content even mounts.
+      requestAnimationFrame(sample);
     }
     requestAnimationFrame(sample);
   });
@@ -29,8 +31,11 @@ async function recordFrames(page: Page) {
 async function checkStable(page: Page, width:number,height:number) {
   await expect(page.locator(".tickets-background")).toBeVisible();
   await expect(page.locator(".digital-ticket")).toHaveCount(3);
-  await expect.poll(() => page.evaluate(() => (window as any).ticketBackgroundFrames.length)).toBeGreaterThan(35);
-  const samples = await page.evaluate(() => (window as any).ticketBackgroundFrames as any[]);
+  await expect.poll(() => page.evaluate(() => window.ticketBackgroundFrames.length)).toBeGreaterThan(35);
+  // DOM insertion precedes the next animation frame. Pre-content samples do
+  // not prove that the recorder has observed the newly mounted ticket yet.
+  await expect.poll(() => page.evaluate(() => window.ticketBackgroundFrames.some((frame: { mainTransform: string | null }) => frame.mainTransform !== null))).toBe(true);
+  const samples = await page.evaluate(() => window.ticketBackgroundFrames as import("./browser-fixtures").BackgroundFrame[]);
   expect(samples.some(s => s.mainTransform && s.mainTransform !== "none")).toBe(true);
   for(const s of samples) {
     expect({x:s.x,y:s.y,width:s.width,height:s.height}).toEqual({x:0,y:0,width,height});

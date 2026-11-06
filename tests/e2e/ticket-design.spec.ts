@@ -65,7 +65,7 @@ test('portrait ticket preserves dynamic ID, QR, download and mobile layout',asyn
   expect(errors).toEqual([]);
 });
 
-test('homepage navbar is transparent while other primary routes retain glass styling',async({page})=>{
+test('route-specific transparent navbars and ticket glass styling survive navigation',async({page})=>{
   await page.goto('/');
   const homeHeader=page.locator('.header');
   await expect(homeHeader).toHaveClass(/home-navbar/);
@@ -102,6 +102,17 @@ test('homepage navbar is transparent while other primary routes retain glass sty
     await expect(header).toHaveCSS('backdrop-filter','blur(18px)');
     await expect(header).toHaveCSS('border-bottom-color','rgba(190, 130, 95, 0.16)');
   };
+  const expectTransparentNavbar=async(variant:string)=>{
+    const header=page.locator('.header');
+    await expect(header).toBeVisible();
+    await expect(header).toHaveClass(new RegExp(variant));
+    await expect(header).not.toHaveClass(/glass-navbar/);
+    await expect(header).toHaveCSS('background-color','rgba(0, 0, 0, 0)');
+    await expect(header).toHaveCSS('background-image','none');
+    await expect(header).toHaveCSS('backdrop-filter','none');
+    await expect(header).toHaveCSS('border-bottom-style','none');
+    await expect(header).toHaveCSS('box-shadow','none');
+  };
   await page.getByRole('button',{name:'Search movies and cinemas'}).click();
   await expect(page.getByRole('dialog',{name:'Search MovieVerse'})).toBeVisible();
   await page.getByLabel('Search movies, cinemas and cities').fill('Sintel');
@@ -114,14 +125,14 @@ test('homepage navbar is transparent while other primary routes retain glass sty
   for(const [label,route] of [['Movies','/movies'],['Cinemas','/cinemas'],['Coming soon','/coming-soon']] as const){
     await homeNavigation.getByRole('link',{name:label}).click();
     await expect(page).toHaveURL(new RegExp(`${route}$`));
-    await expectGlassNavbar();
+    await expectTransparentNavbar(route==='/cinemas'?'cinema-navbar':'movies-navbar');
   }
   await page.getByRole('banner').getByRole('link',{name:'My tickets'}).click();
   await expect(page).toHaveURL(/\/my-tickets$/);
   await expectGlassNavbar();
   await page.getByRole('banner').getByRole('link',{name:'Sign in'}).click();
   await expect(page).toHaveURL(/\/login$/);
-  await expectGlassNavbar();
+  await expectTransparentNavbar('auth-navbar');
   await page.getByRole('banner').getByRole('link',{name:'MovieVerse home'}).click();
   await expect(page).toHaveURL(/\/$/);
   await expect(homeHeader).toHaveClass(/home-navbar/);
@@ -131,13 +142,15 @@ test('homepage navbar is transparent while other primary routes retain glass sty
   await expect(page.locator('.header')).toHaveCount(0);
   await expect(page.getByRole('link',{name:'Back to movies',exact:true})).toBeVisible();
   await page.goto('/cinemas/pune-1');
-  await expectGlassNavbar();
+  await expectTransparentNavbar('cinema-navbar');
 });
 
 test('released films remain searchable without pretending they have local screenings',async({page})=>{
-  await page.goto('/movies');
-  await page.getByLabel('Search movie titles').fill('Udta');
-  await expect(page.locator('.movie-grid')).toContainText('Udta Teer');
+  // Released discovery belongs to Explore; Movies contains bookable screenings only.
+  await page.goto('/explore?collection=hollywood');
+  await page.getByLabel('Search movie titles').fill('Dark Knight');
+  await expect(page.locator('.movie-grid')).toContainText('The Dark Knight');
+  await expect(page.locator('.movie-grid')).not.toContainText('Demo booking');
   await expect(page.locator('.movie-grid')).toContainText('Explore movie');
   await page.getByRole('button',{name:'Search movies and cinemas'}).click();
   await page.getByPlaceholder('Movies, cinemas, cities…').fill('Drishyam');

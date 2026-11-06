@@ -1,0 +1,31 @@
+name: Repository security
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  repository-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source and reachable history
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Use Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      # These checks use Node built-ins only; no install or credentials needed.
+      - name: Test the security tooling
+        run: npm run security:test
+      - name: Check current source and ignore protection
+        run: npm run security:check
+      - name: Scan reachable Git history
+        run: npm run security:history
