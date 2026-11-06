@@ -5,6 +5,7 @@ import {
   genreSchema,
   normalizeMovie,
   TmdbError,
+  type TmdbDiagnostic,
   type TmdbSettings,
 } from "./tmdb";
 import {
@@ -16,11 +17,12 @@ import type { Movie } from "./catalog";
 export type SyncReport = {
   collections: Record<
     string,
-    { count?: number; removed?: number; error?: string }
+    { count?: number; removed?: number; error?: string; category?: string }
   >;
   imported: number;
   updated: number;
   failures: number;
+  failureCategories: Record<string, number>;
 };
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 async function request(
@@ -28,10 +30,11 @@ async function request(
   params: Record<string, string>,
   settings: TmdbSettings,
   validate: (x: unknown) => boolean,
+  context: { collection?: string; stage: string; log?: (diagnostic: TmdbDiagnostic) => void },
 ) {
   for (let attempt = 0; ; attempt++)
     try {
-      return await tmdbRequest(path, params, settings, 0, validate);
+      return await tmdbRequest(path, params, settings, 0, validate, context);
     } catch (error) {
       if (
         attempt >= 2 ||
@@ -131,6 +134,7 @@ export async function syncCatalogue(
   options: {
     now?: Date;
     progress?: (text: string) => void;
+    diagnostics?: (diagnostic: TmdbDiagnostic) => void;
     collection?: string;
   } = {},
 ) {
@@ -150,6 +154,7 @@ export async function syncCatalogue(
     imported: 0,
     updated: 0,
     failures: 0,
+    failureCategories: {},
   };
   try {
     await db
@@ -167,6 +172,7 @@ export async function syncCatalogue(
       { language: "en-US" },
       settings,
       (x) => genreSchema.safeParse(x).success,
+      { stage: "genre-list", log: options.diagnostics },
     );
     const genres = new Map(
       genreSchema.parse(genreResult.data).genres.map((g) => [g.id, g.name]),
@@ -192,6 +198,7 @@ export async function syncCatalogue(
               const parsed = pageSchema.safeParse(x);
               return parsed.success && parsed.data.page === page;
             },
+            { stage: "collection-page", collection: spec.id, log: options.diagnostics },
           );
           const data = pageSchema.parse(result.data);
           if (data.total_pages > 0 && data.results.length === 0)
@@ -245,6 +252,7 @@ export async function syncCatalogue(
                       const parsed = movieSchema.safeParse(x);
                       return parsed.success && parsed.data.id === id;
                     },
+                    { stage: "movie-detail", collection: spec.id, log: options.diagnostics },
                   );
                   const raw = movieSchema.parse(result.data);
                   if (raw.adult) return;
@@ -306,7 +314,11 @@ export async function syncCatalogue(
           error instanceof TmdbError
             ? error.code
             : "Collection refresh failed; previous snapshot retained.";
-        report.collections[spec.id] = { error: message };
+        const category = error instanceof TmdbError
+          ? error.diagnostic?.category ?? "provider"
+          : "database";
+        report.failureCategories[category] = (report.failureCategories[category] ?? 0) + 1;
+        report.collections[spec.id] = { error: message, category };
         await db
           .prepare(
             "INSERT INTO discovery_collections(id,last_attempt,error) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET last_attempt=excluded.last_attempt,error=excluded.error",
@@ -349,6 +361,7 @@ export async function syncCatalogue(
         JSON.stringify({
           ...report,
           error: error instanceof TmdbError ? error.code : "Sync failed",
+          errorCategory: error instanceof TmdbError ? error.diagnostic?.category ?? "provider" : "database",
         }),
         runId,
       )

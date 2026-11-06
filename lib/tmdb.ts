@@ -2,6 +2,22 @@ import { z } from "zod";
 import type { Movie } from "./catalog";
 
 export type TmdbSettings = { TMDB_READ_TOKEN?: string; TMDB_API_KEY?: string };
+export type TmdbDiagnostic = {
+  stage: string;
+  collection?: string;
+  tokenPresent: boolean;
+  upstreamStatus?: number;
+  category: "configuration" | "authentication" | "rate_limit" | "provider" | "network" | "invalid_response";
+  exceptionType: string;
+  durationMs: number;
+  requestId?: string;
+  responseDetails?: string;
+};
+export type TmdbRequestContext = {
+  stage?: string;
+  collection?: string;
+  log?: (diagnostic: TmdbDiagnostic) => void;
+};
 export const discoveryQuery = z.object({
   section: z.enum(["trending", "now-playing", "upcoming", "popular", "top-rated"]).default("trending"),
   page: z.coerce.number().int().min(1).max(500).default(1),
@@ -14,7 +30,13 @@ export type MovieDiscoveryResult = {
   fetchedAt: string; page: number; totalPages: number; movies: Movie[];
 };
 export class TmdbError extends Error {
-  constructor(public code: string, message: string, public status = 503, public retryAfter?: number) { super(message); }
+  constructor(
+    public code: string,
+    message: string,
+    public status = 503,
+    public retryAfter?: number,
+    public diagnostic?: Omit<TmdbDiagnostic, "durationMs">,
+  ) { super(message); }
 }
 export const movieSchema = z.object({
   id: z.number().int().positive(), title: z.string(), original_title: z.string().optional(),
@@ -41,11 +63,32 @@ type Cached = { expires: number; value: Promise<{ data: unknown; fetchedAt: stri
 // Per-worker, bounded, coalesced cache. Credentials remain server-side and separate cache namespaces.
 const caches = new Map<string, Map<string, Cached>>();
 const cooldowns = new Map<string, number>();
+const safeProviderDetails = (text: string) => {
+  const compact = text.replace(/[\u0000-\u001f]+/g, " ").trim();
+  if (!compact) return undefined;
+  try {
+    const parsed: unknown = JSON.parse(compact);
+    if (parsed && typeof parsed === "object") {
+      const value = parsed as Record<string, unknown>;
+      const statusMessage = typeof value.status_message === "string" ? value.status_message : "";
+      const statusCode = typeof value.status_code === "number" ? `status_code=${value.status_code}` : "";
+      return [statusCode, statusMessage].filter(Boolean).join("; ").slice(0, 300) || undefined;
+    }
+  } catch {
+    // Provider proxies may return plain text.
+  }
+  return compact.slice(0, 300);
+};
+const exceptionType = (error: unknown) => error instanceof Error ? error.name : typeof error;
+const emitDiagnostic = (context: TmdbRequestContext | undefined, diagnostic: TmdbDiagnostic) => context?.log?.(diagnostic);
 export function tmdbConfigured(settings: TmdbSettings) { return !!(settings.TMDB_READ_TOKEN?.trim() || settings.TMDB_API_KEY?.trim()); }
-export async function tmdbRequest(path: string, params: Record<string, string>, settings: TmdbSettings, ttl = 15 * 60_000, validate?: (value: unknown) => boolean) {
+export async function tmdbRequest(path: string, params: Record<string, string>, settings: TmdbSettings, ttl = 15 * 60_000, validate?: (value: unknown) => boolean, context?: TmdbRequestContext) {
   const token = settings.TMDB_READ_TOKEN?.trim();
   const apiKey = settings.TMDB_API_KEY?.trim();
-  if (!token && !apiKey) throw new TmdbError("TMDB_NOT_CONFIGURED", "Movie discovery is not connected yet. The demo catalogue remains available below.");
+  if (!token && !apiKey) {
+    emitDiagnostic(context, { stage: context?.stage ?? path, collection: context?.collection, tokenPresent: false, category: "configuration", exceptionType: "TmdbConfigurationError", durationMs: 0 });
+    throw new TmdbError("TMDB_NOT_CONFIGURED", "Movie discovery is not connected yet. The demo catalogue remains available below.");
+  }
   const identity = token ? `token:${token}` : `key:${apiKey}`;
   const cooldown = cooldowns.get(identity) || 0;
   if (cooldown > Date.now()) throw new TmdbError("TMDB_RATE_LIMITED", "Movie discovery is busy. Please try again shortly.", 429, Math.ceil((cooldown - Date.now()) / 1000));
@@ -62,25 +105,57 @@ export async function tmdbRequest(path: string, params: Record<string, string>, 
   if (cache.size >= 200) cache.delete(cache.keys().next().value!);
   const entry: Cached = { expires: Date.now() + ttl, value: Promise.resolve({ data: null, fetchedAt: "" }) };
   entry.value = (async () => {
+    const started = Date.now();
+    const diagnosticBase = { stage: context?.stage ?? path, collection: context?.collection, tokenPresent: Boolean(token) };
     try {
       if (!token) url.searchParams.set("api_key", apiKey!);
       const response = await fetch(url.href, { headers: { accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) }, signal: AbortSignal.timeout(8000), redirect: "error" });
+      const requestId = response.headers.get("x-tmdb-request-id") ?? response.headers.get("x-request-id") ?? response.headers.get("cf-ray") ?? undefined;
+      const details = response.ok ? undefined : safeProviderDetails(await response.clone().text());
       if (response.status === 429) {
         const rawDelay = Number(response.headers.get("Retry-After"));
         const delay = Number.isFinite(rawDelay) && rawDelay > 0 ? Math.min(300, Math.ceil(rawDelay)) : 30;
         cooldowns.set(identity, Date.now() + delay * 1000);
-        throw new TmdbError("TMDB_RATE_LIMITED", "Movie discovery is busy. Please try again shortly.", 429, delay);
+        const diagnostic = { ...diagnosticBase, upstreamStatus: response.status, category: "rate_limit" as const, exceptionType: "TmdbRateLimitError", requestId, responseDetails: details };
+        emitDiagnostic(context, { ...diagnostic, durationMs: Date.now() - started });
+        throw new TmdbError("TMDB_RATE_LIMITED", "Movie discovery is busy. Please try again shortly.", 429, delay, diagnostic);
       }
-      if (response.status === 401 || response.status === 403) throw new TmdbError("TMDB_AUTH_FAILED", "Movie discovery could not authenticate. Please contact support.");
-      if (response.status === 404) throw new TmdbError("TMDB_NOT_FOUND", "This movie was not found.", 404);
-      if (!response.ok) throw new TmdbError("TMDB_UNAVAILABLE", "Movie discovery is temporarily unavailable. Please try again.");
-      const data: unknown = await response.json();
-      if (validate && !validate(data)) throw new TmdbError("TMDB_INVALID_RESPONSE", "Movie discovery returned an invalid response.");
+      if (response.status === 401 || response.status === 403) {
+        const diagnostic = { ...diagnosticBase, upstreamStatus: response.status, category: "authentication" as const, exceptionType: "TmdbAuthenticationError", requestId, responseDetails: details };
+        emitDiagnostic(context, { ...diagnostic, durationMs: Date.now() - started });
+        throw new TmdbError("TMDB_AUTH_FAILED", "Movie discovery could not authenticate. Please contact support.", 503, undefined, diagnostic);
+      }
+      if (response.status === 404) {
+        const diagnostic = { ...diagnosticBase, upstreamStatus: response.status, category: "provider" as const, exceptionType: "TmdbNotFoundError", requestId, responseDetails: details };
+        emitDiagnostic(context, { ...diagnostic, durationMs: Date.now() - started });
+        throw new TmdbError("TMDB_NOT_FOUND", "This movie was not found.", 404, undefined, diagnostic);
+      }
+      if (!response.ok) {
+        const diagnostic = { ...diagnosticBase, upstreamStatus: response.status, category: "provider" as const, exceptionType: "TmdbProviderError", requestId, responseDetails: details };
+        emitDiagnostic(context, { ...diagnostic, durationMs: Date.now() - started });
+        throw new TmdbError("TMDB_UNAVAILABLE", "Movie discovery is temporarily unavailable. Please try again.", 503, undefined, diagnostic);
+      }
+      let data: unknown;
+      try {
+        data = await response.json();
+      } catch (error) {
+        const diagnostic = { ...diagnosticBase, upstreamStatus: response.status, category: "invalid_response" as const, exceptionType: exceptionType(error), requestId };
+        emitDiagnostic(context, { ...diagnostic, durationMs: Date.now() - started });
+        throw new TmdbError("TMDB_INVALID_RESPONSE", "Movie discovery returned an invalid response.", 503, undefined, diagnostic);
+      }
+      if (validate && !validate(data)) {
+        const diagnostic = { ...diagnosticBase, upstreamStatus: response.status, category: "invalid_response" as const, exceptionType: "TmdbSchemaValidationError", requestId };
+        emitDiagnostic(context, { ...diagnostic, durationMs: Date.now() - started });
+        throw new TmdbError("TMDB_INVALID_RESPONSE", "Movie discovery returned an invalid response.", 503, undefined, diagnostic);
+      }
+      emitDiagnostic(context, { ...diagnosticBase, upstreamStatus: response.status, category: "provider", exceptionType: "None", durationMs: Date.now() - started, requestId });
       return { data, fetchedAt: new Date().toISOString() };
     } catch (error) {
       cache!.delete(cacheKey);
       if (error instanceof TmdbError) throw error;
-      throw new TmdbError("TMDB_UNAVAILABLE", "Movie discovery is temporarily unavailable. Please try again.");
+      const diagnostic = { ...diagnosticBase, category: "network" as const, exceptionType: exceptionType(error), durationMs: Date.now() - started };
+      emitDiagnostic(context, diagnostic);
+      throw new TmdbError("TMDB_UNAVAILABLE", "Movie discovery is temporarily unavailable. Please try again.", 503, undefined, diagnostic);
     }
   })();
   cache.set(cacheKey, entry);

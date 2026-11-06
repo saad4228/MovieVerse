@@ -10,6 +10,7 @@ import { syncCatalogue } from "./catalogue-sync";
 import { genreQuery } from "./genre-catalog";
 import { collectionPlan } from "./discovery-collections";
 import { readRequestJson, RequestError } from "./request-json";
+import { genreSchema, tmdbRequest, TmdbError, type TmdbDiagnostic } from "./tmdb";
 export async function catalogueApi(
   req: Request,
   action: string,
@@ -20,6 +21,7 @@ export async function catalogueApi(
     "discovery-home",
     "catalogue-search",
     "catalogue-sync",
+    "catalogue-diagnostic",
     "catalogue-status",
     "catalogue-pins",
     "movie-genres",
@@ -32,6 +34,7 @@ export async function catalogueApi(
     db = env.DB;
   const protectedRoute = [
     "catalogue-sync",
+    "catalogue-diagnostic",
     "catalogue-status",
     "catalogue-pins",
   ].includes(action);
@@ -60,6 +63,39 @@ export async function catalogueApi(
       },
     });
   try {
+    const logTmdbDiagnostic = (diagnostic: TmdbDiagnostic) =>
+      console.log(JSON.stringify({ event: "tmdb-request", ...diagnostic }));
+    if (action === "catalogue-diagnostic" && req.method === "POST") {
+      const diagnostics: TmdbDiagnostic[] = [];
+      try {
+        await tmdbRequest(
+          "genre/movie/list",
+          { language: "en-US" },
+          env,
+          0,
+          (value) => genreSchema.safeParse(value).success,
+          {
+            stage: "protected-diagnostic",
+            log: (diagnostic) => {
+              diagnostics.push(diagnostic);
+              logTmdbDiagnostic(diagnostic);
+            },
+          },
+        );
+        return respond({ ok: true, message: "TMDB diagnostic request succeeded.", diagnostic: diagnostics.at(-1) });
+      } catch (error) {
+        if (error instanceof TmdbError)
+          return respond({
+            ok: false,
+            error: {
+              code: error.code,
+              category: error.diagnostic?.category ?? "provider",
+              diagnostic: error.diagnostic,
+            },
+          }, error.status);
+        throw error;
+      }
+    }
     if (action === "catalogue-status" && req.method === "GET")
       return respond(await catalogueStatus(db));
     if (action === "catalogue-sync" && req.method === "POST") {
@@ -140,6 +176,7 @@ export async function catalogueApi(
       return respond(
         await syncCatalogue(db, env, body.kind, {
           collection: body.collection,
+          diagnostics: logTmdbDiagnostic,
         }),
       );
     }

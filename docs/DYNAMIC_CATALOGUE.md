@@ -70,6 +70,7 @@ Credentials are read privately from `.dev.vars`. An unmatched opening quote in t
 All these endpoints require `Authorization: Bearer <ADMIN_TOKEN>`, with no token in the URL:
 
 - `GET /api/catalogue-status`: last successful full/trending runs, movie/origin counts, collection counts, genre counts, import/update/removal counts and failures.
+- `POST /api/catalogue-diagnostic`: makes one protected, read-only `genre/movie/list` request from the deployed Worker. Its response and Worker logs include only token presence, upstream status, category, exception type, duration, request ID and sanitized provider details.
 - `POST /api/catalogue-sync`: validated sync plan, one authorized collection refresh at a time, and final completion validation. Use the helper below rather than one long HTTP import.
 - `POST /api/catalogue-pins` with JSON `{ "ids": [123, 456] }`: at most six existing TMDB movie IDs. Only authorized editorial pins; automatic discovery remains active.
 
@@ -90,6 +91,8 @@ try {
 ```
 
 The helper first fetches a protected plan, submits each collection and stops on failure. The final full/trending success record is created only after the backend verifies all required successful collection run IDs within two hours. Interrupted manual imports can be rerun; upserts are idempotent. Cron execution does not depend on site visits or this helper.
+
+The protected status report records `failureCategories` and per-collection `category` values. `authentication`, `provider`, `rate_limit`, `network`, `invalid_response`, `configuration`, and `database` failures remain distinct; published generations are retained on failed refreshes.
 
 ## Production setup still required
 

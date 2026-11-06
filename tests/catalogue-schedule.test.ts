@@ -8,7 +8,7 @@ it("routes daily and six-hour schedules to the correct sync with the backend bin
  const log=vi.spyOn(console,"log").mockImplementation(()=>{});
  for(const [cron,kind] of [["0 3 * * *","full"],["0 */6 * * *","trending"]]){
   await worker.scheduled({cron} as ScheduledController,env,{waitUntil} as unknown as ExecutionContext);
-  expect(syncCatalogue).toHaveBeenLastCalledWith(db,env,kind);
+  expect(syncCatalogue).toHaveBeenLastCalledWith(db,env,kind,expect.objectContaining({diagnostics:expect.any(Function)}));
   await waitUntil.mock.calls.at(-1)![0];
  }
  log.mockRestore();

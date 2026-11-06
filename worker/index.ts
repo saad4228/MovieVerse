@@ -7,7 +7,7 @@ const worker = {
   async scheduled(event:ScheduledController,env:Cloudflare.Env,ctx:ExecutionContext){
     if(!env.DB)throw new Error("Catalogue sync requires the DB binding.");
     // A full import runs once daily; the other trigger refreshes only trending lists.
-    ctx.waitUntil(syncCatalogue(env.DB,env,event.cron==="0 3 * * *"?"full":"trending").then(result=>{console.log(JSON.stringify({event:"catalogue-sync",id:result.id,kind:result.kind,failures:result.failures}));}));
+    ctx.waitUntil(syncCatalogue(env.DB,env,event.cron==="0 3 * * *"?"full":"trending",{diagnostics:diagnostic=>console.log(JSON.stringify({event:"tmdb-request",...diagnostic}))}).then(result=>{console.log(JSON.stringify({event:"catalogue-sync",id:result.id,kind:result.kind,failures:result.failures}));}));
   },
   fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
     let binding = ctx.props?.CONNECTORS;

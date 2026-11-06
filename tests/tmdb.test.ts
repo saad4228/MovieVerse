@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { discoveryQuery, tmdbCatalog } from "../lib/tmdb";
+import { discoveryQuery, genreSchema, tmdbCatalog, tmdbRequest } from "../lib/tmdb";
 
 afterEach(()=>vi.unstubAllGlobals());
 const film = { id: 42, title: "Provider fixture film", original_title: "Original fixture", overview: "Provider overview", genre_ids: [18], release_date: "2026-11-05", poster_path: "/poster.jpg", original_language: "hi", vote_average: 7.8 };
@@ -49,6 +49,22 @@ describe("TMDB server integration (fixture responses, not live proof)",()=>{
     await expect(provider.list(discoveryQuery.parse({}))).rejects.toMatchObject({code:"TMDB_AUTH_FAILED",status:503});
     await expect(provider.list(discoveryQuery.parse({}))).rejects.not.toHaveProperty("message","secret provider diagnostic");
     expect(fetcher).toHaveBeenCalledTimes(4);
+  });
+  it("uses bearer authorization and reports sanitized upstream diagnostics", async () => {
+    const token = ["test", "read", "value"].join("-");
+    const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      status_code: 7,
+      status_message: "Invalid API key: You do not have permissions to access the service.",
+    }), { status: 401, headers: { "content-type": "application/json", "x-tmdb-request-id": "tmdb-request-1" } }));
+    vi.stubGlobal("fetch", fetcher);
+    const diagnostics: unknown[] = [];
+    await expect(tmdbRequest("genre/movie/list", { language: "en-US" }, { TMDB_READ_TOKEN: token }, 0, (value) => genreSchema.safeParse(value).success, {
+      stage: "protected-diagnostic",
+      log: diagnostic => diagnostics.push(diagnostic),
+    })).rejects.toMatchObject({ code: "TMDB_AUTH_FAILED", diagnostic: { upstreamStatus: 401, category: "authentication" } });
+    expect(fetcher.mock.calls[0][1].headers.Authorization).toBe(`Bearer ${token}`);
+    expect(JSON.stringify(diagnostics)).not.toContain(token);
+    expect(diagnostics[0]).toMatchObject({ stage: "protected-diagnostic", tokenPresent: true, upstreamStatus: 401, requestId: "tmdb-request-1" });
   });
   it("respects upstream rate limiting without automatic request storms",async()=>{
     const fetcher=vi.fn().mockResolvedValue(new Response("",{status:429,headers:{"Retry-After":"40"}})); vi.stubGlobal("fetch",fetcher);
