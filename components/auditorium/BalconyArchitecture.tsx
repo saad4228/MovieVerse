@@ -6,7 +6,7 @@ import { balconyFrame } from "@/lib/balcony";
 import { WoodMaterial, useCinemaSurface } from "../CinemaMaterials";
 
 export default function BalconyArchitecture({ blueprint: b, lights }: { blueprint: Blueprint; lights: boolean }) {
-  const balcony = balconyFrame(b);
+  const balcony = useMemo(() => balconyFrame(b), [b]);
   const geometry = useMemo(() => {
     if (!balcony) return null;
     const shape = new THREE.Shape();
@@ -20,7 +20,7 @@ export default function BalconyArchitecture({ blueprint: b, lights }: { blueprin
     const deck = new THREE.ExtrudeGeometry(shape, { depth: balcony.thickness, bevelEnabled: false, steps: 1 });
     deck.rotateX(-Math.PI / 2);
     return deck;
-  }, [b.width, b.depth, b.rows, b.balconyRows, b.balconyElevation, b.slope, b.rowSpacing, b.balcony, b.modelUrl]);
+  }, [balcony]);
   useEffect(() => () => geometry?.dispose(), [geometry]);
   const carpet = useCinemaSurface("carpet", b.width / 3, 3);
   if (!balcony || !geometry) return null;

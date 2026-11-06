@@ -1,11 +1,12 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import { useEffect, useRef, type ReactNode } from "react";
 import { X, ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 export function Logo() {
   return (
     <Link href="/" className="logo" aria-label="MovieVerse home">
-      <img className="official-logo" src="/assets/movieverse-logo.png" alt="MovieVerse" width={649} height={117} />
+      <AssetImage className="official-logo" src="/assets/movieverse-logo.png" alt="MovieVerse" width={649} height={117} />
     </Link>
   );
 }

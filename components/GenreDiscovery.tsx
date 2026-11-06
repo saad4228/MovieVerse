@@ -1,4 +1,5 @@
 "use client";
+import { useResettableState } from "@/hooks/use-resettable-state";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,15 +12,15 @@ import { TmdbAttribution } from "./TmdbAttribution";
 
 function useResource<T>(url: string | null) {
   const [attempt, setAttempt] = useState(0);
-  const [state, setState] = useState<{ url: string | null; data?: T; error?: string }>({ url, data: url ? peekGenre<T>(url) : undefined });
+  const [state, setState] = useResettableState<{ url: string | null; data?: T; error?: string }>(`${url}:${attempt}`, () => ({ url, data: url ? peekGenre<T>(url) : undefined }));
   useEffect(() => {
     if (!url) return;
     let active = true;
-    setState({ url, data: peekGenre<T>(url) });
+
     loadGenre<T>(url).then(data => { if (active) setState({ url, data }); })
       .catch(error => { if (active) setState({ url, error: error instanceof Error ? error.message : "Discovery is temporarily unavailable." }); });
     return () => { active = false; };
-  }, [url, attempt]);
+  }, [url, attempt, setState]);
   const current = state.url === url ? state : { data: url ? peekGenre<T>(url) : undefined, error: undefined };
   return { ...current, retry: () => setAttempt(n => n + 1) };
 }
@@ -82,7 +83,7 @@ export function GenrePage({ slug }: { slug: string }) {
   }
   const url = `/api/genre-movies?${query}`;
   const { data, error, retry } = useResource<GenreResult>(url);
-  const [search, setSearch] = useState(params.get("q") || "");
+  const [search, setSearch] = useResettableState(params.toString(), params.get("q") || "");
   const top = useRef<HTMLDivElement>(null);
   function change(key: string, value: string) {
     const next = new URLSearchParams(filters.current);
@@ -91,7 +92,7 @@ export function GenrePage({ slug }: { slug: string }) {
     filters.current = next.toString();
     router.replace(`/genres/${slug}${next.size ? `?${next}` : ""}`, { scroll: false });
   }
-  useEffect(() => { setSearch(params.get("q") || ""); }, [params]);
+
   return <main className="discovery-page section-container genre-page">
     <Link className="back-link" href="/explore#explore-genres"><ChevronLeft size={16}/>Back to movies</Link>
     <div className="page-intro"><span className="eyebrow">EXPLORE BY GENRE</span><h1>{data?.collection.name || slug.replaceAll("-", " ")}</h1><p>{data?.collection.description || "Discover films that match your mood."}</p></div>

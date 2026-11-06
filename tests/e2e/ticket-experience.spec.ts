@@ -40,12 +40,29 @@ async function seekPaper(page: Page, time: number) {
 }
 
 async function freezeClock(page: Page) {
-  const fixedTime = new Date(Date.now() + 60_000);
-  await page.clock.install({ time: fixedTime });
+  // Fix wall time before pausing: the target cannot slip into the past between
+  // protocol calls. Timers were installed before navigation, not mid-animation.
+  const fixedTime = new Date(await page.evaluate(() => Date.now()));
+  await page.clock.setFixedTime(fixedTime);
   await page.clock.pauseAt(fixedTime);
 }
 
 test("real checkout prints the saved ticket; replay, refresh, download and print never book again", async ({ page }) => {
+  // Observe short-lived phases in the frame they commit. Protocol polling can
+  // legitimately miss READY (240ms), especially after a real checkout request.
+  await page.addInitScript(() => {
+    window.ticketPhases = {};
+    new MutationObserver(() => {
+      const host=document.querySelector<HTMLElement>(".ticket-experience");
+      const phase=host?.dataset.animation;
+      const header=document.querySelector(".header");
+      if(!phase || !header || window.ticketPhases[phase])return;
+      const style=getComputedStyle(header);
+      window.ticketPhases[phase]={status:host?.querySelector(".printer-status-display strong")?.textContent||"",printerStatus:host?.querySelector<HTMLElement>(".ticket-dispenser")?.dataset.status||"",navbar:{
+        backgroundColor:style.backgroundColor,backgroundImage:style.backgroundImage,backdropFilter:style.backdropFilter,borderBottomColor:style.borderBottomColor,
+      }};
+    }).observe(document,{subtree:true,childList:true,attributes:true,attributeFilter:["data-animation"]});
+  });
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
   const { show, seats } = await prepareCheckout(page);
@@ -67,27 +84,33 @@ test("real checkout prints the saved ticket; replay, refresh, download and print
     };
   });
   await expect(navbar).toBeVisible();
+  // Checkout uses the approved theatre chrome; confirmation uses ticket glass.
+  await expect(navbar).toHaveClass(/theatre-navbar/);
+  await expect(navbar).toHaveCSS("border-bottom-color", "rgb(41, 42, 50)");
+  await expect(navbar).toHaveCSS("background-image", "linear-gradient(110deg, rgb(20, 22, 29), rgb(17, 19, 26) 70%)");
+  await page.getByLabel("Simulated result").selectOption("success");
+  await page.getByRole("button", { name: /Test payment$/ }).click();
+  await expect.poll(() => page.evaluate(() => !!window.ticketPhases.ready)).toBe(true);
   await expect(navbar).toHaveClass(/glass-navbar/);
-  const navbarBefore = await glassNavbar();
+  const navbarBefore = await page.evaluate(() => window.ticketPhases.ready.navbar);
   expect(navbarBefore).toEqual({
     backgroundColor: "rgba(17, 11, 23, 0.86)",
     backgroundImage: "none",
     backdropFilter: "blur(18px)",
     borderBottomColor: "rgba(190, 130, 95, 0.16)",
   });
-  await page.getByLabel("Simulated result").selectOption("success");
-  await page.getByRole("button", { name: /Test payment$/ }).click();
-  await expect(page.locator(".ticket-experience")).toHaveAttribute("data-animation", "ready");
+
   expect(await glassNavbar()).toEqual(navbarBefore);
   await expect(page.getByRole("button", { name: "Skip animation" })).toHaveCSS("top", "102px");
   await expect(navbar).toHaveCSS("z-index", "30");
   await expect(page.locator(".tickets-page")).toHaveCSS("z-index", "20");
-  await expect(page.locator(".printer-status-display strong")).toHaveText("READY");
-  await expect(page.locator(".ticket-experience")).toHaveAttribute("data-animation", "preparing");
+  expect(await page.evaluate(() => window.ticketPhases.ready.status)).toBe("READY");
+  await expect.poll(() => page.evaluate(() => !!window.ticketPhases.preparing)).toBe(true);
   await expect(page.getByRole("button", { name: "Skip animation" })).toBeFocused();
   const printer = page.locator(".ticket-dispenser");
-  await expect(printer).toHaveAttribute("data-status", "preparing");
-  await expect(printer.locator(".printer-status-display strong")).toHaveText("PREPARING");
+  expect(await page.evaluate(() => window.ticketPhases.preparing.printerStatus)).toBe("preparing");
+  expect(await page.evaluate(() => window.ticketPhases.preparing.status)).toBe("PREPARING");
+  expect(await page.evaluate(() => Object.keys(window.ticketPhases).slice(0,2))).toEqual(["ready","preparing"]);
   const machineBox = await printer.boundingBox();
   const initialTrackBox = await page.locator(".ticket-output-track").boundingBox();
   expect(Math.abs(initialTrackBox!.y - machineBox!.y - machineBox!.height)).toBeLessThanOrEqual(1);
@@ -191,28 +214,28 @@ test("real checkout prints the saved ticket; replay, refresh, download and print
 });
 
 test("mobile ticket stays inside the slot and viewport; Escape and motion changes finish safely", async ({ page }) => {
+  await page.clock.install();
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    window.ticketMobilePhases = [];
+    let previous = "";
+    new MutationObserver(() => {
+      const phase = document.querySelector<HTMLElement>(".ticket-experience")?.dataset.animation;
+      if (phase && phase !== previous) {
+        window.ticketMobilePhases.push(phase);
+        previous = phase;
+      }
+    }).observe(document, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-animation"] });
+  });
   await prepareCheckout(page, 5);
   await page.getByRole("button", { name: /Test payment$/ }).click();
-  await expect(page.locator(".ticket-experience")).toHaveAttribute("data-animation", "ready");
-  await expect(page.locator(".header")).toHaveCSS("background-color", "rgba(17, 11, 23, 0.86)");
-  await expect(page.locator(".header")).toHaveCSS("z-index", "30");
-  await expect(page.locator(".tickets-page")).toHaveCSS("z-index", "20");
-  await expect(page.getByRole("button", { name: "Skip animation" })).toHaveCSS("top", "88px");
-  await expect(page.locator(".ticket-experience")).toHaveAttribute("data-animation", "preparing");
-  const mobileScene = await page.locator(".tickets-page").evaluate(el => {
-    const pageStyle = getComputedStyle(document.querySelector(".tickets-background")!);
-    const animationStyle = getComputedStyle(el.querySelector(".ticket-experience")!);
-    const read = (style: CSSStyleDeclaration) => ({ image: style.backgroundImage, size: style.backgroundSize, position: style.backgroundPosition });
-    return { page: read(pageStyle), animation: read(animationStyle) };
-  });
-  expect(mobileScene.animation).toEqual(mobileScene.page);
-  expect(mobileScene.page.image).toContain("/assets/movieverse-ticket-backdrop.webp");
-  await expect(page.locator(".ticket-experience")).toHaveAttribute("data-animation", "printing");
-  await page.keyboard.press("Tab");
-  await expect(page.getByRole("button", { name: "Skip animation" })).toBeFocused();
-  await page.keyboard.press("Escape");
-  await expect(page.locator(".ticket-experience")).toHaveAttribute("data-animation", "completed");
+  await expect.poll(() => page.evaluate(() => {
+    const phases = window.ticketMobilePhases;
+    const ready = phases.lastIndexOf("ready");
+    return ready >= 0 && phases.slice(ready).includes("completed");
+  }), { timeout: 15000 }).toBe(true);
+  const initialPhases = await page.evaluate(() => window.ticketMobilePhases.slice(window.ticketMobilePhases.lastIndexOf("ready")));
+  expect(initialPhases.slice(0, 5)).toEqual(["ready", "preparing", "printing", "stamping", "completed"]);
   await expect.poll(() => page.locator(".tickets-background").evaluate(el => getComputedStyle(el).backgroundImage)).toContain("/assets/movieverse-ticket-backdrop.webp");
   await expect(page.locator(".qr-code")).toBeVisible();
   for (const width of [320, 390, 768]) {
@@ -223,6 +246,27 @@ test("mobile ticket stays inside the slot and viewport; Escape and motion change
   }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator(".digital-ticket").screenshot({ path: "outputs/cinematic-ticket-mobile.png" });
+  await page.getByRole("button", { name: "Replay animation" }).click();
+  await expect(page.locator(".ticket-experience")).toHaveAttribute("data-animation", "printing");
+  await freezeClock(page);
+  const mobileScene = await page.locator(".tickets-page").evaluate(el => {
+    const pageStyle = getComputedStyle(document.querySelector(".tickets-background")!);
+    const animationStyle = getComputedStyle(el.querySelector(".ticket-experience")!);
+    const read = (style: CSSStyleDeclaration) => ({ image: style.backgroundImage, size: style.backgroundSize, position: style.backgroundPosition });
+    return { page: read(pageStyle), animation: read(animationStyle) };
+  });
+  expect(mobileScene.animation).toEqual(mobileScene.page);
+  expect(mobileScene.page.image).toContain("/assets/movieverse-ticket-backdrop.webp");
+  await expect(page.locator(".header")).toHaveCSS("background-color", "rgba(17, 11, 23, 0.86)");
+  await expect(page.locator(".header")).toHaveCSS("z-index", "30");
+  await expect(page.locator(".tickets-page")).toHaveCSS("z-index", "20");
+  await expect(page.getByRole("button", { name: "Skip animation" })).toHaveCSS("top", "88px");
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Skip animation" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".ticket-experience")).toHaveAttribute("data-animation", "completed");
+  await expect(page.getByRole("button", { name: "Replay animation" })).toBeFocused();
+  await page.clock.resume();
   await page.getByRole("button", { name: "Replay animation" }).click();
   await expect(page.locator(".ticket-experience")).toHaveAttribute("data-animation", "printing");
   await freezeClock(page);

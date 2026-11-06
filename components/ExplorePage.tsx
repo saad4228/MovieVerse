@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import "./explore.css";
 import {useEffect,useRef,useState} from "react";
 import Link from "next/link";
@@ -29,7 +30,7 @@ export default function ExplorePage(){
  const artwork=data?.movies.find(movie=>movie.backdrop);
  if(params.size)return <><div className="section-container explore-return"><Link className="text-link" href="/explore">← Explore collections</Link></div><MovieDiscovery explore/></>;
  return <main className="section-container explore-page"><header className="explore-hero">
-  {artwork&&<img src={artwork.backdrop} alt="" fetchPriority="high"/>}<div><span className="eyebrow">STORIES WITHOUT BORDERS</span><h1>Explore the MovieVerse</h1><p>From legendary classics to the latest global releases. Find your next favourite story.</p><div className="explore-actions"><Link className="btn btn-gold" href="/explore?collection=all">Search all movies</Link><a className="btn btn-outline" href="#explore-genres">Browse by genre</a><Link className="text-link" href="/explore?collection=hollywood">Explore Hollywood →</Link></div></div>
+  {artwork&&<AssetImage src={artwork.backdrop} alt="" fetchPriority="high"/>}<div><span className="eyebrow">STORIES WITHOUT BORDERS</span><h1>Explore the MovieVerse</h1><p>From legendary classics to the latest global releases. Find your next favourite story.</p><div className="explore-actions"><Link className="btn btn-gold" href="/explore?collection=all">Search all movies</Link><a className="btn btn-outline" href="#explore-genres">Browse by genre</a><Link className="text-link" href="/explore?collection=hollywood">Explore Hollywood →</Link></div></div>
  </header><p className="demo-note">Discovering a film does not mean it is screening nearby. Visit <Link href="/movies">Movies</Link> for available demo cinema screenings, or save a story to your Watchlist.</p>
  {exploreCollections.map(([id,title,description])=><Collection key={id} id={id} title={title} description={description}/>)}<GenreDiscovery/></main>;
 }

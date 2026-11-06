@@ -1,3 +1,4 @@
+import AssetImage from "@/components/AssetImage";
 import Link from "./MovieLink";
 import type {Movie} from "@/lib/catalog";
 
@@ -28,7 +29,7 @@ export default function ExploreMovieBanner({collections}:Props){
   <div className="home-explore-copy"><span className="eyebrow">A WORLD BEYOND THE SCREEN</span><h2 id="home-explore-title">Explore the MovieVerse</h2><p>Hollywood favourites, Indian cinema and stories across every genre.</p><Link className="btn btn-gold" href="/explore">Explore Movies <span aria-hidden="true">↗</span></Link></div>
   <div className="home-explore-collage" aria-label="Movie scenes from the MovieVerse catalogue">
    {Array.from({length:4},(_,index)=>{const movie=images[index];return <div className={`home-explore-still still-${index+1}${movie?"":" image-unavailable"}`} key={movie?.id??`still-${index}`}>
-    {movie&&<img src={movie.backdrop} alt={`${movie.title} cinematic still`} loading="lazy" decoding="async" width={1280} height={720} onError={event=>{event.currentTarget.parentElement?.classList.add("image-unavailable");event.currentTarget.remove();}}/>}
+    {movie&&<AssetImage src={movie.backdrop} alt={`${movie.title} cinematic still`} loading="lazy" decoding="async" width={1280} height={720} onError={event=>{event.currentTarget.parentElement?.classList.add("image-unavailable");event.currentTarget.remove();}}/>}
    </div>;})}
   </div>
  </section>;

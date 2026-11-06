@@ -2,7 +2,7 @@ import {test,expect} from "@playwright/test";
 import {dates,venues,showsFor,snacks} from "../../lib/catalog";
 import {recommendSeats,calculatePrice} from "../../lib/booking";
 
-async function enter(page:any){
+async function enter(page:import("@playwright/test").Page){
   await page.request.get("/api/session");
   const venue=venues.find(v=>v.cityId==="pune")!,show=showsFor(venue,"sintel",dates()[5])[0];
   const data=await (await page.request.get(`/api/inventory?show=${encodeURIComponent(show.id)}`)).json();
@@ -11,7 +11,7 @@ async function enter(page:any){
   expect(hold.ok()).toBe(true);const {expires}=await hold.json();
   await page.goto("/my-tickets");
   const cart={[snacks[0].id]:1};
-  await page.evaluate(({show,seats,expires,cart}:any)=>localStorage.setItem("movieverse-v1",JSON.stringify({state:{city:"pune",recentCities:[],showId:show.id,seats:seats.map((s:any)=>s.id),cart,holdExpires:expires,promoCode:""},version:0})),{show,seats,expires,cart});
+  await page.evaluate(({show,seats,expires,cart})=>localStorage.setItem("movieverse-v1",JSON.stringify({state:{city:"pune",recentCities:[],showId:show.id,seats:seats.map((s: import("../../lib/catalog").Seat)=>s.id),cart,holdExpires:expires,promoCode:""},version:0})),{show,seats,expires,cart});
   await page.goto(`/booking/${encodeURIComponent(show.id)}/checkout`);
   await expect(page.locator(".premium-checkout")).toBeVisible();
   return {show,seats,cart};

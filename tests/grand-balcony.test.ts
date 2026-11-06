@@ -8,7 +8,7 @@ describe("Grand Balcony Cinema",()=>{
   const seats=makeSeats(b),deck=balconyFrame(b)!;
   it("curves geometry while preserving every booking identity, class and price basis",()=>{
     const straight=makeSeats({...b,curvature:0});
-    expect(seats.map(({x,y,z,rotationY,...seat})=>seat)).toEqual(straight.map(({x,y,z,rotationY,...seat})=>seat));
+    expect(seats.map(seat=>Object.fromEntries(Object.entries(seat).filter(([key])=>!["x","y","z","rotationY"].includes(key))))).toEqual(straight.map(seat=>Object.fromEntries(Object.entries(seat).filter(([key])=>!["x","y","z","rotationY"].includes(key)))));
     expect(seats[0].z).toBeLessThan(straight[0].z-.5);
     for(const seat of seats) expect(floorAt(b,seat.z,seat.x)).toBeCloseTo(seat.y);
   });

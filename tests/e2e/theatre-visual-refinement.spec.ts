@@ -24,7 +24,7 @@ test("booking theatre uses compact charcoal navigation and a proportional larger
   const selected=(await page.locator(".selected-seats-list").textContent())!;
   await page.getByRole("button",{name:"Overview",exact:true}).click();
   await expect(canvas).toHaveAttribute("data-camera-moving","false");
-  const centre=await canvas.evaluate((element:any)=>element.movieverseDiagnostics().screen);
+  const centre=await canvas.evaluate((element:HTMLCanvasElement)=>element.movieverseDiagnostics().screen);
   if(centre && centre.x>0 && centre.y>0 && centre.x<1000 && centre.y<900) {
     await page.mouse.click(centre.x,centre.y);
     await expect(page.locator(".selected-seats-list")).toHaveText(selected);

@@ -44,9 +44,10 @@ export default function MovieShowtimes({ movie }: { movie: Movie }) {
   const currentFormat = formats.includes(format) ? format : all;
   const currentExperience = experiences.includes(experience) ? experience : all;
   const currentPrice = price === all || prices.includes(Number(price)) ? price : all;
-  useEffect(() => {
-    setLanguage(currentLanguage); setFormat(currentFormat); setExperience(currentExperience); setPrice(currentPrice);
-  }, [currentLanguage, currentFormat, currentExperience, currentPrice]);
+  if(language!==currentLanguage) setLanguage(currentLanguage);
+  if(format!==currentFormat) setFormat(currentFormat);
+  if(experience!==currentExperience) setExperience(currentExperience);
+  if(price!==currentPrice) setPrice(currentPrice);
   const inventoryKey = screenings.map(s => s.id).join(",");
   const availability = inventory.key === inventoryKey ? inventory.summaries : {};
   useEffect(() => {

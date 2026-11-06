@@ -46,8 +46,8 @@ test("watchlists are isolated, duplicate aliases are canonical, and unauthorized
 test("saved collection supports real movie metadata, search, sorting, filters, mobile and error rollback",async({page})=>{
  test.setTimeout(150000);await register(page);
  const upcoming=await (await page.request.get("/api/catalogue?collection=upcoming&region=IN")).json();const all=await (await page.request.get("/api/catalogue?collection=hollywood")).json();
- const now=await (await page.request.get("/api/catalogue?collection=now-playing-IN")).json();const nowIds=new Set(now.movies.map((m:any)=>m.id));
- const released=all.movies.find((m:any)=>m.release&&m.release<new Date().toISOString().slice(0,10)&&!nowIds.has(m.id))!;
+ const now=await (await page.request.get("/api/catalogue?collection=now-playing-IN")).json();const nowIds=new Set(now.movies.map((m: import("../../lib/catalog").Movie)=>m.id));
+ const released=all.movies.find((m: import("../../lib/catalog").Movie)=>m.release&&m.release<new Date().toISOString().slice(0,10)&&!nowIds.has(m.id))!;
  for(const id of ["coolie",upcoming.movies[0].id,released.id])expect((await page.request.post("/api/watchlist",{data:{id,saved:true}})).ok()).toBe(true);
  await page.setViewportSize({width:1440,height:1000});await page.goto("/watchlist",{waitUntil:"domcontentloaded"});await expect(page.locator(".watchlist-card")).toHaveCount(3);await expect(page.locator(".watchlist-count")).toContainText("3 saved movies");
  await page.getByLabel("Search watchlist").fill("coolie");await expect(page.locator(".watchlist-card")).toHaveCount(1);await page.getByLabel("Search watchlist").fill("");

@@ -1,5 +1,5 @@
 "use client";
-import { Children, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { Children, useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 /** Native scrolling keeps touch, trackpads and keyboard focus navigation intact. */
@@ -12,7 +12,7 @@ export default function MovieRail({ children, label, curved = false }: { childre
   const layout = useRef({ width: 0, scrollWidth: 0, cards: [] as { element: HTMLElement; center: number }[] });
   const [edges, setEdges] = useState({ start: true, end: false });
   const childKeys=Children.toArray(children).map(child=>typeof child==="object"&&"key" in child?child.key:typeof child).join("|");
-  function update() {
+  const update = useCallback(() => {
     const el = rail.current;
     if (!el) return;
     const { width, scrollWidth, cards } = layout.current;
@@ -29,7 +29,7 @@ export default function MovieRail({ children, label, curved = false }: { childre
         element.style.setProperty("--rail-scale", `${(1 - Math.abs(distance) * .015).toFixed(3)}`);
       });
     }
-  }
+  }, [curved]);
   function scheduleUpdate() {
     if (!frame.current) frame.current = requestAnimationFrame(() => { frame.current = 0; update(); });
   }
@@ -45,7 +45,7 @@ export default function MovieRail({ children, label, curved = false }: { childre
     for (const child of el.children) observer.observe(child);
     measure();
     return () => { observer.disconnect(); cancelAnimationFrame(frame.current); frame.current = 0; };
-  }, [childKeys, curved]);
+  }, [childKeys, curved, update]);
   function step(direction: number) {
     const el = rail.current!;
     const card = el.firstElementChild as HTMLElement | null;

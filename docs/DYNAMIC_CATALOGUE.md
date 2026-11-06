@@ -95,12 +95,34 @@ The helper first fetches a protected plan, submits each collection and stops on 
 
 No production deployment, Cloudflare login, production secret assignment or remote database write was performed in this task. Local success is not evidence that production Cron has fired.
 
-1. Log into the intended Cloudflare account: `npx wrangler login`.
-2. Identify the **existing MovieVerse production D1 database** with `npx wrangler d1 list`. Do not create a second movie database. Set its actual name/ID and the intended Worker name in `deployment.public.json`. The committed all-zero ID is a placeholder and must be replaced for your own deployment; it is not a production binding.
-3. Run `npm run build`. Confirm `dist/server/wrangler.json` contains the correct DB binding, Worker name and both `triggers.crons`. The build plugin copies migrations beside this config, so configuration survives subsequent builds.
-4. Apply migrations with `npx wrangler d1 migrations apply DB --remote --config dist/server/wrangler.json`. If the earlier application schema was applied through a separate hosting migration system, apply only the new idempotent migration with `npx wrangler d1 execute DB --remote --config dist/server/wrangler.json --file drizzle/0004_dynamic_catalogue.sql`; do not blindly replay earlier schema creation.
-5. Deploy: `npx wrangler deploy --config dist/server/wrangler.json`.
-6. Set backend secrets through the secure interactive prompts:
+1. Authenticate to the intended Cloudflare account and confirm it: `npx wrangler login`, then `npx wrangler whoami`.
+2. List D1 databases with `npx wrangler d1 list`. The source config currently names the target `site-creator-d1`, but its all-zero ID is a placeholder. Select the existing **MovieVerse production** database only after confirming its identity. Do **not** use the unrelated `dropby-db`, and do not create a duplicate if the correct MovieVerse database already exists. If this is a genuinely new installation and no MovieVerse D1 exists, obtain the owner's approval before creating one with `npx wrangler d1 create site-creator-d1`.
+3. Put the confirmed database name and real ID in `deployment.public.json` (`d1DatabaseName` and `d1DatabaseId`). If using an existing MovieVerse database with another name, use that exact name and ID. Keep the application binding named `DB`.
+4. Build the production Worker config and verify its bindings and schedules:
+
+```powershell
+npm run build
+Get-Content dist/server/wrangler.json | ConvertFrom-Json | Select-Object name,d1_databases,triggers
+npx wrangler deploy --dry-run --config dist/server/wrangler.json
+```
+
+The generated config must name the intended Worker, bind `DB` to the confirmed MovieVerse D1, and contain both Cron expressions (`0 3 * * *` and `0 */6 * * *`).
+
+5. Review remote migration status before any write:
+
+```powershell
+npx wrangler d1 migrations list DB --remote --config dist/server/wrangler.json
+```
+
+For a new, empty MovieVerse D1, take a backup and then apply pending migrations with `npx wrangler d1 migrations apply DB --remote --config dist/server/wrangler.json`. For a database whose schema was previously created by another host or migration system, stop and reconcile its actual schema and migration history first; do not replay initial migrations or execute a SQL file directly until the baseline is understood. No remote migration was run for this audit.
+
+6. Deploy only after the database target and migration plan are confirmed:
+
+```powershell
+npx wrangler deploy --config dist/server/wrangler.json
+```
+
+7. Set backend secrets through secure interactive prompts (never pass secret values as command arguments):
 
 ```powershell
 npx wrangler secret put TMDB_READ_TOKEN --config dist/server/wrangler.json
@@ -109,9 +131,9 @@ npx wrangler secret put ADMIN_TOKEN --config dist/server/wrangler.json
 
 Alternatively, Cloudflare Dashboard → Workers & Pages → the deployed MovieVerse Worker → Settings → Variables and Secrets → add both as **Secrets**, not public variables. `.dev.vars` is local only. Never put either in `NEXT_PUBLIC_*`, frontend code or committed deployment JSON.
 
-7. Worker Settings → Triggers/Cron Triggers: verify daily `0 3 * * *` and six-hour `0 */6 * * *`. Dashboard → Bindings: verify `DB` points to the same production D1 database. Allow Cloudflare's trigger propagation time.
-8. Run the protected remote helper once for the initial production import. Inspect protected status, rendered homepage, Hollywood filter and Coming Soon afterwards.
-9. After the next scheduled events, check Workers Observability/invocation logs and protected status for newer successful run timestamps and production D1 changes. Token presence alone does not verify an API connection or Cron success.
+8. In Worker Settings, verify the `DB` binding points to the same production D1 and that daily `0 3 * * *` and six-hour `0 */6 * * *` schedules are active. Allow trigger propagation time.
+9. After confirming the secrets and D1 binding, run the protected remote helper once for the initial production import. Inspect its protected status, rendered homepage, Hollywood filter and Coming Soon afterwards.
+10. After the next scheduled events, check Workers Observability/invocation logs and protected status for newer successful run timestamps and production D1 changes. Token presence alone does not verify an API connection or Cron success.
 
 TMDB region semantics are documented in [Discover Movie](https://developer.themoviedb.org/reference/discover-movie) and [Region Support](https://developer.themoviedb.org/docs/region-support). TMDB metadata does not establish city-level cinema inventory.
 

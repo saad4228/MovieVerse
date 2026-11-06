@@ -1,6 +1,7 @@
 import {test,expect} from '@playwright/test';
 import {dates,venues,showsFor} from '../../lib/catalog';
 import type {InventorySnapshot} from '../../lib/providers';
+import {bookingTheatrePresentation} from '../../lib/theatre-presentation';
 import {clampRoom,cameraObstructed,cameraView,type Point} from '../../lib/auditorium';
 test('fast orbit, pan and zoom stay inside floor, seats and room boundaries',async({page})=>{
  test.setTimeout(150000);
@@ -29,7 +30,8 @@ test('fast orbit, pan and zoom stay inside floor, seats and room boundaries',asy
  }
  expect(new Set(positions).size).toBeGreaterThan(2);
  await page.getByRole('button',{name:'Overview',exact:true}).click();
- const expected=cameraView(b,'Overview',seats,null,0).position;
+ // The booking route applies its render-only screen/envelope refinement.
+ const expected=cameraView(bookingTheatrePresentation(b),'Overview',seats,null,0).position;
  await expect.poll(async()=>{
   const p=(await canvas.getAttribute('data-camera-position'))!.split(',').map(Number);
   return Math.max(...p.map((n,i)=>Math.abs(n-expected[i])));

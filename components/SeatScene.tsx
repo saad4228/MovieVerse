@@ -178,12 +178,13 @@ function CustomModel({
 export default memo(function SeatScene(input: Props) {
   const presentation = useMemo(() => input.refined ? bookingTheatrePresentation(input.blueprint) : input.blueprint, [input.blueprint,input.refined]);
   const props = {...input,blueprint:presentation};
+  const {seats: selectionSeats, inventory: selectionInventory, onSelect: commitSelection} = props;
   const selectSeat = useCallback((id: string) => {
-    const seat = props.seats.find(seat => seat.id === id);
-    const state = props.inventory[id];
+    const seat = selectionSeats.find(seat => seat.id === id);
+    const state = selectionInventory[id];
     if (!seat || seat.blocked || state?.status === "booked" || state?.status === "blocked" || (state?.status === "held" && !state.mine)) return;
-    props.onSelect(id);
-  }, [props.seats, props.inventory, props.onSelect]);
+    commitSelection(id);
+  }, [selectionSeats, selectionInventory, commitSelection]);
   const sceneRoot = useRef<HTMLDivElement>(null);
   const gesture = useMemo(() => new SeatGesture(), []);
   const [playing, setPlaying] = useState(false);

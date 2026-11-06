@@ -1,4 +1,6 @@
 "use client";
+import { useResettableState } from "@/hooks/use-resettable-state";
+import AssetImage from "@/components/AssetImage";
 import CheckoutExperience from "./CheckoutExperience";
 import { checkoutOffer } from "@/lib/checkout-offers";
 import type { TrailerController, TrailerState } from "@/lib/video/controller";
@@ -118,19 +120,19 @@ export default function BookingFlow({
     setSeats = useApp((s) => s.setSeats);
   const expiry = useApp((s) => s.holdExpires);
   const setExpiry = useApp((s) => s.setExpiry);
-  const [data, setData] = useState<InventoryResponse | null>(null);
-  const [error, setError] = useState("");
+  const [data, setData] = useResettableState<InventoryResponse | null>(showId, null);
+  const [error, setError] = useResettableState(showId, "");
   const [busy, setBusy] = useState(false);
   const [now, setNow] = useState(Date.now);
   const [summaryOpen, setSummaryOpen] = useState(false);
-  const [preferredCategory, setPreferredCategory] = useState("all");
-  const [selectionHistory, setSelectionHistory] = useState<string[][]>([]);
+  const [preferredCategory, setPreferredCategory] = useResettableState(showId, "all");
+  const [selectionHistory, setSelectionHistory] = useResettableState<string[][]>(showId, []);
   const changeSeats = useCallback((next: string[]) => {
     if (busy) return;
     const previous = [...useApp.getState().seats];
     setSelectionHistory(history => [...history.slice(-19), previous]);
     setSeats(next);
-  }, [busy,setSeats]);
+  }, [busy,setSeats,setSelectionHistory]);
   function undoSelection() {
     const previous = selectionHistory.at(-1);
     if (!previous || !data || busy) return;
@@ -149,12 +151,13 @@ export default function BookingFlow({
   }, [showId, setShow]);
   useEffect(() => {
     let active = true;
-    setData(null); setError(""); setSelectionHistory([]); setPreferredCategory("all");
+
     const refresh = () =>
       seatInventoryProvider.get(showId)
         .then((x) => {
           if (active) {
-            setData(x);
+            // An unchanged inventory poll must not wake the entire demand-rendered scene.
+            setData(previous => previous && JSON.stringify(previous) === JSON.stringify(x) ? previous : x);
             setError("");
           }
         })
@@ -167,7 +170,7 @@ export default function BookingFlow({
       active = false;
       clearInterval(interval);
     };
-  }, [showId]);
+  }, [showId, setData, setError]);
   useEffect(() => {
     if (!expiry || expiry <= Date.now()) return;
     const timer = setInterval(() => setNow(Date.now()), 1000);
@@ -442,11 +445,15 @@ export default function BookingFlow({
 function SelectionRows({ seats, show, onRemove }: { seats: Seat[]; show: Show; onRemove: (s: Seat) => void }) {
   const [rows,setRows] = useState<Seat[]>(seats);
   const signature = seats.map(s => s.id).join(",");
-  useEffect(() => {
+  const [lastSignature,setLastSignature] = useState(signature);
+  if(lastSignature !== signature) {
+    setLastSignature(signature);
     setRows(previous => [...seats, ...previous.filter(s => !seats.some(next => next.id === s.id))]);
+  }
+  useEffect(() => {
     const timer = setTimeout(() => setRows(seats), matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 180);
     return () => clearTimeout(timer);
-  }, [signature]);
+  }, [signature, seats]);
   if (!rows.length) return <p className="no-seats">Click any seat in the hall, or let us pick the best ones.</p>;
   return <div className="selected-seats-list" aria-label="Selected seats">
     {rows.map(s => {
@@ -558,7 +565,9 @@ function SeatExperience({
   onSelect: (ids: string[]) => void;
   notify: (s: string) => void;
 }) {
-  const [mode, setMode] = useState<"3d" | "2d">("3d");
+  const [mode, setMode] = useState<"3d" | "2d">(() => {
+    try { const canvas=document.createElement("canvas"); const context=canvas.getContext("webgl2"); context?.getExtension("WEBGL_lose_context")?.loseContext(); return context ? "3d" : "2d"; } catch { return "2d"; }
+  });
   const [mapLevel, setMapLevel] = useState(0);
   const [preset, setPreset] = useState<Preset>("Overview");
   const [viewIndex, setViewIndex] = useState(0);
@@ -587,22 +596,21 @@ function SeatExperience({
     const seat = seats.find(s => s.id === id), status = inventory[id];
     return seat && !seat.blocked && status?.status !== "booked" && status?.status !== "blocked" && !(status?.status === "held" && !status.mine);
   });
-  const previewOriginMode = useRef<"2d" | "3d">("3d");
+  const [previewOriginMode,setPreviewOriginMode] = useState<"2d" | "3d">("3d");
   function exitPreview() {
     setPreset("Free view");
     setCameraCommand(c => c + 1);
-    setMode(previewOriginMode.current);
+    setMode(previewOriginMode);
   }
   function nextPreview(direction: number) {
     const index = previewSeats.indexOf(preview || "");
     setPreview(previewSeats[(index + direction + previewSeats.length) % previewSeats.length]);
     setCameraCommand(c => c + 1);
   }
-  useEffect(() => {
-    if (preset !== "My seat" || previewSeats.includes(preview || "")) return;
-    if (previewSeats.length) setPreview(previewSeats[0]);
-    else exitPreview();
-  }, [preset, preview, previewSeats.join(",")]);
+  if(preset === "My seat" && !previewSeats.includes(preview || "")) {
+    if(previewSeats.length) setPreview(previewSeats[0]);
+    else { setPreset("Free view"); setCameraCommand(c=>c+1); setMode(previewOriginMode); }
+  }
   const officialLink = officialTrailerLink(movie);
   const trailerUnavailable = media.includes("could not") || media.includes("did not") || media.includes("unavailable");
   const canPlay = !trailerUnavailable && (directSources(movie).length > 0 || !!embeddedTrailer(movie));
@@ -614,12 +622,6 @@ function SeatExperience({
     setMode("3d");
   };
   useEffect(() => {
-    try {
-      const c = document.createElement("canvas");
-      if (!c.getContext("webgl2")) setMode("2d");
-    } catch {
-      setMode("2d");
-    }
     return () => {
       document.body.style.cursor = "auto";
     };
@@ -912,7 +914,7 @@ function SeatExperience({
               title="View from this seat"
               className={preset === "My seat" ? "selected" : ""}
               onClick={() => {
-                if (preset !== "My seat") previewOriginMode.current = mode;
+                if (preset !== "My seat") setPreviewOriginMode(mode);
                 setPreview(previewSeats[previewSeats.length - 1]);
                 setPreset("My seat");
                 setCameraCommand((c) => c + 1);
@@ -1006,7 +1008,7 @@ export function OrderSummary({
     <aside className="order-summary">
       <span className="small-label">YOUR MOVIE MOMENT</span>
       <div className="summary-movie">
-        <img src={movie.poster} alt={`${movie.title} poster`} />
+        <AssetImage src={movie.poster} alt={`${movie.title} poster`} />
         <div>
           <h3>{movie.title}</h3>
           <p>
@@ -1127,7 +1129,7 @@ function SnacksStep({
                 key={s.id}
               >
                 <div className="snack-art">
-                  <img src={s.image} alt={s.name} />
+                  <AssetImage src={s.image} alt={s.name} />
                   <span className="vegetarian" title="Vegetarian">
                     ●
                   </span>

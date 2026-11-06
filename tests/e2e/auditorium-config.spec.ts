@@ -4,7 +4,7 @@ for (const id of ["grand","classic","luxury","multiplex","large-format"]) {
   test.setTimeout(120000);
   await page.setViewportSize({width:1440,height:900});
   const catalog=await (await page.request.get("/api/catalog")).json();
-  const venue=catalog.venues.find((v:any)=>v.blueprints[0]===id && v.movieIds.includes("sintel"));
+  const venue=catalog.venues.find((v: import("../../lib/catalog").Venue)=>v.blueprints[0]===id && v.movieIds.includes("sintel"));
   expect(venue).toBeTruthy();
   const date=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(Date.now()+2*86400000);
   const showId=[venue.id,"sintel",date,"1030"].join("~");
@@ -23,12 +23,12 @@ for (const id of ["grand","classic","luxury","multiplex","large-format"]) {
    await expect(page.locator(".viewpoint-label")).toHaveText(name);
   }
   await page.waitForTimeout(1800);
-  const diagnostics=await page.locator("canvas").evaluate((el:any)=>el.movieverseDiagnostics());
+  const diagnostics=await page.locator("canvas").evaluate((el:HTMLCanvasElement)=>el.movieverseDiagnostics());
   expect(diagnostics.seats.length).toBe(inventory.seats.length);
   expect(diagnostics.calls).toBeLessThan(1000);
   await page.screenshot({path:`outputs/auditorium-${id}.png`});
   await page.getByRole("button",{name:"2D map",exact:true}).click();
-  const ground=inventory.seats.filter((s:any)=>(s.level??(inventory.blueprint.balcony&&s.y>=(inventory.blueprint.rows-3)*inventory.blueprint.slope+2.3?1:0))===0);
+  const ground=inventory.seats.filter((s: import("../../lib/catalog").Seat)=>(s.level??(inventory.blueprint.balcony&&s.y>=(inventory.blueprint.rows-3)*inventory.blueprint.slope+2.3?1:0))===0);
   await expect(page.locator(".map-seat")).toHaveCount(ground.length);
   if(inventory.blueprint.balcony){
    await page.locator(".map-levels").getByRole("button",{name:"Balcony",exact:true}).click();
@@ -46,7 +46,7 @@ test("switching cinema discards previous seats and camera state",async({page})=>
  const catalog=await (await page.request.get("/api/catalog")).json();
  const date=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(Date.now()+3*86400000);
  for(const id of ["multiplex","large-format"]){
-  const venue=catalog.venues.find((v:any)=>v.blueprints[0]===id);
+  const venue=catalog.venues.find((v: import("../../lib/catalog").Venue)=>v.blueprints[0]===id);
   await page.goto(`/booking/${encodeURIComponent([venue.id,"sintel",date,"1030"].join("~"))}/seats`);
   await expect(page.locator("canvas")).toBeVisible();
   await expect(page.locator(".selected-seats-list>div")).toHaveCount(0);

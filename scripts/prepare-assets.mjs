@@ -1,8 +1,16 @@
 import sharp from 'sharp';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+// Optional legacy asset preparation; never run as part of normal app startup.
+const sourceArgument=process.argv[2] || process.env.MOVIEVERSE_ASSET_SOURCE;
+if (!sourceArgument) {
+  console.error('Usage: node scripts/prepare-assets.mjs <reference-image-directory>');
+  console.error('Alternatively, set MOVIEVERSE_ASSET_SOURCE to that directory.');
+  process.exit(1);
+}
+const input=path.resolve(sourceArgument);
+if (!(await fs.stat(input)).isDirectory()) throw new Error('The reference-image source must be a directory.');
 const destination=path.resolve('public/assets');await fs.mkdir(destination,{recursive:true});
-const input='C:/Users/Saad/Downloads';
 const crops=[
  ['home.png','vikram',0,352,237,301],['home.png','leo',266,367,190,262],
  ['mobile.png','coolie',0,721,230,381],['mobile.png','varanasi',255,718,261,389],['mobile.png','toxic',550,725,230,382],

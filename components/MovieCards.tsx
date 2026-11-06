@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import {memo,useEffect,useRef,useState,lazy,Suspense,type CSSProperties} from "react";
 import Link from "./MovieLink";
 import {ArrowRight,Star} from "lucide-react";
@@ -38,7 +39,7 @@ export const MovieCard = memo(function MovieCard({
     >
       <Link href={`/movies/${m.id}`} className={`movie-art poster-${imageState}`}>
         {imageState === "error" && <span className="poster-fallback"><span>{m.title}</span><small>Poster unavailable</small></span>}
-        <img
+        <AssetImage
           ref={poster}
           onLoad={() => setImageState("loaded")}
           onError={() => setImageState("error")}

@@ -34,7 +34,9 @@ export default function TheatreLighting({
     return () => media.removeEventListener("change",update);
   }, [invalidate]);
   useFrame((_s, delta) => {
-    const t = reduced.current ? 1 : 1 - Math.exp(-3 * Math.min(delta, 0.1));
+    // Exponential damping is stable for the actual elapsed time. Clamping to
+    // 100ms made a brief lighting change take many seconds on software GPUs.
+    const t = reduced.current ? 1 : 1 - Math.exp(-3 * Math.max(0, delta));
     const dim = lights && playing ? (previewing ? .7 : .88) : 1;
     let stillMoving = false;
     for (const [ref, intensity] of [

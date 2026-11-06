@@ -167,6 +167,8 @@ npm run dev
 
 Open the local URL printed by Vinext (normally `http://127.0.0.1:5173`). Local D1 state is stored under the ignored `.wrangler/` directory. If you already have a local database from an older version, do not delete it or replay the initial migrations blindly; first reconcile its migration baseline. `npm run start` previews the built Worker locally.
 
+Keep an existing `.dev.vars` and `.wrangler/state` intact. The safe setup and publication checklist is in [repository security](docs/REPOSITORY_SECURITY.md); never upload a complete local folder containing secrets, database files or browser traces.
+
 To populate Explore on a fresh local database, configure your private TMDB credential and run the shared importer from a separate terminal:
 
 ```powershell
@@ -206,6 +208,9 @@ Cloudflare D1 is bound as `DB`; it is not configured with a database URL. Before
 | `npm run lint` | Run ESLint. |
 | `npm test` | Run Vitest unit tests. |
 | `npm run test:e2e` | Run Playwright browser tests; install Chromium with `npx playwright install chromium` if needed. |
+| `npm run security:check` | Scan publishable source for secret patterns and private/generated paths. |
+| `npm run security:history` | Scan locally reachable historical text blobs without changing history. |
+| `npm run security:test` | Test the dependency-free repository security tooling. |
 
 **Local verification on 5 November 2026:** TypeScript passed; Vitest passed (23 files, 149 tests); the production build completed with bundle-size and Vinext route-classification warnings. ESLint reports 160 errors and 71 warnings, down from 190 and 73 before cleanup. The broad Playwright run recorded 99 passing, 31 failing, and one skipped test; subsequent focused runs verified corrections but the complete suite is not green. See the [code-quality audit](docs/CODE_QUALITY_AUDIT.md) for fixes, test scope, remaining issues, and an interview guide.
 
@@ -244,6 +249,10 @@ worker/index.ts          Cloudflare Worker request and scheduled handlers
 - [Watchlist storage and API](docs/WATCHLIST.md)
 - [Artwork and media credits](docs/ASSET_CREDITS.md)
 - [Code-quality audit and interview walkthrough](docs/CODE_QUALITY_AUDIT.md)
+- [Security policy and private reporting](SECURITY.md)
+- [Dependency security audit and remediation](docs/DEPENDENCY_SECURITY_REMEDIATION.md)
+- [Safe environment setup and repository checks](docs/REPOSITORY_SECURITY.md)
+- [Approved repository cleanup report](docs/REPOSITORY_SECURITY_CLEANUP.md)
 
 ## Next steps
 
@@ -256,6 +265,10 @@ worker/index.ts          Cloudflare Worker request and scheduled handlers
 ## Contributing
 
 Keep changes focused and explain the user-visible problem, implementation, and verification in the pull request. Run the relevant unit/browser checks, type checking, and production build. Preserve demo labels and provider boundaries. Add regression coverage for fixes to authentication, holds, pricing, or account-specific data; keep credentials and local database state out of commits.
+
+## Code and asset rights
+
+No open-source license is granted for MovieVerse application code. Permission to reuse, modify or redistribute that code has not been granted. Existing third-party licenses and asset terms remain applicable to their respective material; no rights to movie artwork, trailers or trademarks are granted by this repository.
 
 ## Attribution
 

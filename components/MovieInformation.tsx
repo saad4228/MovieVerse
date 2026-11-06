@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import "./movie-detail-polish.css";
 import { useEffect, useState } from "react";
 import type { Movie } from "@/lib/catalog";
@@ -42,7 +43,7 @@ function MovieBackdropArtwork({ movie }: { movie:Movie }) {
   },[original,preview]);
   return <div className={`movie-backdrop ${poster ? "poster-composition" : ""}`}>
     <div className="movie-backdrop-fill" aria-hidden="true" style={{backgroundImage:preview?`url("${preview}")`:undefined}}/>
-    <img className="movie-backdrop-art" src={ready===original?original:preview} data-full-resolution-src={original} srcSet={index===0 ? images.srcSet : undefined} sizes="100vw" alt={`${movie.title} banner artwork`} fetchPriority="high" style={{objectPosition:images.position}} onError={event => { event.currentTarget.removeAttribute("srcset"); setIndex(i=>Math.min(i+1,choices.length-1)); }}/>
+    <AssetImage className="movie-backdrop-art" src={ready===original?original:preview} data-full-resolution-src={original} srcSet={index===0 ? images.srcSet : undefined} sizes="100vw" alt={`${movie.title} banner artwork`} fetchPriority="high" style={{objectPosition:images.position}} onError={event => { event.currentTarget.removeAttribute("srcset"); setIndex(i=>Math.min(i+1,choices.length-1)); }}/>
   </div>;
 }
 export default function MovieInformation({ movie, info }: { movie:Movie; info?:Information }) {
@@ -64,7 +65,7 @@ export default function MovieInformation({ movie, info }: { movie:Movie; info?:I
         const photo=personPhoto(p);
         const backupPhoto=p.backupProfilePath ? personPhoto({...p,profilePath:p.backupProfilePath,backupProfilePath:undefined}) : undefined;
         return <article className="person-card" key={p.id ? `person-${p.id}` : `name-${p.name.trim().toLowerCase()}`} data-person-id={p.id}>
-          <div className="person-photo"><span aria-hidden="true">{p.name.split(" ").map(n=>n[0]).slice(0,2).join("")}</span>{photo && <img src={photo} alt={p.name} width={342} height={513} loading="lazy" decoding="async" onError={e=>{
+          <div className="person-photo"><span aria-hidden="true">{p.name.split(" ").map(n=>n[0]).slice(0,2).join("")}</span>{photo && <AssetImage src={photo} alt={p.name} width={342} height={513} loading="lazy" decoding="async" onError={e=>{
             const image=e.currentTarget;
             if(backupPhoto && image.dataset.fallbackTried !== "true") { image.dataset.fallbackTried="true"; image.src=backupPhoto; }
             else image.style.display="none";
@@ -72,7 +73,7 @@ export default function MovieInformation({ movie, info }: { movie:Movie; info?:I
         </article>;
       })}</div></section>}
     {!!info?.crew.length && <section className="film-crew"><span className="eyebrow">CRAFTED FOR THE BIG SCREEN</span><h2>The filmmakers.</h2><div className="crew-grid">{info.crew.map((p,i)=><article key={`${p.id}-${p.job}-${i}`}><span>{p.job}</span><h3>{p.name}</h3></article>)}</div></section>}
-    {!!movie.alternativeBackdrops?.length && <section><h3>A closer look</h3><div className="film-stills">{movie.alternativeBackdrops.slice(0,2).map((src,i)=><a key={src} href={src} target="_blank" rel="noreferrer"><img src={src} alt={`${movie.title} promotional artwork ${i+1}`} loading="lazy"/></a>)}</div></section>}
+    {!!movie.alternativeBackdrops?.length && <section><h3>A closer look</h3><div className="film-stills">{movie.alternativeBackdrops.slice(0,2).map((src,i)=><a key={src} href={src} target="_blank" rel="noreferrer"><AssetImage src={src} alt={`${movie.title} promotional artwork ${i+1}`} loading="lazy"/></a>)}</div></section>}
     {!!info?.releaseDates.length && <section className="release-markets"><h3>Release information</h3>{info.releaseDates.map((r,i)=><p key={i}><strong>{r.region === "IN" ? "India" : r.region === "US" ? "United States" : r.region}</strong><span>{r.date || "Date not confirmed"}{r.status === "unconfirmed" ? " · unconfirmed" : ""}</span></p>)}</section>}
     {trailerSources(movie).length>1 && <section className="film-media-gallery"><h3>Trailers & teasers</h3>{trailerSources(movie).filter(t=>t.provider==="youtube" || t.provider==="other").map(t=><a key={t.id} href={t.url} target="_blank" rel="noreferrer">{t.type.replaceAll("-"," ")} {t.language?`· ${t.language}`:""} ↗</a>)}</section>}
     {info && <p className="metadata-credit">Movie information: {info.sources.map((s,i)=><a key={s} href={s} target="_blank" rel="noreferrer">{i?" · ":""}{new URL(s).hostname.replace("www.","")}</a>)} · Checked {info.checked}. Profiles from TMDB; images belong to their respective rights holders.</p>}

@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CheckCircle2, RotateCcw } from "lucide-react";
 import type { BookingRecord } from "@/lib/booking-record";
@@ -19,7 +20,7 @@ export default function CinematicTicketExperience({ booking, animate, onCancel, 
       : "completed",
   );
   const phaseRef = useRef(phase);
-  phaseRef.current = phase;
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
   const ticketReady = useRef(false);
   const prepTimer = useRef<number | null>(null);
   const host = useRef<HTMLElement>(null);
@@ -49,10 +50,11 @@ export default function CinematicTicketExperience({ booking, animate, onCancel, 
     setPhase("completed");
   }, []);
 
-  useEffect(() => {
-    if (animate && confirmed && !window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-      setPhase(current => current === "completed" ? "ready" : current);
-  }, [animate, confirmed]);
+  const [arrival, setArrival] = useState(`${animate}:${confirmed}`);
+  if (arrival !== `${animate}:${confirmed}`) {
+    setArrival(`${animate}:${confirmed}`);
+    if (animate && confirmed && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && phase === "completed") setPhase("ready");
+  }
 
   useEffect(() => {
     if (phase !== "ready") return;
@@ -145,7 +147,7 @@ export default function CinematicTicketExperience({ booking, animate, onCancel, 
           </div>
           <div className="printer-metal-panel">
             <div className="printer-branding">
-              <img src="/assets/movieverse-logo.png" alt="" width={649} height={117} />
+              <AssetImage src="/assets/movieverse-logo.png" alt="" width={649} height={117} />
               <span>CINEMA TICKET SYSTEM <i>MV–01</i></span>
             </div>
             <div className="printer-status-display">

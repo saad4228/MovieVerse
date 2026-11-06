@@ -1,12 +1,11 @@
 import vinext from "vinext";
 import { defineConfig } from "vite";
-import hostingConfig from "./.openai/hosting.json";
-import deployment from "./deployment.public.json";
+import hostingConfig from "./.openai/hosting.json" with { type: "json" };
+import deployment from "./deployment.public.json" with { type: "json" };
 import { readExecutionProfile } from "./scripts/execution-profile.mjs";
 import { configureToolEnvironment } from "./scripts/tool-environment.mjs";
-import { sites } from "./scripts/vite/sites-vite-plugin";
+import { sites } from "./scripts/vite/sites-vite-plugin.ts";
 import { connectorPreview } from "./scripts/vite/connector-preview-plugin.mjs";
-import { vinextNavigation } from "./scripts/vite/vinext-navigation";
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
@@ -59,7 +58,6 @@ export default defineConfig(async ({ command }) => {
       },
     },
     plugins: [
-      vinextNavigation(),
       vinext(),
       sites({ mockAuth: !managedLinux }),
       connectorPreview(),

@@ -1,11 +1,13 @@
 "use client";
+import { useResettableState } from "@/hooks/use-resettable-state";
+import AssetImage from "@/components/AssetImage";
 import MovieBackLink from "./MovieBackLink";
 import WatchlistButton from "./WatchlistButton";
 import {useCataloguePage} from "@/lib/discovery-client";
 import {exploreCollections} from "@/lib/explore-collections";
 import {officialGenres} from "@/lib/discovery-collections";
 import { prepareAuditoriumPlayback } from "@/lib/video/preparation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "./MovieLink";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -58,48 +60,25 @@ export function MovieDiscovery({ upcoming = false, explore = false }: { upcoming
   const params = useSearchParams();
   const router = useRouter();
   const city = useApp((s) => s.city);
-  const [language, setLanguage] = useState(params.get("language") || "All");
-  const [genre, setGenre] = useState(params.get("genre") || "All genres");
-  const [format, setFormat] = useState("All formats");
-  const [sort, setSort] = useState("Recommended");
-  const [query, setQuery] = useState("");
+  const browseKey = `movieverse-browse:${explore ? "explore" : upcoming ? "coming" : "movies"}:${city}:${params.toString()}`;
+  const [stored] = useResettableState<Record<string, unknown>>(browseKey, () => {
+    try { const value: unknown = JSON.parse(sessionStorage.getItem(browseKey) || "{}"); return value && typeof value === "object" ? value as Record<string,unknown> : {}; } catch { return {}; }
+  });
+  const [language, setLanguage] = useResettableState<string>(browseKey, (previous = "All") => params.get("language") ||  (typeof stored.language === "string" ? stored.language : previous));
+  const [genre, setGenre] = useResettableState<string>(browseKey, (previous = "All genres") => params.get("genre") ||  (typeof stored.genre === "string" ? stored.genre : previous));
+  const [format, setFormat] = useResettableState<string>(browseKey, (previous = "All formats") =>  (typeof stored.format === "string" ? stored.format : previous));
+  const [sort, setSort] = useResettableState<string>(browseKey, (previous = "Recommended") =>  (typeof stored.sort === "string" ? stored.sort : previous));
+  const [query, setQuery] = useResettableState<string>(browseKey, (previous = "") =>  (typeof stored.query === "string" ? stored.query : previous));
+  const [minRating, setMinRating] = useResettableState<string>(browseKey, (previous = "Any rating") =>  (typeof stored.minRating === "string" ? stored.minRating : previous));
+  const [region, setRegion] = useResettableState<string>(browseKey, (previous = "IN") =>  (typeof stored.region === "string" ? stored.region : previous));
+  const [country, setCountry] = useResettableState<string>(browseKey, (previous = "") =>  (typeof stored.country === "string" ? stored.country : previous));
+  const [year, setYear] = useResettableState<string>(browseKey, (previous = "") =>  (typeof stored.year === "string" ? stored.year : previous));
+  const [availability, setAvailability] = useResettableState<string>(browseKey, (previous = "All films") =>  (typeof stored.availability === "string" ? stored.availability : previous));
+  const [collection, setCollection] = useResettableState<string>(browseKey, (previous = "all") => params.get("collection") ||  (typeof stored.collection === "string" ? stored.collection : previous));
+  const [page,setPage] = useResettableState<number>(browseKey, (previous=1) => Math.max(1, Number(params.get("page") || stored.page) || previous));
   const [debouncedQuery,setDebouncedQuery]=useState("");
   useEffect(()=>{const timer=setTimeout(()=>setDebouncedQuery(query),180);return()=>clearTimeout(timer);},[query]);
-  const [minRating, setMinRating] = useState("Any rating");
-  const [region,setRegion] = useState("IN");
-  const [country,setCountry]=useState("");
-  const [year,setYear]=useState("");
-  const [availability, setAvailability] = useState("All films");
-  const [collection,setCollection]=useState(params.get("collection")||"all");
-  const [page,setPage]=useState(()=>Math.max(1,Number(params.get("page"))||1));
   useEffect(() => {
-    setCollection(params.get("collection") || "all");
-    setLanguage(params.get("language") || "All");
-    setGenre(params.get("genre") || "All genres");
-  }, [params]);
-  const restored = useRef(false);
-  const browseKey = `movieverse-browse:${explore ? "explore" : upcoming ? "coming" : "movies"}:${city}:${params.toString()}`;
-  useEffect(() => {
-    restored.current = false;
-    try {
-      const stored = JSON.parse(sessionStorage.getItem(browseKey) || "null");
-      if (stored) {
-        setLanguage(params.get("language") || stored.language || "All");
-        setGenre(params.get("genre") || stored.genre || "All genres");
-        setFormat(stored.format || "All formats"); setSort(stored.sort || "Recommended");
-        setQuery(stored.query || ""); setMinRating(stored.minRating || "Any rating");
-        setRegion(stored.region || "IN"); setAvailability(stored.availability || "All films");
-        setCountry(stored.country || ""); setYear(stored.year || "");
-        setCollection(params.get("collection") || stored.collection || "all");
-        setPage(Math.max(1,Number(stored.page)||1));
-      }
-    } catch { /* Browsing still works when session storage is unavailable. */ }
-    // Wait for restored state to render before saving.
-    const timer = setTimeout(() => { restored.current = true; }, 0);
-    return () => clearTimeout(timer);
-  }, [browseKey]);
-  useEffect(() => {
-    if (!restored.current) return;
     try { sessionStorage.setItem(browseKey, JSON.stringify({language,genre,format,sort,query,minRating,region,availability,country,year,collection,page})); } catch {}
   }, [browseKey,language,genre,format,sort,query,minRating,region,availability,country,year,collection,page]);
   const languageCode:Record<string,string>={Hindi:"hi",Tamil:"ta",Telugu:"te",Malayalam:"ml",Kannada:"kn",English:"en",Korean:"ko",Japanese:"ja"};
@@ -297,23 +276,18 @@ export function Showtimes(props: { movie?: Movie; venue?: Venue }) {
   return props.movie && !props.venue ? <MovieShowtimes movie={props.movie} /> : <VenueShowtimes {...props} />;
 }
 function VenueShowtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
-  const [availability,setAvailability]=useState<Record<string,AvailabilitySummary>>({});
   const [availabilityFilter,setAvailabilityFilter]=useState("All availability");
   const city = useApp((s) => s.city);
-  const [date, setDate] = useState(dates()[0]);
-  const [format, setFormat] = useState("All formats");
+  const filterKey = `${city}:${movie?.id}:${venue?.id}`;
+  const [date, setDate] = useResettableState(filterKey, () => dates()[0]);
+  const [format, setFormat] = useResettableState(filterKey, "All formats");
   const [period, setPeriod] = useState("All times");
-  const [language, setLanguage] = useState("All languages");
+  const [language, setLanguage] = useResettableState(filterKey, "All languages");
   const [maxPrice, setMaxPrice] = useState("Any price");
   const [sort, setSort] = useState("Recommended");
   const router = useRouter();
   const setShow = useApp((s) => s.setShow);
   const [query, setQuery] = useState("");
-  useEffect(() => {
-    setDate(dates()[0]);
-    setFormat("All formats");
-    setLanguage("All languages");
-  }, [city, movie?.id, venue?.id]);
   function choose(show: Show) {
     const selectedMovie = movies.find(m => m.id === show.movieId);
     if (selectedMovie) prepareAuditoriumPlayback(selectedMovie);
@@ -355,8 +329,9 @@ function VenueShowtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
             : 0,
     );
   const showKeys=relevant.flatMap(v=>(movie?[movie]:movies.filter(m=>v.movieIds.includes(m.id))).flatMap(m=>demoShowtimeProvider.list(v,m.id,date).map(s=>s.id))).join(",");
+  const [availability,setAvailability] = useResettableState<Record<string,AvailabilitySummary>>(showKeys, {});
   useEffect(()=>{
-    const controller=new AbortController();setAvailability({});
+    const controller=new AbortController();
     const ids=showKeys.split(",").filter(Boolean);
     const refresh=async()=>{
       const chunks=[];for(let i=0;i<ids.length;i+=40) chunks.push(ids.slice(i,i+40));
@@ -364,7 +339,7 @@ function VenueShowtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
       if(!controller.signal.aborted)setAvailability(Object.assign({},...results.map(r=>(r as {summaries:Record<string,AvailabilitySummary>}).summaries)));
     };
     void refresh();const timer=setInterval(refresh,20000);return()=>{controller.abort();clearInterval(timer);};
-  },[showKeys]);
+  },[showKeys, setAvailability]);
   return (
     <section className="showtimes-section section-container" id="showtimes">
       <SectionTitle
@@ -472,7 +447,7 @@ function VenueShowtimes({ movie, venue }: { movie?: Movie; venue?: Venue }) {
                     .join("")}
                 </span>
               )}
-              {venue && <img src={m.poster} alt="" />}
+              {venue && <AssetImage src={m.poster} alt="" />}
               <div>
                 {!venue && (
                   <span className="venue-eyebrow">
@@ -574,7 +549,7 @@ export function MovieDetail({ id }: { id: string }) {
         <MovieBackLink/>
         <div className="movie-hero-bottom">
           <div className="movie-identity">
-            <img
+            <AssetImage
               src={m.poster}
               srcSet={posterSet(m)}
               sizes="160px"
@@ -647,18 +622,13 @@ export function MovieDetail({ id }: { id: string }) {
 }
 export function CinemaDiscovery() {
   const city = useApp((s) => s.city);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useResettableState(city, "");
   const [format, setFormat] = useState("All formats");
   const [amenity, setAmenity] = useState("All amenities");
   const [sort, setSort] = useState("Popular");
-  const [locality, setLocality] = useState("All localities");
+  const [locality, setLocality] = useResettableState(city, "All localities");
   const [distance, setDistance] = useState("Any distance");
-  const [movie, setMovie] = useState("All movies");
-  useEffect(() => {
-    setLocality("All localities");
-    setQuery("");
-    setMovie("All movies");
-  }, [city]);
+  const [movie, setMovie] = useResettableState(city, "All movies");
   const cityVenues = venues.filter((v) => v.cityId === city);
   const list = cityVenues
     .filter(
@@ -802,7 +772,7 @@ export function CinemaCard({ venue: v }: { venue: Venue }) {
   return (
     <article className="cinema-card">
       <Link href={`/cinemas/${v.id}`} className="cinema-cover">
-        <img
+        <AssetImage
           src={v.image}
           alt={`Illustrative ${v.name} interior`}
           loading="lazy"

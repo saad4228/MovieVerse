@@ -1,6 +1,7 @@
 "use client";
+import { useResettableState } from "@/hooks/use-resettable-state";
 import type { TrailerController, TrailerState } from "@/lib/video/controller";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useEffect, useRef, useState } from "react";
 import { Html } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import type { Movie } from "@/lib/catalog";
@@ -17,14 +18,14 @@ export default function EmbeddedCinemaTrailer({ movie, videoId, width, height, m
   onPlaybackState?: (state: TrailerState) => void;
   onFailure: (reason: string) => void;
 }) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useResettableState(videoId, false);
   const [host, setHost] = useState<HTMLDivElement | null>(null);
   const player = useRef<YouTubePlayer | null>(null);
   const playerReady = useRef(false);
   const desired = useRef({ muted, paused });
-  desired.current = { muted, paused };
+  useLayoutEffect(() => { desired.current = { muted, paused }; }, [muted, paused]);
   const callbacks = useRef({onMediaStatus, onPlaybackReady, onPlaybackState, onFailure});
-  callbacks.current = {onMediaStatus, onPlaybackReady, onPlaybackState, onFailure};
+  useLayoutEffect(() => { callbacks.current = {onMediaStatus, onPlaybackReady, onPlaybackState, onFailure}; }, [onMediaStatus, onPlaybackReady, onPlaybackState, onFailure]);
   const { gl } = useThree();
   // Canvas initially connects events to its wrapper, then to eventSource.
   // Html must not recreate two React roots on the same element during that
@@ -32,7 +33,6 @@ export default function EmbeddedCinemaTrailer({ movie, videoId, width, height, m
   const portal = useRef(gl.domElement.parentElement!);
   useEffect(() => {
     if (!host) return;
-    setVisible(false);
     const iframe = document.createElement("iframe");
     iframe.src = youtubeEmbedUrl(videoId, window.location.origin);
     iframe.title = `${movie.title} official trailer on cinema screen`;
@@ -125,7 +125,7 @@ export default function EmbeddedCinemaTrailer({ movie, videoId, width, height, m
       playerReady.current = false;
       host.replaceChildren();
     };
-  }, [host, videoId, movie.id, gl]);
+  }, [host, videoId, movie, gl, setVisible]);
   useEffect(() => {
     if (!player.current || !playerReady.current) return;
     if (muted) player.current.mute(); else player.current.unMute();

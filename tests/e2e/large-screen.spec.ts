@@ -22,7 +22,7 @@ test('enlarged screen fits all auditorium styles and keeps playback and presets 
   expect(frame.width/frame.height).toBeCloseTo(16/9,6);
   const texture=await canvas.getAttribute('data-video-texture-id');expect(texture).toBeTruthy();
   await page.screenshot({path:`outputs/large-screen-${id}-overview.png`});
-  console.log({id,frame,canvas:await canvas.boundingBox(),diagnostics:await canvas.evaluate((el:any)=>{const d=el.movieverseDiagnostics();return {room:d.room,screenSize:d.screenSize,corners:d.screenCorners,drawCalls:d.calls,triangles:d.triangles}})});
+  console.log({id,frame,canvas:await canvas.boundingBox(),diagnostics:await canvas.evaluate((el:HTMLCanvasElement)=>{const d=el.movieverseDiagnostics();return {room:d.room,screenSize:d.screenSize,corners:d.screenCorners,drawCalls:d.calls,triangles:d.triangles}})});
   if(id==='classic'){
    for(const preset of ['From stage','Bird','Overview']){
     const button=page.getByRole('button',{name:preset==='Bird'?/Bird/:preset,exact:preset!=='Bird'});
@@ -41,7 +41,7 @@ test('enlarged screen fits all auditorium styles and keeps playback and presets 
    await page.screenshot({path:'outputs/large-screen-mobile.png'});
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
    const bounds=(await canvas.boundingBox())!;
-   const corners=await canvas.evaluate((el:any)=>el.movieverseDiagnostics().screenCorners);
+   const corners=await canvas.evaluate((el:HTMLCanvasElement)=>el.movieverseDiagnostics().screenCorners);
    console.log(JSON.stringify({mobileScreenCorners:corners,canvas:bounds}));
    for(const corner of corners){expect(corner.x).toBeGreaterThanOrEqual(bounds.x);expect(corner.x).toBeLessThanOrEqual(bounds.x+bounds.width);}
 

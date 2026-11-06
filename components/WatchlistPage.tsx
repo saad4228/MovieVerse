@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import "./watchlist.css";
 import {useBrowseState} from "@/lib/use-browse-state";
 import Link from "./MovieLink";
@@ -25,7 +26,7 @@ export default function WatchlistPage(){
      <div className="watchlist-poster-wrap">
       <Link className="watchlist-art" href={`/movies/${entry.movie.id}`} aria-label={`Explore ${entry.movie.title}`}>
        <span className="poster-fallback">{entry.movie.title}</span>
-       {entry.movie.poster&&<img src={entry.movie.poster} alt={`${entry.movie.title} poster`} loading="lazy" decoding="async" width={500} height={750} onError={e=>{e.currentTarget.style.visibility="hidden";}}/>}
+       {entry.movie.poster&&<AssetImage src={entry.movie.poster} alt={`${entry.movie.title} poster`} loading="lazy" decoding="async" width={500} height={750} onError={e=>{e.currentTarget.style.visibility="hidden";}}/>}
        <h2 className="watchlist-art-title">{entry.movie.title}</h2>
       </Link>
       <span className={`watchlist-availability ${entry.availability.status}`}>{entry.availability.label}</span>

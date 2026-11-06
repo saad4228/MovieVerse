@@ -19,6 +19,15 @@ next-env.d.ts
 
 # Test output
 /coverage/
+/test-results*/
+/playwright-report/
+/playwright/.auth/
+trace.zip
+*.trace
+*.network
+*.har
+*storage-state*.json
+auth-state*.json
 
 # Package-manager logs
 npm-debug.log*
@@ -31,6 +40,40 @@ yarn-error.log*
 !.env.example
 .dev.vars*
 *.pem
+*.key
+*.pk8
+*.p12
+*.pfx
+*.pkcs12
+*.jks
+*.keystore
+*.crt
+*.cer
+*.der
+*.csr
+*.p7b
+*.p7c
+id_rsa*
+id_ed25519*
+
+# Local databases and exports; authored drizzle/*.sql migrations remain tracked.
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.dump
+*.dump.gz
+*.dump.sql
+*.backup.sql
+*.sql.gz
+*.sql.zip
+/backup.sql
+/dump.sql
+/backups/
+/database-backups/
+/database-dumps/
 
 # Checkout-local tool state
 /.wrangler/
@@ -41,9 +84,10 @@ yarn-error.log*
 /.codex/
 /outputs/
 /work/
-/test-results/
-/test-results-native/
-/playwright-report/
+*.tar.gz
+*.tgz
+*.zip
+*.log
 
 # OS metadata
 .DS_Store

@@ -1,4 +1,6 @@
 "use client";
+import { useResettableState } from "@/hooks/use-resettable-state";
+import AssetImage from "@/components/AssetImage";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { Armchair, CalendarDays, Check, CheckCircle2, Clock, Copy, Download, IndianRupee, MapPin, Monitor, Printer, Ticket, X } from "lucide-react";
@@ -20,9 +22,10 @@ export default function DigitalTicket({ booking: b, onCancel, notify, onReady, l
   onReady?: () => void;
   landscape?: boolean;
 }) {
-  const [qr, setQr] = useState("");
-  const [qrError, setQrError] = useState(false);
   const [qrAttempt, setQrAttempt] = useState(0);
+  const [qr, setQr] = useResettableState(`${b.token}:${b.status}:${qrAttempt}`, "");
+  const [qrError, setQrError] = useResettableState(`${b.token}:${b.status}:${qrAttempt}`, false);
+
   const [copied, setCopied] = useState(false);
   const [working, setWorking] = useState(false);
   const article = useRef<HTMLElement>(null);
@@ -30,7 +33,8 @@ export default function DigitalTicket({ booking: b, onCancel, notify, onReady, l
   const qrImage = useRef<HTMLImageElement>(null);
   const printCleanup = useRef<(() => void) | null>(null);
   const readyNotified = useRef(false);
-  const [artworkFallback, setArtworkFallback] = useState(false);
+  const [artworkFallback, setArtworkFallback] = useResettableState(`${b.token}:${b.status}:${qrAttempt}`, false);
+  const [now] = useState(Date.now);
   const snap = b.snapshot;
   const artwork = snap.movie.backdrop || snap.movie.poster;
   const confirmed = b.status === "confirmed";
@@ -40,14 +44,12 @@ export default function DigitalTicket({ booking: b, onCancel, notify, onReady, l
 
   useEffect(() => {
     let active = true;
-    setQr("");
-    setQrError(false);
-    setArtworkFallback(false);
+
     readyNotified.current = false;
     if (confirmed) ticketQr(b.token, window.location.origin).then(value => { if (active) setQr(value); })
       .catch(() => { if (active) setQrError(true); });
     return () => { active = false; };
-  }, [b.token, confirmed, qrAttempt]);
+  }, [b.token, confirmed, qrAttempt, setQr, setQrError]);
   useEffect(() => {
     if (!onReady || !confirmed || readyNotified.current || (!qr && !qrError)) return;
     let active = true;
@@ -76,7 +78,7 @@ export default function DigitalTicket({ booking: b, onCancel, notify, onReady, l
       active = false;
       window.clearTimeout(timeout);
     };
-  }, [artwork, confirmed, onReady, qr, qrError]);
+  }, [artwork, confirmed, onReady, qr, qrError, setArtworkFallback, setQr, setQrError]);
   useEffect(() => {
     if (!copied) return;
     const timer = setTimeout(() => setCopied(false), 2000);
@@ -114,7 +116,7 @@ export default function DigitalTicket({ booking: b, onCancel, notify, onReady, l
     finally { setWorking(false); }
   }
 
-  const future = new Date(`${snap.show.date}T${snap.show.time}:00+05:30`).getTime() > Date.now();
+  const future = new Date(`${snap.show.date}T${snap.show.time}:00+05:30`).getTime() > now;
   return (
     <article ref={article} className={`digital-ticket ${landscape ? "animation-ticket" : ""} ${b.status === "cancelled" ? "cancelled" : ""}`} data-booking-id={b.id} data-booking-status={b.status}>
       <header className="premium-ticket-header ticket-reveal-header">
@@ -126,8 +128,8 @@ export default function DigitalTicket({ booking: b, onCancel, notify, onReady, l
         <p>YOUR UNIVERSE. YOUR MOVIE. YOUR SEAT.</p>
       </header>
       <div className="premium-ticket-hero" data-artwork-kind={snap.movie.backdrop ? "backdrop" : "poster"} data-artwork-fallback={artworkFallback ? "true" : undefined}>
-        <img className="ticket-artwork-fill" src={artwork} alt="" aria-hidden="true" onError={e => { e.currentTarget.style.display = "none"; }} />
-        <img ref={artworkImage} className="ticket-artwork-main" src={artwork} alt={`${snap.movie.title} artwork`} decoding="async" fetchPriority="high" style={{ objectPosition: artworkPosition, "--ticket-artwork-position": ticketPosition } as CSSProperties} onError={() => setArtworkFallback(true)} />
+        <AssetImage className="ticket-artwork-fill" src={artwork} alt="" aria-hidden="true" onError={e => { e.currentTarget.style.display = "none"; }} />
+        <AssetImage ref={artworkImage} className="ticket-artwork-main" src={artwork} alt={`${snap.movie.title} artwork`} decoding="async" fetchPriority="high" style={{ objectPosition: artworkPosition, "--ticket-artwork-position": ticketPosition } as CSSProperties} onError={() => setArtworkFallback(true)} />
         <div><h2>{snap.movie.title}</h2><span>{snap.show.language}</span><span>{snap.show.format}</span></div>
       </div>
       <div className="ticket-perforation" aria-hidden="true" />
@@ -143,7 +145,7 @@ export default function DigitalTicket({ booking: b, onCancel, notify, onReady, l
         <div className="premium-ticket-qr ticket-reveal-qr">
           {confirmed ? <>
             <div className="qr-panel">
-              {qr ? <img ref={qrImage} className="qr-code" src={qr} alt={`QR verification for booking ${b.id}`} width={320} height={320} /> : <div className="ticket-qr-placeholder" role="status">{qrError ? "QR unavailable" : "Preparing QR…"}</div>}
+              {qr ? <AssetImage ref={qrImage} className="qr-code" src={qr} alt={`QR verification for booking ${b.id}`} width={320} height={320} /> : <div className="ticket-qr-placeholder" role="status">{qrError ? "QR unavailable" : "Preparing QR…"}</div>}
               {qr && <span className="ticket-qr-scan" aria-hidden="true" />}
             </div>
             {qrError ? <button className="text-link" onClick={() => setQrAttempt(n => n + 1)}>Retry QR code</button> : <strong>Scan at Entry</strong>}

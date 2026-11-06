@@ -45,7 +45,7 @@ export const blueprintSchema = z
           seatClasses:z.array(z.object({id:z.string().regex(/^[a-z0-9-]+$/),name:z.string().min(1).max(50),description:z.string().max(150),price:z.number().int().min(160).max(5000),color})).max(12).optional(),
           rowConfig:z.array(z.object({label:z.string().regex(/^[A-Z]{1,4}$/).optional(),category:z.string().regex(/^[a-z0-9-]+$/).optional(),omitted:z.array(z.number().int().min(1).max(30)).optional(),accessible:z.array(z.number().int().min(1).max(30)).optional(),blocked:z.array(z.number().int().min(1).max(30)).optional()})).max(20).optional(),
           modelUrl: z.string().url().startsWith("https://").optional(),
-          seatMap: z.record(z.string()).optional(),
+          seatMap: z.record(z.string(), z.string()).optional(),
         })
 .superRefine((b,ctx)=>{
  const fail=(message:string)=>ctx.addIssue({code:z.ZodIssueCode.custom,message});

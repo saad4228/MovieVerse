@@ -17,8 +17,8 @@ async function enter(page:Page) {
   await expect(page.locator("canvas")).toHaveAttribute("data-camera-moving","false");
   return chosen;
 }
-async function point(page:Page,id:string){return page.locator("canvas").evaluate((el:any,id)=>el.movieverseDiagnostics().seats.find((s:any)=>s.id===id),id);}
-async function visual(page:Page,id:string){return page.locator("canvas").evaluate((el:any,id)=>el.movieverseDiagnostics().seatVisuals.find((s:any)=>s.id===id).y,id);}
+async function point(page:Page,id:string){return page.locator("canvas").evaluate((el:HTMLCanvasElement,id)=>el.movieverseDiagnostics().seats.find((s)=>s.id===id)!,id);}
+async function visual(page:Page,id:string){return page.locator("canvas").evaluate((el:HTMLCanvasElement,id)=>el.movieverseDiagnostics().seatVisuals.find((s)=>s.id===id)!.y,id);}
 test("exact adjacent hover/click, physical lift, out-and-back drag, undo and recovery",async({page})=>{
   test.setTimeout(180000);const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
   const ids=await enter(page); const before=await visual(page,ids[0]);
@@ -52,7 +52,11 @@ test.describe("touch and reduced motion",()=>{
  test.use({hasTouch:true,viewport:{width:390,height:844},reducedMotion:"reduce"});
  test("tap selects without hover and touch drag never selects",async({page})=>{
   test.setTimeout(180000);const ids=await enter(page);let p=await point(page,ids[0]);
-  await page.touchscreen.tap(p.x,p.y);await expect(page.getByRole("button",{name:`Remove ${ids[0]}`,exact:true})).toBeVisible();
+  await page.touchscreen.tap(p.x,p.y);
+  // Mobile removal controls live in the summary sheet, not over the theatre.
+  await page.getByRole("button",{name:/Seat options & summary/}).click();
+  await expect(page.getByRole("button",{name:`Remove ${ids[0]}`,exact:true})).toBeVisible();
+  await page.getByRole("button",{name:"Return to theatre",exact:true}).click();
   const client=await page.context().newCDPSession(page);p=await point(page,ids[1]);
   await client.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x:p.x,y:p.y}]});
   await client.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:p.x+35,y:p.y}]});

@@ -1,4 +1,5 @@
 "use client";
+import AssetImage from "@/components/AssetImage";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Coffee, Film, Sparkles } from "lucide-react";
@@ -7,7 +8,7 @@ function CreatorAvatar() {
   return (
     <div className="creator-avatar">
       <span className="creator-avatar-orbit" aria-hidden="true" />
-      <img className="creator-profile-picture" src="/assets/creator-profile.jpg" alt="Mohammad Saad's profile avatar: Spider-Man wearing a suit" width={736} height={736} loading="lazy" />
+      <AssetImage className="creator-profile-picture" src="/assets/creator-profile.jpg" alt="Mohammad Saad's profile avatar: Spider-Man wearing a suit" width={736} height={736} loading="lazy" />
       <span className="creator-avatar-star" aria-hidden="true"><Sparkles size={19} /></span>
       <span className="creator-avatar-coffee" aria-hidden="true"><Coffee size={18} /></span>
     </div>
