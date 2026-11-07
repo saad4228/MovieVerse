@@ -1,7 +1,12 @@
 import { z } from "zod";
 import type { Movie } from "./catalog";
 
-export type TmdbSettings = { TMDB_READ_TOKEN?: string; TMDB_API_KEY?: string };
+export type TmdbSettings = {
+  TMDB_READ_TOKEN?: string;
+  TMDB_API_KEY?: string;
+  TMDB_API_BASE_URL?: string;
+  fetcher?: typeof fetch;
+};
 export type TmdbDiagnostic = {
   stage: string;
   collection?: string;
@@ -97,7 +102,7 @@ export async function tmdbRequest(path: string, params: Record<string, string>, 
     if (caches.size >= 5) { const oldest = caches.keys().next().value!; caches.delete(oldest); cooldowns.delete(oldest); }
     cache = new Map(); caches.set(identity, cache);
   }
-  const url = new URL(`https://api.themoviedb.org/3/${path}`);
+  const url = new URL(`${settings.TMDB_API_BASE_URL?.replace(/\/+$/, "") ?? "https://api.themoviedb.org/3"}/${path}`);
   for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
   const cacheKey = url.href;
   const existing = cache.get(cacheKey);
@@ -109,7 +114,7 @@ export async function tmdbRequest(path: string, params: Record<string, string>, 
     const diagnosticBase = { stage: context?.stage ?? path, collection: context?.collection, tokenPresent: Boolean(token) };
     try {
       if (!token) url.searchParams.set("api_key", apiKey!);
-      const response = await fetch(url.href, { headers: { accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) }, signal: AbortSignal.timeout(8000), redirect: "manual" });
+      const response = await (settings.fetcher ?? fetch)(url.href, { headers: { accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) }, signal: AbortSignal.timeout(8000), redirect: "manual" });
       const requestId = response.headers.get("x-tmdb-request-id") ?? response.headers.get("x-request-id") ?? response.headers.get("cf-ray") ?? undefined;
       const details = response.ok ? undefined : safeProviderDetails(await response.clone().text());
       if (response.status >= 300 && response.status < 400) {

@@ -2,7 +2,7 @@ import {afterEach,describe,it,expect,vi} from "vitest";
 import {discoveryDb} from "./helpers/discovery-db";
 import {syncCatalogue,publishCollection,qualifies} from "../lib/catalogue-sync";
 import {cataloguePage,databaseGenrePage,balancedFeatured} from "../lib/catalogue-read";
-import {collectionPlan,indiaToday} from "../lib/discovery-collections";
+import {collectionPlan,indiaToday,CATALOGUE_PAGE_LIMITS,DEFAULT_DISCOVERY_PAGE_LIMIT} from "../lib/discovery-collections";
 import {normalizeMovie} from "../lib/tmdb";
 import {catalogueApi} from "../lib/catalogue-api";
 const settings={TMDB_READ_TOKEN:"test-only-discovery-token"};
@@ -17,6 +17,15 @@ function provider(){vi.stubGlobal("fetch",vi.fn(async(input:string)=>{
 }));}
 afterEach(()=>{vi.unstubAllGlobals();ids=[1,2];broken=false;});
 describe("persistent catalogue generations",()=>{
+ it("keeps every catalogue definition while applying bounded page limits",()=>{
+  const plan=collectionPlan("full");
+  expect(new Set(plan.map(collection=>collection.id)).size).toBe(plan.length);
+  expect(plan.length).toBeGreaterThanOrEqual(60);
+  expect(plan.every(collection=>collection.pages>=1&&collection.pages<=5)).toBe(true);
+  expect(plan.find(collection=>collection.id==="now-playing-IN")?.pages).toBe(CATALOGUE_PAGE_LIMITS["now-playing-IN"]);
+  expect(plan.find(collection=>collection.id==="genre-action")?.pages).toBe(DEFAULT_DISCOVERY_PAGE_LIMIT);
+  expect(collectionPlan("trending").every(collection=>collection.pages<=2)).toBe(true);
+ });
  it("releases the lease if creating the sync run fails",async()=>{
   const {db,sqlite}=discoveryDb();
   sqlite.exec("CREATE TRIGGER fail_run BEFORE INSERT ON discovery_sync_runs BEGIN SELECT RAISE(FAIL, 'run write failed'); END");
@@ -104,7 +113,7 @@ describe("persistent catalogue generations",()=>{
  it("blocks public sync, status and pin mutation and refuses concurrent imports",async()=>{
   const {db,sqlite}=discoveryDb();
   for(const action of ["catalogue-sync","catalogue-status","catalogue-pins"]){const response=await catalogueApi(new Request(`https://movieverse.test/api/${action}`),action,{DB:db,ADMIN_TOKEN:"test-only-admin"});expect(response?.status).toBe(403);}
-  await db.prepare("INSERT INTO discovery_sync_lock VALUES(1,'other',?)").bind(Date.now()+60000).run();
+  await db.prepare("INSERT INTO discovery_sync_lock VALUES(1,'other',?,1)").bind(Date.now()+60000).run();
   await expect(syncCatalogue(db,settings,"full")).rejects.toThrow("already running");sqlite.close();
  });
  it("distinguishes regional theatrical dates, US origin and English language",()=>{

@@ -207,7 +207,10 @@ export default function Home() {
         </MovieRail> : <p className="discovery-empty">No verified advance bookings are listed for {city.name} today.</p>}
       </section>
       <PosterWall movies={discovery?.collections.popular??[]} />
-      {!!sections.released.length && <section className="section-container discovery-section"><SectionTitle title="More stories to discover" subtitle="Released films without verified local showtimes. Explore their stories and cast." link="/explore?collection=all" label="Browse all films"/><MovieRail label="Released films">{sections.released.map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}</MovieRail></section>}
+      <section className="section-container discovery-section">
+        <SectionTitle title="More stories to discover" subtitle="Released films without verified local showtimes. Explore their stories and cast." link="/explore?collection=all" label="Browse all films"/>
+        {sections.released.length ? <MovieRail label="Released films">{sections.released.map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}</MovieRail> : <p className="discovery-empty">No released discovery films are available yet. Browse the full catalogue to explore more stories.</p>}
+      </section>
       <section className="experience-section section-container">
         <div className="experience-copy">
           <span className="eyebrow">DON’T JUST PICK A SEAT. STEP INSIDE.</span>
@@ -288,18 +291,18 @@ export default function Home() {
         </div>
       </section>
       <section className="section-container discovery-section">
-        {sections.trending.length > 0 && <>
-          <SectionTitle eyebrow="TRENDING WORLDWIDE" title="The stories everyone is discovering" subtitle="Fresh TMDB trends. Popularity does not confirm local screenings." link="/explore?collection=trending-day" label="Explore all" />
+        <SectionTitle eyebrow="TRENDING WORLDWIDE" title="The stories everyone is discovering" subtitle="Fresh TMDB trends. Popularity does not confirm local screenings." link="/explore?collection=trending-day" label="Explore all" />
+        {sections.trending.length ? <>
           <MovieRail label={"Trending movies"}>
             {sections.trending.slice(0, 8).map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}
           </MovieRail>
-        </>}
+        </> : <p className="discovery-empty">Trending stories are waiting for the next refresh.</p>}
       </section>
       <section className="section-container discovery-section">
         <SectionTitle eyebrow="FRESH FROM EVERY CORNER" title={`Popular regional picks in ${city.name}`} subtitle="Fresh Indian-language discoveries. Local screenings are separate from movie popularity." link="/explore?collection=indian" label="Browse movies" />
-        <MovieRail label={`Regional movies in ${city.name}`}>
+        {sections.regional.length ? <MovieRail label={`Regional movies in ${city.name}`}>
           {sections.regional.slice(0, 12).map((m,i)=><MovieCard key={m.id} movie={m} index={i}/>)}
-        </MovieRail>
+        </MovieRail> : <p className="discovery-empty">Regional discoveries are waiting for the next catalogue refresh.</p>}
       </section>
       <ExploreMovieBanner collections={discovery?.collections}/>
       <CreatorSection />

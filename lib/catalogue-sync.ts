@@ -14,6 +14,12 @@ import {
   type CollectionSpec,
 } from "./discovery-collections";
 import type { Movie } from "./catalog";
+import {
+  acquireCatalogueLease,
+  assertCatalogueLease,
+  releaseCatalogueLease,
+  renewCatalogueLease,
+} from "./catalogue-sync-lock";
 export type SyncReport = {
   collections: Record<
     string,
@@ -93,27 +99,25 @@ export async function publishCollection(
   movies: Movie[],
   generation: string,
   now = Date.now(),
+  includeRemoved = true,
 ) {
-  const previous = await db
-    .prepare(
-      "SELECT count(*) AS n FROM discovery_memberships m JOIN discovery_collections c ON c.id=m.collection AND c.generation=m.generation WHERE m.collection=? AND m.movie_id NOT IN (SELECT value FROM json_each(?))",
-    )
-    .bind(spec.id, JSON.stringify(movies.map((m) => m.metadata!.tmdbId)))
-    .first<{ n: number }>();
+  const previous = includeRemoved
+    ? await db
+      .prepare(
+        "SELECT count(*) AS n FROM discovery_memberships m JOIN discovery_collections c ON c.id=m.collection AND c.generation=m.generation WHERE m.collection=? AND m.movie_id NOT IN (SELECT value FROM json_each(?))",
+      )
+      .bind(spec.id, JSON.stringify(movies.map((m) => m.metadata!.tmdbId)))
+      .first<{ n: number }>()
+    : null;
   // Stage a complete generation. Readers keep the old generation until the final pointer swap.
-  for (let i = 0; i < movies.length; i += 40)
-    await db.batch(
-      movies
-        .slice(i, i + 40)
-        .map((movie, index) =>
-          db
-            .prepare(
-              "INSERT OR REPLACE INTO discovery_memberships(collection,generation,movie_id,rank,last_seen) VALUES(?,?,?,?,?)",
-            )
-            .bind(spec.id, generation, movie.metadata!.tmdbId, i + index, now),
-        ),
-    );
-  await db.batch([
+  const membershipStatements = movies.map((movie, index) =>
+    db
+      .prepare(
+        "INSERT OR REPLACE INTO discovery_memberships(collection,generation,movie_id,rank,last_seen) VALUES(?,?,?,?,?)",
+      )
+      .bind(spec.id, generation, movie.metadata!.tmdbId, index, now),
+  );
+  const publicationStatements = [
     db
       .prepare(
         "INSERT INTO discovery_collections(id,generation,last_success,last_attempt,error) VALUES(?,?,?,?,NULL) ON CONFLICT(id) DO UPDATE SET generation=excluded.generation,last_success=excluded.last_success,last_attempt=excluded.last_attempt,error=NULL",
@@ -124,7 +128,14 @@ export async function publishCollection(
         "DELETE FROM discovery_memberships WHERE collection=? AND generation<>?",
       )
       .bind(spec.id, generation),
-  ]);
+  ];
+  if (membershipStatements.length <= 40) {
+    await db.batch([...membershipStatements, ...publicationStatements]);
+  } else {
+    for (let i = 0; i < membershipStatements.length; i += 40)
+      await db.batch(membershipStatements.slice(i, i + 40));
+    await db.batch(publicationStatements);
+  }
   return { count: movies.length, removed: previous?.n ?? 0 };
 }
 export async function syncCatalogue(
@@ -141,14 +152,7 @@ export async function syncCatalogue(
   const now = options.now ?? new Date(),
     started = Date.now(),
     runId = crypto.randomUUID();
-  const lock = await db
-    .prepare(
-      "INSERT INTO discovery_sync_lock(id,owner,expires) VALUES(1,?,?) ON CONFLICT(id) DO UPDATE SET owner=excluded.owner,expires=excluded.expires WHERE discovery_sync_lock.expires<?",
-    )
-    .bind(runId, started + 20 * 60_000, started)
-    .run();
-  if (!lock.meta.changes)
-    throw new Error("A catalogue synchronisation is already running.");
+  const lease = await acquireCatalogueLease(db, runId, started);
   const report: SyncReport = {
     collections: {},
     imported: 0,
@@ -182,6 +186,7 @@ export async function syncCatalogue(
       (s) => !options.collection || s.id === options.collection,
     )) {
       try {
+        await renewCatalogueLease(db, lease);
         options.progress?.(`Refreshing ${spec.id}`);
         const ids = new Set<number>();
         let totalPages: number | undefined;
@@ -260,6 +265,7 @@ export async function syncCatalogue(
                   const origins = movie.originCountries?.length
                     ? movie.originCountries
                     : (movie.productionCountries ?? []);
+                  await assertCatalogueLease(db, lease);
                   await db
                     .prepare(
                       "INSERT INTO discovery_movies(id,document,title,release_date,language,origins,genres,popularity,rating,votes,runtime,india_release,us_release,first_imported,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET document=excluded.document,title=excluded.title,release_date=excluded.release_date,language=excluded.language,origins=excluded.origins,genres=excluded.genres,popularity=excluded.popularity,rating=excluded.rating,votes=excluded.votes,runtime=excluded.runtime,india_release=excluded.india_release,us_release=excluded.us_release,updated=excluded.updated",
@@ -302,6 +308,7 @@ export async function syncCatalogue(
             candidates.indexOf(a.metadata!.tmdbId!) -
             candidates.indexOf(b.metadata!.tmdbId!),
         );
+        await assertCatalogueLease(db, lease);
         report.collections[spec.id] = await publishCollection(
           db,
           spec,
@@ -319,6 +326,7 @@ export async function syncCatalogue(
           : "database";
         report.failureCategories[category] = (report.failureCategories[category] ?? 0) + 1;
         report.collections[spec.id] = { error: message, category };
+        await assertCatalogueLease(db, lease);
         await db
           .prepare(
             "INSERT INTO discovery_collections(id,last_attempt,error) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET last_attempt=excluded.last_attempt,error=excluded.error",
@@ -331,10 +339,9 @@ export async function syncCatalogue(
         )
           throw error;
       }
-      await db
-        .prepare("UPDATE discovery_sync_lock SET expires=? WHERE owner=?")
-        .bind(Date.now() + 20 * 60_000, runId)
-        .run();
+      await renewCatalogueLease(db, lease);
+      await assertCatalogueLease(db, lease);
+      await assertCatalogueLease(db, lease);
       await db
         .prepare("UPDATE discovery_sync_runs SET report=? WHERE id=?")
         .bind(JSON.stringify(report), runId)
@@ -352,6 +359,11 @@ export async function syncCatalogue(
       )
       .run();
   } catch (error) {
+    try {
+      await assertCatalogueLease(db, lease);
+    } catch {
+      throw error;
+    }
     await db
       .prepare(
         "UPDATE discovery_sync_runs SET status='failed',finished=?,report=? WHERE id=?",
@@ -368,10 +380,7 @@ export async function syncCatalogue(
       .run();
     throw error;
   } finally {
-    await db
-      .prepare("DELETE FROM discovery_sync_lock WHERE owner=?")
-      .bind(runId)
-      .run();
+    await releaseCatalogueLease(db, lease);
   }
   return { id: runId, kind, ...report };
 }

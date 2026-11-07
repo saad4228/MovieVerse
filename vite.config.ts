@@ -20,7 +20,6 @@ const localBindingConfig = {
   name:deployment.workerName,
   main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
-  triggers:{crons:["0 3 * * *","0 */6 * * *"]},
   d1_databases: d1
     ? [
         {

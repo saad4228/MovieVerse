@@ -129,13 +129,13 @@ flowchart LR
   Sync --> D1
 ```
 
-`app/` contains the application entry point and API routes. The Worker in `worker/index.ts` serves requests through Vinext and owns scheduled catalogue refresh work. Server routes use the existing D1 binding for persistent data; the browser does not receive TMDB credentials. `components/` contains the UI, while `components/auditorium/` holds the 3D theatre pieces. Domain logic for bookings, discovery, media, and Watchlist lives in `lib/`; database schema and SQL migrations are under `db/` and `drizzle/`.
+`app/` contains the application entry point and API routes. The Worker in `worker/index.ts` serves requests through Vinext; the external Node.js 24 importer owns catalogue refresh work. Server routes use the existing D1 binding for persistent data; the browser does not receive TMDB credentials. `components/` contains the UI, while `components/auditorium/` holds the 3D theatre pieces. Domain logic for bookings, discovery, media, and Watchlist lives in `lib/`; database schema and SQL migrations are under `db/` and `drizzle/`.
 
 ## Data freshness and booking availability
 
-MovieVerse includes a D1-backed TMDB catalogue importer and Worker cron handlers: a full catalogue sync is scheduled daily at `0 3 * * *` UTC, with a trending refresh every six hours at `0 */6 * * *` UTC. Public pages cache catalogue responses briefly, so a currently open page may take a few minutes to reflect a completed sync.
+MovieVerse includes a D1-backed, resumable TMDB catalogue importer. GitHub Actions runs a full catalogue sync daily at `0 3 * * *` UTC and a trending refresh every six hours at `0 */6 * * *` UTC. The external Node.js 24 process performs TMDB requests and orchestration; the Worker accepts authenticated prepared batches and performs D1 ingestion/publication only. Public pages cache catalogue responses briefly.
 
-Those handlers refresh discovery metadata only when the deployed Worker has a valid server-side TMDB credential, the intended D1 database binding, scheduled triggers enabled, and enough runtime quota. **The code and schedule do not by themselves prove that a production deployment or its cron runs are configured.** Production import freshness must be verified in Cloudflare after deployment.
+The importer requires `MOVIEVERSE_URL`, `ADMIN_TOKEN`, and `TMDB_READ_TOKEN`. The Worker ingestion endpoint requires the existing `ADMIN_TOKEN`; it does not need a new secret. Keep the existing Worker `TMDB_READ_TOKEN` if protected diagnostics or legacy compatibility endpoints are still used, but the external importer reads TMDB through its own environment. Production import freshness must be verified in GitHub Actions and the protected Worker status endpoint after deployment.
 
 The homepage booking carousel has a separate rule: it selects movies with future configured **demo screenings** and available illustrative inventory for the selected city. A new movie arriving from TMDB will appear in discovery after sync, but it will **not** automatically gain a cinema, showtime, seats, or a real booking. Those require a licensed cinema inventory and transaction integration, or an operator to configure a demo screening.
 
@@ -178,6 +178,45 @@ node --experimental-transform-types scripts/sync-catalogue-local.mjs --status
 
 The initial import can take several minutes. This helper operates on local D1; production setup and scheduled-run verification are documented in [Dynamic catalogue](docs/DYNAMIC_CATALOGUE.md).
 
+### External production importer
+
+Set the endpoint and read the two importer secrets without echoing them:
+
+```powershell
+function Read-MovieVerseSecret([string] $Name) {
+  $secure = Read-Host $Name -AsSecureString
+  $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+  try { return [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer) }
+  finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
+}
+
+$env:MOVIEVERSE_URL = "https://movieverse.saad4228.workers.dev"
+$env:ADMIN_TOKEN = Read-MovieVerseSecret "ADMIN_TOKEN"
+$env:TMDB_READ_TOKEN = Read-MovieVerseSecret "TMDB_READ_TOKEN"
+```
+
+Trending-only import:
+
+```powershell
+node --experimental-transform-types --loader ./scripts/local-ts-loader.mjs scripts/sync-catalogue-remote.mjs --trending
+```
+
+Start a new full import:
+
+```powershell
+Remove-Item Env:\MOVIEVERSE_RUN_ID -ErrorAction SilentlyContinue
+node --experimental-transform-types --loader ./scripts/local-ts-loader.mjs scripts/sync-catalogue-remote.mjs
+```
+
+Resume an existing import:
+
+```powershell
+$runId = Read-Host "Existing catalogue run UUID"
+node --experimental-transform-types --loader ./scripts/local-ts-loader.mjs scripts/sync-catalogue-remote.mjs --run-id $runId
+```
+
+The shared GitHub Actions workflow uses the same commands, Node.js 24, and one non-cancelling concurrency group for full and trending imports.
+
 ## Environment variables
 
 Put local Worker values in ignored `.dev.vars`. In production, configure secrets through the Worker host’s secret settings; never use `NEXT_PUBLIC_*` or `VITE_*` for credentials.
@@ -194,6 +233,169 @@ Put local Worker values in ignored `.dev.vars`. In production, configure secrets
 | `TEST_BASE_URL` | Optional, tests only | Base URL for browser tests; defaults to the local app URL. |
 
 Cloudflare D1 is bound as `DB`; it is not configured with a database URL. Before deploying your own Worker, replace the placeholder D1/Worker deployment values with your own Cloudflare resources and apply migrations. TMDB access alone does not activate cinema showtimes or payment processing.
+
+## Production deployment runbook
+
+Run these commands from the repository root in PowerShell. They do not print secret values.
+
+### Build and verify the Worker
+
+The build script is the repository's `build` script and generates the production Wrangler configuration at `dist/server/wrangler.json`:
+
+```powershell
+npm run build
+Get-Content .\dist\server\wrangler.json -Raw | ConvertFrom-Json |
+  Select-Object name,d1_databases,triggers
+npx wrangler deploy --dry-run --config .\dist\server\wrangler.json
+```
+
+The generated configuration must bind `DB` to the intended MovieVerse D1 and contain no catalogue Cron triggers. Catalogue schedules belong to GitHub Actions.
+
+### Verify the production D1
+
+Authenticate to the intended Cloudflare account first:
+
+```powershell
+npx wrangler login
+npx wrangler whoami
+```
+
+List remote databases and inspect the configured database identity:
+
+```powershell
+npx wrangler d1 list --json
+npx wrangler d1 info site-creator-d1 --json
+Get-Content .\dist\server\wrangler.json -Raw | ConvertFrom-Json |
+  Select-Object -ExpandProperty d1_databases
+```
+
+Confirm that the configured name and ID identify MovieVerse production. Do not select `dropby-db`, create a duplicate database, or proceed if the identity is ambiguous.
+
+### Back up D1 before migration
+
+Create a local backup directory and export the remote production database before applying migrations:
+
+```powershell
+New-Item -ItemType Directory -Force .\backups | Out-Null
+$backup = ".\backups\movieverse-site-creator-d1-$(Get-Date -Format yyyyMMdd-HHmmss).sql"
+npx wrangler d1 export site-creator-d1 --remote `
+  --output $backup `
+  --config .\dist\server\wrangler.json
+```
+
+Keep the backup outside commits and do not upload it to the repository.
+
+### Review and apply migrations
+
+Review the remote migration history before any write:
+
+```powershell
+npx wrangler d1 migrations list DB --remote `
+  --config .\dist\server\wrangler.json
+```
+
+After confirming that the only pending migrations are `0006_resumable_catalogue.sql` and `0007_resumable_coordination.sql`, apply pending migrations through the configured `DB` binding. Wrangler applies them in filename order:
+
+```powershell
+npx wrangler d1 migrations apply DB --remote `
+  --config .\dist\server\wrangler.json
+```
+
+Verify the migration history again:
+
+```powershell
+npx wrangler d1 migrations list DB --remote `
+  --config .\dist\server\wrangler.json
+```
+
+Do not run individual migration SQL files directly or replay earlier migrations against an existing database. Keep `ADMIN_TOKEN` unchanged.
+
+### Deploy the Worker
+
+Deploy only after the D1 backup, migration review, and successful dry run:
+
+```powershell
+npx wrangler deploy --config .\dist\server\wrangler.json
+```
+
+### Run the GitHub Actions importer
+
+The workflow runs from the repository default branch, currently `main`. Configure these repository secrets without exposing their values:
+
+- `MOVIEVERSE_URL`
+- `ADMIN_TOKEN`
+- `TMDB_READ_TOKEN`
+
+Start a trending import manually:
+
+```powershell
+gh workflow run catalogue-sync.yml `
+  --repo saad4228/MovieVerse `
+  --ref main `
+  --field mode=trending
+```
+
+After the trending run succeeds, start a full import:
+
+```powershell
+gh workflow run catalogue-sync.yml `
+  --repo saad4228/MovieVerse `
+  --ref main `
+  --field mode=full
+```
+
+To resume a known run from the manual workflow:
+
+```powershell
+$runId = Read-Host "Existing catalogue run UUID"
+gh workflow run catalogue-sync.yml `
+  --repo saad4228/MovieVerse `
+  --ref main `
+  --field mode=full `
+  --field run_id=$runId
+```
+
+The workflow's shared concurrency group has `cancel-in-progress: false`; full and trending imports cannot overlap.
+
+### Verify the trending import
+
+First inspect the workflow result:
+
+```powershell
+gh run list --repo saad4228/MovieVerse `
+  --workflow catalogue-sync.yml `
+  --limit 5
+```
+
+The selected trending run must finish successfully. Then inspect the protected catalogue status without printing the token:
+
+```powershell
+$env:MOVIEVERSE_URL = "https://movieverse.saad4228.workers.dev"
+$admin = Read-Host "Production ADMIN_TOKEN" -AsSecureString
+$pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($admin)
+try {
+  $token = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer)
+  $status = Invoke-RestMethod `
+    -Uri "$env:MOVIEVERSE_URL/api/catalogue-status" `
+    -Headers @{ Authorization = "Bearer $token" }
+  $status | ConvertTo-Json -Depth 20
+} finally {
+  [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer)
+  Remove-Variable token -ErrorAction SilentlyContinue
+}
+```
+
+Confirm that:
+
+- the latest trending run is `success`;
+- the expected trending collections are present with nonzero or explicitly valid empty collection counts;
+- each refreshed collection has a new active publication generation;
+- `resumable.batches.failed` is `0`;
+- `itemFailures` is empty;
+- no collection remains unexpectedly `running`, `pending`, or `publishing`;
+- the Worker logs show authenticated batch ingestion/publication only.
+
+The Node.js 24 process performs TMDB fetching, JSON parsing, validation, normalization, collection planning, enrichment, and orchestration. The Worker performs authenticated D1 batch ingestion, fencing/lease checks, generation staging, and atomic publication only.
 
 ## Useful commands
 

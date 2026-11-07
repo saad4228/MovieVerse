@@ -21,6 +21,8 @@ type TestStatement = {
 export function discoveryDb() {
   const sqlite = new DatabaseSync(":memory:");
   sqlite.exec(readFileSync("drizzle/0004_dynamic_catalogue.sql", "utf8"));
+  sqlite.exec(readFileSync("drizzle/0006_resumable_catalogue.sql", "utf8"));
+  sqlite.exec(readFileSync("drizzle/0007_resumable_coordination.sql", "utf8"));
 
   function statement(sql: string, args: SQLInputValue[] = []): TestStatement {
     return {
