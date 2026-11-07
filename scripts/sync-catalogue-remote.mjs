@@ -3,6 +3,7 @@
 import { collectionPlan, indiaToday } from "../lib/discovery-collections.ts";
 import { genreSchema, movieSchema, normalizeMovie, pageSchema, tmdbRequest } from "../lib/tmdb.ts";
 import { qualifies } from "../lib/catalogue-sync.ts";
+import { uploadCollection } from "./catalogue-batch-chunking.mjs";
 
 const origin = process.env.MOVIEVERSE_URL;
 const adminToken = process.env.ADMIN_TOKEN;
@@ -17,6 +18,13 @@ const requestedRunId = process.argv.find((arg, index) => arg === "--run-id" && p
   ? process.argv[process.argv.indexOf("--run-id") + 1] : undefined;
 const settings = { TMDB_READ_TOKEN: tmdbToken, TMDB_API_BASE_URL: process.env.TMDB_API_BASE_URL };
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+class CatalogueHttpError extends Error {
+  constructor(message, readonlyStatus, retryable) {
+    super(message);
+    this.status = readonlyStatus;
+    this.retryable = retryable;
+  }
+}
 
 async function call(body) {
   for (let attempt = 0; ; attempt++) {
@@ -33,8 +41,13 @@ async function call(body) {
         await sleep(Number.isFinite(retry) && retry > 0 ? Math.min(30000, retry * 1000) : 500 * 2 ** attempt);
         continue;
       }
-      throw new Error(result.error?.message || result.error || `Catalogue request failed with HTTP ${response.status}.`);
+      throw new CatalogueHttpError(
+        result.error?.message || result.error || `Catalogue request failed with HTTP ${response.status}.`,
+        response.status,
+        response.status === 409 || response.status === 429 || response.status >= 500,
+      );
     } catch (error) {
+      if (error instanceof CatalogueHttpError && !error.retryable) throw error;
       if (attempt >= 3) throw error;
       await sleep(500 * 2 ** attempt);
     }
@@ -96,16 +109,15 @@ for (const spec of collectionPlan(kind)) {
     const movie = normalizeMovie(raw, new Map(Object.entries(genres).map(([id, name]) => [Number(id), name])), new Date().toISOString());
     movies.push({ movieId: raw.id, rank: candidate.rank, document: movie, popularity: raw.popularity ?? 0, voteCount: raw.vote_count ?? 0 });
   }
-  for (let offset = 0; offset < movies.length; offset += 20)
-    await send(runId, "movies", { collection: spec.id, movies: movies.slice(offset, offset + 20) });
-
   const eligible = movies.filter(item => qualifies(item.document, spec, indiaToday(new Date(started.started))));
   const publicationStart = saved?.status === "publishing" ? saved.detail_cursor ?? 0 : 0;
-  for (let offset = publicationStart; offset < eligible.length; offset += 20) {
-    const rows = eligible.slice(offset, offset + 20).map(item => ({ movieId: item.movieId, rank: item.rank }));
-    await send(runId, "membership", { collection: spec.id, cursor: offset + rows.length, items: rows });
-  }
-  await send(runId, "publish", { collection: spec.id });
+  await uploadCollection({
+    send: (stage, payload) => send(runId, stage, payload),
+    collection: spec.id,
+    movies,
+    eligible,
+    publicationStart,
+  });
   console.log(`[${spec.id}] ${movies.length} validated records; published ${eligible.length} memberships.`);
 }
 
